@@ -8,6 +8,7 @@ task :test do
   ENV['QUIET'] ||= 'true'
 
   $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/spec'))
+  $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 
   MiniTest::Unit.autorun
 
