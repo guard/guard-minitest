@@ -24,7 +24,7 @@ module Guard
         end
 
         def test_files
-          @test_files ||= Dir.glob('test/**/test_*.rb') + Dir.glob('spec/**/*_spec.rb')
+          @test_files ||= Dir.glob('test/**/test_*.rb') + Dir.glob('{test,spec}/**/*_spec.rb')
         end
 
         def clear_test_files_list
