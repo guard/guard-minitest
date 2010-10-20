@@ -9,6 +9,14 @@ module Guard
           @seed = options[:seed] ||= default_seed
         end
 
+        def set_verbose(options = {})
+          @verbose = !!options[:verbose]
+        end
+
+        def verbose?
+          !!@verbose
+        end
+
         def run(paths, options = {})
           message = options[:message] || "Running: #{paths.join(' ')}"
           UI.info message, :reset => true
@@ -28,6 +36,7 @@ module Guard
           cmd_parts << '-e \'MiniTest::Unit.autorun\''
           cmd_parts << '--'
           cmd_parts << "--seed #{seed}"
+          cmd_parts << '--verbose' if verbose?
           cmd_parts.join(' ')
         end
 

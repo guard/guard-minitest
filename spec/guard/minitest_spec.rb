@@ -11,6 +11,11 @@ describe Guard::Minitest do
       subject.start
     end
 
+    it 'should set verbose option' do
+      Guard::Minitest::Runner.expects(:set_verbose)
+      subject.start
+    end
+
   end
 
   describe 'run_all' do

@@ -46,6 +46,20 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
       watch('^spec/spec_helper.rb')                     { "spec" }
     end
 
+== Options
+
+You can force seed for minitest with:
+
+    guard 'minitest', :seed => 12345 do
+      ...
+    end
+
+You can set verbose mode for minitest with:
+
+    guard 'minitest', :verbose => true do
+      ...
+    end
+
 == Development
 
 - Source hosted at {GitHub}[http://github.com/guard/guard-minitest]

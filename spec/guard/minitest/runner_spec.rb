@@ -7,6 +7,7 @@ describe Guard::Minitest::Runner do
   after(:each) do
     subject.class_eval do
       @seed    = nil
+      @verbose = nil
       @bundler = nil
     end
   end
@@ -23,6 +24,22 @@ describe Guard::Minitest::Runner do
       subject.seed.must_be_nil
       subject.set_seed
       subject.seed.must_be_instance_of Fixnum
+    end
+
+  end
+
+  describe 'set_verbose' do
+
+    it 'should use verbose option first' do
+      subject.verbose?.must_equal false
+      subject.set_verbose(:verbose => true)
+      subject.verbose?.must_equal true
+    end
+
+    it 'should set verbose to false by default' do
+      subject.verbose?.must_equal false
+      subject.set_verbose
+      subject.verbose?.must_equal false
     end
 
   end
@@ -44,6 +61,15 @@ describe Guard::Minitest::Runner do
         subject.run(['test/test_minitest.rb'])
       end
 
+      it 'should set verbose option' do
+        subject.set_verbose(:verbose => true)
+        Guard::UI.expects(:info)
+        subject.expects(:system).with(
+          'ruby -Itest -Ispec -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345 --verbose'
+        )
+        subject.run(['test/test_minitest.rb'])
+      end
+
     end
 
     describe 'in bundler folder' do
@@ -57,6 +83,15 @@ describe Guard::Minitest::Runner do
         Guard::UI.expects(:info)
         subject.expects(:system).with(
           'bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345'
+        )
+        subject.run(['test/test_minitest.rb'])
+      end
+
+      it 'should set verbose option' do
+        subject.set_verbose(:verbose => true)
+        Guard::UI.expects(:info)
+        subject.expects(:system).with(
+          'bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345 --verbose'
         )
         subject.run(['test/test_minitest.rb'])
       end

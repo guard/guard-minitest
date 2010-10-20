@@ -10,6 +10,7 @@ module Guard
 
     def start
       Runner.set_seed(options)
+      Runner.set_verbose(options)
     end
 
     def run_all
