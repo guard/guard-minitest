@@ -7,6 +7,7 @@ module Guard
 
     autoload :Runner,    'guard/minitest/runner'
     autoload :Inspector, 'guard/minitest/inspector'
+    autoload :Notifier,  'guard/minitest/notifier'
 
     def start
       Runner.set_seed(options)

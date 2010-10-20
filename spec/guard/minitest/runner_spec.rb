@@ -46,6 +46,10 @@ describe Guard::Minitest::Runner do
 
   describe 'run' do
 
+    before(:each) do
+      @default_runner = File.expand_path('../../../../lib/guard/minitest/runners/default_runner.rb', __FILE__)
+    end
+
     describe 'in empty folder' do
 
       before(:each) do
@@ -56,7 +60,7 @@ describe Guard::Minitest::Runner do
       it 'should run without bundler' do
         Guard::UI.expects(:info)
         subject.expects(:system).with(
-          'ruby -Itest -Ispec -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345'
+          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345"
         )
         subject.run(['test/test_minitest.rb'])
       end
@@ -65,7 +69,7 @@ describe Guard::Minitest::Runner do
         subject.set_verbose(:verbose => true)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
-          'ruby -Itest -Ispec -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345 --verbose'
+          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345 --verbose"
         )
         subject.run(['test/test_minitest.rb'])
       end
@@ -82,7 +86,7 @@ describe Guard::Minitest::Runner do
       it 'should run with bundler' do
         Guard::UI.expects(:info)
         subject.expects(:system).with(
-          'bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345'
+          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345"
         )
         subject.run(['test/test_minitest.rb'])
       end
@@ -91,7 +95,7 @@ describe Guard::Minitest::Runner do
         subject.set_verbose(:verbose => true)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
-          'bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345 --verbose'
+          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345 --verbose"
         )
         subject.run(['test/test_minitest.rb'])
       end

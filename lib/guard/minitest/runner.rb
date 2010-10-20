@@ -33,6 +33,7 @@ module Guard
           paths.each do |path|
             cmd_parts << "-r #{path}"
           end
+          cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
           cmd_parts << '-e \'MiniTest::Unit.autorun\''
           cmd_parts << '--'
           cmd_parts << "--seed #{seed}"
