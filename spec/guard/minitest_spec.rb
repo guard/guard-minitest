@@ -6,8 +6,8 @@ describe Guard::Minitest do
 
   describe 'start' do
     it 'should set seed option' do
+      Guard::Minitest::Runner.expects(:set_seed)
       subject.start
-      Guard::Minitest::Runner.seed.wont_be_nil
     end
   end
 end
