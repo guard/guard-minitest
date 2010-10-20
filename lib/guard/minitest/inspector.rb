@@ -8,7 +8,16 @@ module Guard
           paths.uniq!
           paths.compact!
           paths = paths.select { |p| test_file?(p) || test_folder?(p) }
-          paths = paths.delete_if { |p| included_in_other_path?(p, paths) }
+
+          paths.each do |path|
+            if File.directory?(path)
+              paths.delete(path)
+              paths += Dir.glob("#{path}/**/test_*.rb") + Dir.glob('test/**/*_test.rb') + Dir.glob("#{path}/**/*_spec.rb")
+            end
+          end
+
+          paths.uniq!
+          paths.compact!
           clear_test_files_list
           paths
         end
@@ -16,7 +25,7 @@ module Guard
       private
 
         def test_folder?(path)
-          path.match(/^\/?(test|spec)/) && !path.match(/\..+$/)
+          path.match(/^\/?(test|spec)/) && !path.match(/\..+$/) && File.directory?(path)
         end
 
         def test_file?(path)
@@ -24,16 +33,11 @@ module Guard
         end
 
         def test_files
-          @test_files ||= Dir.glob('test/**/test_*.rb') + Dir.glob('{test,spec}/**/*_spec.rb')
+          @test_files ||= Dir.glob('test/**/test_*.rb') + Dir.glob('test/**/*_test.rb') + Dir.glob('{test,spec}/**/*_spec.rb')
         end
 
         def clear_test_files_list
           @test_files = nil
-        end
-
-        def included_in_other_path?(path, paths)
-          paths = paths.select { |p| p != path }
-          paths.any? { |p| path.include?(p) && (path.gsub(p, '')).include?('/') }
         end
 
       end
