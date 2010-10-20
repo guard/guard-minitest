@@ -22,4 +22,12 @@ describe Guard::Minitest do
     end
 
   end
+
+  describe 'runn_on_change' do
+
+    it 'should run minitest in paths' do
+      Guard::Minitest::Runner.expects(:run).with(['test/guard/minitest/test_inspector.rb'])
+      subject.run_on_change(['test/guard/minitest/test_inspector.rb'])
+    end
+  end
 end
