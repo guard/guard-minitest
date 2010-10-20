@@ -20,6 +20,8 @@ GEM
     libnotify (0.1.4)
       ffi (>= 0.6.2)
     minitest (1.7.2)
+    mocha (0.9.8)
+      rake
     rake (0.8.7)
     rb-inotify (0.8.1)
       ffi (>= 0.5.0)
@@ -34,3 +36,4 @@ DEPENDENCIES
   guard
   guard-minitest!
   minitest (~> 1.7.0)
+  mocha (~> 0.9.8)
