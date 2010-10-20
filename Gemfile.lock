@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    guard-minitest (0.1.0)
+    guard-minitest (0.2.0)
       guard
 
 GEM
