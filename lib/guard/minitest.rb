@@ -14,7 +14,8 @@ module Guard
     end
 
     def run_all
-      Runner.run(Inspector.clean(['test', 'spec']), :message => 'Running all tests')
+      paths = Inspector.clean(['test', 'spec'])
+      Runner.run(paths, :message => 'Running all tests') unless paths.empty?
     end
 
     def run_on_change(paths = [])

@@ -9,7 +9,7 @@ module Guard
           paths.compact!
           paths = paths.select { |p| test_file?(p) || test_folder?(p) }
 
-          paths.each do |path|
+          paths.dup.each do |path|
             if File.directory?(path)
               paths.delete(path)
               paths += Dir.glob("#{path}/**/test_*.rb") + Dir.glob('test/**/*_test.rb') + Dir.glob("#{path}/**/*_spec.rb")
