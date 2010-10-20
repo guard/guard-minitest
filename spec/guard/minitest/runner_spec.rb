@@ -37,6 +37,7 @@ describe Guard::Minitest::Runner do
       end
 
       it 'should run without bundler' do
+        Guard::UI.expects(:info)
         subject.expects(:system).with(
           'ruby -Itest -Ispec -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345'
         )
@@ -53,6 +54,7 @@ describe Guard::Minitest::Runner do
       end
 
       it 'should run with bundler' do
+        Guard::UI.expects(:info)
         subject.expects(:system).with(
           'bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -e \'MiniTest::Unit.autorun\' -- --seed 12345'
         )

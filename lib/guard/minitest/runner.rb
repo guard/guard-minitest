@@ -10,6 +10,8 @@ module Guard
         end
 
         def run(paths, options = {})
+          message = options[:message] || "Running: #{paths.join(' ')}"
+          UI.info message, :reset => true
           system(minitest_command(paths))
         end
 
