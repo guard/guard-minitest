@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ['Yann Lugrin']
   s.email       = ['yann.lugrin@sans-savoir.net']
   s.homepage    = 'http://rubygems.org/gems/guard-minitest'
-  s.summary     = 'Guard gem for Minitest'
-  s.description = 'Guard::Minitest automatically run your tests (much like autotest)'
+  s.summary     = 'Guard gem for MiniTest framework'
+  s.description = 'Guard::Minitest automatically run your tests with MiniTest framework (much like autotest)'
 
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'guard-minitest'
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'guard'
 
   s.add_development_dependency 'bundler',   '~> 1.0.2'
-  s.add_development_dependency 'minitest',  '~> 1.7.0'
+  s.add_development_dependency 'minitest',  '~> 1.7.2'
   s.add_development_dependency 'mocha',     '~> 0.9.8'
 
   s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.rdoc]

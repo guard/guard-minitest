@@ -35,5 +35,5 @@ DEPENDENCIES
   bundler (~> 1.0.2)
   guard
   guard-minitest!
-  minitest (~> 1.7.0)
+  minitest (~> 1.7.2)
   mocha (~> 0.9.8)
