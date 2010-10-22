@@ -12,7 +12,12 @@ module MiniTest
       def run(args = [])
         self.options = process_args(args)
 
-        self.help =  ['--seed', options[:seed]]
+        unless options[:seed] then
+          srand
+          options[:seed] = srand % 0xFFFF
+        end
+
+        self.help =  ['--seed', options[:seed].to_s]
         self.help << ['--verbose'] if options[:verbose]
         self.help =  self.help.join(' ')
 

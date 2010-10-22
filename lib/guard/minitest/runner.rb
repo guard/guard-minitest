@@ -6,7 +6,7 @@ module Guard
         attr_reader :seed
 
         def set_seed(options = {})
-          @seed = options[:seed] ||= default_seed
+          @seed = options[:seed]
         end
 
         def set_verbose(options = {})
@@ -36,7 +36,7 @@ module Guard
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
           cmd_parts << '-e \'MiniTest::Unit.autorun\''
           cmd_parts << '--'
-          cmd_parts << "--seed #{seed}"
+          cmd_parts << "--seed #{seed}" unless seed.nil?
           cmd_parts << '--verbose' if verbose?
           cmd_parts.join(' ')
         end
@@ -45,10 +45,6 @@ module Guard
           @bundler ||= File.exist?("#{Dir.pwd}/Gemfile")
         end
 
-        def default_seed
-          srand
-          srand % 0xFFFF
-        end
       end
     end
   end

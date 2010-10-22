@@ -20,10 +20,10 @@ describe Guard::Minitest::Runner do
       subject.seed.must_equal 123456789
     end
 
-    it 'should set random seed by default' do
+    it 'should not set random seed by default' do
       subject.seed.must_be_nil
-      subject.set_seed
-      subject.seed.must_be_instance_of Fixnum
+      subject.set_seed({})
+      subject.seed.must_be_nil
     end
 
   end
@@ -54,10 +54,18 @@ describe Guard::Minitest::Runner do
 
       before(:each) do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
-        subject.set_seed(:seed => 12345)
       end
 
       it 'should run without bundler' do
+        Guard::UI.expects(:info)
+        subject.expects(:system).with(
+          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --"
+        )
+        subject.run(['test/test_minitest.rb'])
+      end
+
+      it 'should set seed option' do
+        subject.set_seed(:seed => 12345)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
           "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345"
@@ -69,7 +77,7 @@ describe Guard::Minitest::Runner do
         subject.set_verbose(:verbose => true)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
-          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345 --verbose"
+          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --verbose"
         )
         subject.run(['test/test_minitest.rb'])
       end
@@ -80,10 +88,18 @@ describe Guard::Minitest::Runner do
 
       before(:each) do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
-        subject.set_seed(:seed => 12345)
       end
 
       it 'should run with bundler' do
+        Guard::UI.expects(:info)
+        subject.expects(:system).with(
+          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --"
+        )
+        subject.run(['test/test_minitest.rb'])
+      end
+
+      it 'should set seed option' do
+        subject.set_seed(:seed => 12345)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
           "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345"
@@ -95,7 +111,7 @@ describe Guard::Minitest::Runner do
         subject.set_verbose(:verbose => true)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
-          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345 --verbose"
+          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --verbose"
         )
         subject.run(['test/test_minitest.rb'])
       end
