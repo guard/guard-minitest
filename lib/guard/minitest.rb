@@ -21,7 +21,7 @@ module Guard
 
     def run_on_change(paths = [])
       paths = Inspector.clean(paths)
-      Runner.run(Inspector.clean(paths)) unless paths.empty?
+      Runner.run(paths) unless paths.empty?
     end
   end
 end
