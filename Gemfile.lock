@@ -8,12 +8,17 @@ GEM
   remote: http://rubygems.org/
   specs:
     configuration (1.1.0)
+    ffi (0.6.3)
+      rake (>= 0.8.7)
+    growl (1.0.3)
     guard (0.2.0)
       open_gem (~> 1.4.2)
       thor (~> 0.14.3)
     launchy (0.3.7)
       configuration (>= 0.0.5)
       rake (>= 0.8.1)
+    libnotify (0.3.0)
+      ffi (>= 0.6.2)
     minitest (1.7.2)
     mocha (0.9.8)
       rake
@@ -27,7 +32,9 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.0.2)
+  growl
   guard (>= 0.2.0)
   guard-minitest!
+  libnotify
   minitest (~> 1.7.2)
   mocha (~> 0.9.8)
