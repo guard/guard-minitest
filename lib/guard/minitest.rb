@@ -12,16 +12,19 @@ module Guard
     def start
       Runner.set_seed(options)
       Runner.set_verbose(options)
+      true
     end
 
     def run_all
       paths = Inspector.clean(['test', 'spec'])
-      Runner.run(paths, :message => 'Running all tests') unless paths.empty?
+      return Runner.run(paths, :message => 'Running all tests') unless paths.empty?
+      true
     end
 
     def run_on_change(paths = [])
       paths = Inspector.clean(paths)
-      Runner.run(paths) unless paths.empty?
+      return Runner.run(paths) unless paths.empty?
+      true
     end
   end
 end
