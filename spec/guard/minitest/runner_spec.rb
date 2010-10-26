@@ -12,36 +12,60 @@ describe Guard::Minitest::Runner do
     end
   end
 
-  describe 'set_seed' do
+  describe 'options' do
+    
+    describe 'set_seed' do
 
-    it 'should use seed option first' do
-      subject.seed.must_be_nil
-      subject.set_seed(:seed => 123456789)
-      subject.seed.must_equal 123456789
+      it 'should not set random seed by default' do
+        subject.seed.must_be_nil
+        subject.set_seed({})
+        subject.seed.must_be_nil
+      end
+
+      it 'should use seed option first' do
+        subject.seed.must_be_nil
+        subject.set_seed(:seed => 123456789)
+        subject.seed.must_equal 123456789
+      end
+
     end
 
-    it 'should not set random seed by default' do
-      subject.seed.must_be_nil
-      subject.set_seed({})
-      subject.seed.must_be_nil
+    describe 'set_verbose' do
+
+      it 'should set verbose to false by default' do
+        subject.verbose?.must_equal false
+        subject.set_verbose
+        subject.verbose?.must_equal false
+      end
+
+      it 'should use verbose option first' do
+        subject.verbose?.must_equal false
+        subject.set_verbose(:verbose => true)
+        subject.verbose?.must_equal true
+      end
+
     end
 
-  end
+    describe 'set_bundler' do
 
-  describe 'set_verbose' do
+      it 'should set bundler to true by default if Gemfile is present' do
+        Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
+        subject.bundler?.must_equal true
+      end
 
-    it 'should use verbose option first' do
-      subject.verbose?.must_equal false
-      subject.set_verbose(:verbose => true)
-      subject.verbose?.must_equal true
+      it 'should set bundler to false by default if Gemfile is not present' do
+        Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
+        subject.bundler?.must_equal false
+      end
+
+      it 'should use bundler option first' do
+        Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
+        subject.bundler?.must_equal true
+        subject.set_bundler(:bundler => false)
+        subject.bundler?.must_equal false
+      end
+
     end
-
-    it 'should set verbose to false by default' do
-      subject.verbose?.must_equal false
-      subject.set_verbose
-      subject.verbose?.must_equal false
-    end
-
   end
 
   describe 'run' do

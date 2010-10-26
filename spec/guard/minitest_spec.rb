@@ -16,6 +16,11 @@ describe Guard::Minitest do
       subject.start
     end
 
+    it 'should set bundler option' do
+      Guard::Minitest::Runner.expects(:set_bundler)
+      subject.start
+    end
+
   end
 
   describe 'run_all' do
@@ -35,4 +40,8 @@ describe Guard::Minitest do
       subject.run_on_change(['test/guard/minitest/test_inspector.rb'])
     end
   end
+end
+
+def new_guard_with_options(options = {})
+  Guard::Minitest.new([], options)
 end

@@ -49,15 +49,21 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
 
 == Options
 
-You can force seed for minitest with:
+You can force minitest seed with:
 
     guard 'minitest', :seed => 12345 do
       ...
     end
 
-You can set verbose mode for minitest with:
+You can set minitest verbose mode with:
 
     guard 'minitest', :verbose => true do
+      ...
+    end
+
+You can disable bundler usage to run minitest with:
+
+    guard 'minitest', :bundler => false do
       ...
     end
 

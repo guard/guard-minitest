@@ -12,6 +12,7 @@ module Guard
     def start
       Runner.set_seed(options)
       Runner.set_verbose(options)
+      Runner.set_bundler(options)
       true
     end
 

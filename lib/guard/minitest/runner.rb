@@ -10,11 +10,21 @@ module Guard
         end
 
         def set_verbose(options = {})
-          @verbose = !!options[:verbose]
+          @verbose = options[:verbose].nil? ? false : !!options[:verbose]
         end
 
         def verbose?
-          !!@verbose
+          @verbose = set_verbose if @verbose.nil?
+          @verbose
+        end
+
+        def set_bundler(options = {})
+          @bundler = options[:bundler].nil? ? File.exist?("#{Dir.pwd}/Gemfile") : !!options[:bundler]
+        end
+
+        def bundler?
+          @bundler = set_bundler if @bundler.nil?
+          @bundler
         end
 
         def run(paths, options = {})
@@ -39,10 +49,6 @@ module Guard
           cmd_parts << "--seed #{seed}" unless seed.nil?
           cmd_parts << '--verbose' if verbose?
           cmd_parts.join(' ')
-        end
-
-        def bundler?
-          @bundler ||= File.exist?("#{Dir.pwd}/Gemfile")
         end
 
       end
