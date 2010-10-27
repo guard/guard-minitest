@@ -1,8 +1,10 @@
 
+== 0.3.0 (Oct 27, 2010)
+
 Bug Fixes:
 
 - All guard API action return a boolean value
-- Depends on guard 0.2.1 to fix darwin watching problems
+- Depends on guard 0.2.2 to fix darwin watching problems
 
 Fixtures:
 
