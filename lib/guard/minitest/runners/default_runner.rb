@@ -54,7 +54,7 @@ module MiniTest
       @@out.puts
 
       status
-      Guard::Minitest::Notifier.notify(test_count, assertion_count, failures, errors, skips, duration)
+      Guard::MinitestNotifier.notify(test_count, assertion_count, failures, errors, skips, duration) if GUARD_NOTIFY
 
       @@out.puts
       @@out.puts "Test run options: #{help}"

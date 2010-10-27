@@ -16,6 +16,11 @@ describe Guard::Minitest do
       subject.start
     end
 
+    it 'should set notify option' do
+      Guard::Minitest::Runner.expects(:set_notify)
+      subject.start
+    end
+
     it 'should set bundler option' do
       Guard::Minitest::Runner.expects(:set_bundler)
       subject.start

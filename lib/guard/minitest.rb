@@ -11,6 +11,7 @@ module Guard
     def start
       Runner.set_seed(options)
       Runner.set_verbose(options)
+      Runner.set_notify(options)
       Runner.set_bundler(options)
       Runner.set_rubygems(options)
       true

@@ -6,6 +6,7 @@ Bug Fixes:
 
 Fixtures:
 
+- Desktop notification can be disabled
 - Bundler usage can be disabled
 - Rubygems usage can be enable (only if bundler is not present or disable)
 

@@ -61,6 +61,12 @@ You can set minitest verbose mode with:
       ...
     end
 
+You can disable desktop notification with:
+
+    guard 'minitest', :notify => false do
+      ...
+    end
+
 You can disable bundler usage to run minitest with:
 
     guard 'minitest', :bundler => false do

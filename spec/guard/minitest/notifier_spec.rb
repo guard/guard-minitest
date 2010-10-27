@@ -1,8 +1,9 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'guard/minitest/notifier'
 
-describe Guard::Minitest::Notifier do
-  subject { Guard::Minitest::Notifier }
+describe Guard::MinitestNotifier do
+  subject { Guard::MinitestNotifier }
 
   it 'should format message without skipped test' do
     message = subject.guard_message(1, 2, 3, 4, 0, 10.0)

@@ -18,6 +18,15 @@ module Guard
           @verbose
         end
 
+        def set_notify(options = {})
+          @notify = options[:notify].nil? ? true : !!options[:notify]
+        end
+
+        def notify?
+          @notify = set_notify if @notify.nil?
+          @notify
+        end
+
         def set_bundler(options = {})
           @bundler = options[:bundler].nil? ? File.exist?("#{Dir.pwd}/Gemfile") : !!options[:bundler]
         end
@@ -54,7 +63,11 @@ module Guard
             cmd_parts << "-r #{path}"
           end
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
-          cmd_parts << '-e \'MiniTest::Unit.autorun\''
+          if notify?
+            cmd_parts << '-e \'GUARD_NOTIFY=true; MiniTest::Unit.autorun\''
+          else
+            cmd_parts << '-e \'GUARD_NOTIFY=false; MiniTest::Unit.autorun\''
+          end
           cmd_parts << '--'
           cmd_parts << "--seed #{seed}" unless seed.nil?
           cmd_parts << '--verbose' if verbose?
