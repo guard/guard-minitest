@@ -9,23 +9,19 @@ module Guard
     autoload :Inspector, 'guard/minitest/inspector'
 
     def start
-      Runner.set_seed(options)
-      Runner.set_verbose(options)
-      Runner.set_notify(options)
-      Runner.set_bundler(options)
-      Runner.set_rubygems(options)
+      @runner ||= Runner.new(options)
       true
     end
 
     def run_all
       paths = Inspector.clean(['test', 'spec'])
-      return Runner.run(paths, :message => 'Running all tests') unless paths.empty?
+      return @runner.run(paths, :message => 'Running all tests') unless paths.empty?
       true
     end
 
     def run_on_change(paths = [])
       paths = Inspector.clean(paths)
-      return Runner.run(paths) unless paths.empty?
+      return @runner.run(paths) unless paths.empty?
       true
     end
   end
