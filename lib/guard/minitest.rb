@@ -7,12 +7,12 @@ module Guard
 
     autoload :Runner,    'guard/minitest/runner'
     autoload :Inspector, 'guard/minitest/inspector'
-    autoload :Notifier,  'guard/minitest/notifier'
 
     def start
       Runner.set_seed(options)
       Runner.set_verbose(options)
       Runner.set_bundler(options)
+      Runner.set_rubygems(options)
       true
     end
 

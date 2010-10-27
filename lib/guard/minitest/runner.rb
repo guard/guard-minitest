@@ -27,6 +27,15 @@ module Guard
           @bundler
         end
 
+        def set_rubygems(options = {})
+          @rubygems = !!options[:rubygems]
+        end
+
+        def rubygems?
+          @rubygems = set_rubygems if @rubygems.nil?
+          bundler? ? false : @rubygems
+        end
+
         def run(paths, options = {})
           message = options[:message] || "Running: #{paths.join(' ')}"
           UI.info message, :reset => true
@@ -39,6 +48,7 @@ module Guard
           cmd_parts = []
           cmd_parts << "bundle exec" if bundler?
           cmd_parts << 'ruby -Itest -Ispec'
+          cmd_parts << '-r rubygems' if rubygems?
           cmd_parts << '-r bundler/setup' if bundler?
           paths.each do |path|
             cmd_parts << "-r #{path}"

@@ -67,6 +67,12 @@ You can disable bundler usage to run minitest with:
       ...
     end
 
+You can enable rubygems usage to run minitest (only if bundler is not present or disabale) with:
+
+    guard 'minitest', :rubygems => true do
+      ...
+    end
+
 == Development
 
 - Source hosted at {GitHub}[http://github.com/guard/guard-minitest]

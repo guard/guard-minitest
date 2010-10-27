@@ -6,7 +6,8 @@ Bug Fixes:
 
 Fixtures:
 
-- Bundler usage can be disabled with guard options
+- Bundler usage can be disabled
+- Rubygems usage can be enable (only if bundler is not present or disable)
 
 == 0.2.2 (Oct 24, 2010)
 

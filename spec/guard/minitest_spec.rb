@@ -21,6 +21,11 @@ describe Guard::Minitest do
       subject.start
     end
 
+    it 'should set bundler option' do
+      Guard::Minitest::Runner.expects(:set_rubygems)
+      subject.start
+    end
+
   end
 
   describe 'run_all' do

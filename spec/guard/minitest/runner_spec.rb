@@ -6,9 +6,10 @@ describe Guard::Minitest::Runner do
 
   after(:each) do
     subject.class_eval do
-      @seed    = nil
-      @verbose = nil
-      @bundler = nil
+      @seed     = nil
+      @verbose  = nil
+      @bundler  = nil
+      @rubygems = nil
     end
   end
 
@@ -66,6 +67,28 @@ describe Guard::Minitest::Runner do
       end
 
     end
+
+    describe 'rubygems' do
+
+      it 'should set rubygems to false by default' do
+        subject.rubygems?.must_equal false
+      end
+
+      it 'should set rubygems' do
+        subject.stubs(:bundler?).returns(false)
+        subject.rubygems?.must_equal false
+        subject.set_rubygems(:rubygems => true)
+        subject.rubygems?.must_equal true
+      end
+ 
+      it 'should set rubygems to false if bundler is set to true' do
+        subject.stubs(:bundler?).returns(true)
+        subject.rubygems?.must_equal false
+        subject.set_rubygems(:rubygems => true)
+        subject.rubygems?.must_equal false
+      end
+
+    end
   end
 
   describe 'run' do
@@ -80,7 +103,7 @@ describe Guard::Minitest::Runner do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
       end
 
-      it 'should run without bundler' do
+      it 'should run without bundler and rubygems' do
         Guard::UI.expects(:info)
         subject.expects(:system).with(
           "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --"
@@ -88,7 +111,16 @@ describe Guard::Minitest::Runner do
         subject.run(['test/test_minitest.rb'])
       end
 
-      it 'should set seed option' do
+      it 'should run without bundler but rubygems' do
+        subject.set_rubygems(:rubygems => true)
+        Guard::UI.expects(:info)
+        subject.expects(:system).with(
+          "ruby -Itest -Ispec -r rubygems -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --"
+        )
+        subject.run(['test/test_minitest.rb'])
+      end
+
+      it 'should run with specified seed' do
         subject.set_seed(:seed => 12345)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
@@ -97,7 +129,7 @@ describe Guard::Minitest::Runner do
         subject.run(['test/test_minitest.rb'])
       end
 
-      it 'should set verbose option' do
+      it 'should run verbose mode' do
         subject.set_verbose(:verbose => true)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
@@ -114,7 +146,7 @@ describe Guard::Minitest::Runner do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
       end
 
-      it 'should run with bundler' do
+      it 'should run with bundler but not rubygems' do
         Guard::UI.expects(:info)
         subject.expects(:system).with(
           "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --"
@@ -122,7 +154,26 @@ describe Guard::Minitest::Runner do
         subject.run(['test/test_minitest.rb'])
       end
 
-      it 'should set seed option' do
+      it 'should run without bundler but rubygems' do
+        subject.set_bundler(:bundler => false)
+        subject.set_rubygems(:rubygems => true)
+        Guard::UI.expects(:info)
+        subject.expects(:system).with(
+          "ruby -Itest -Ispec -r rubygems -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --"
+        )
+        subject.run(['test/test_minitest.rb'])
+      end
+
+      it 'should run without bundler and rubygems' do
+        subject.set_bundler(:bundler => false)
+        Guard::UI.expects(:info)
+        subject.expects(:system).with(
+          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --"
+        )
+        subject.run(['test/test_minitest.rb'])
+      end
+
+      it 'should run with specified seed' do
         subject.set_seed(:seed => 12345)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
@@ -131,7 +182,7 @@ describe Guard::Minitest::Runner do
         subject.run(['test/test_minitest.rb'])
       end
 
-      it 'should set verbose option' do
+      it 'should run in verbose mode' do
         subject.set_verbose(:verbose => true)
         Guard::UI.expects(:info)
         subject.expects(:system).with(
