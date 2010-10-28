@@ -8,8 +8,21 @@ module Guard
     autoload :Runner,    'guard/minitest/runner'
     autoload :Inspector, 'guard/minitest/inspector'
 
-    def start
+    def initialize(watchers = [], options = {})
+      super
+
       @runner ||= Runner.new(options)
+    end
+
+    def start
+      true
+    end
+
+    def stop
+      true
+    end
+
+    def reload
       true
     end
 
