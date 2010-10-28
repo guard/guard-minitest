@@ -49,7 +49,7 @@ describe Guard::Minitest::Runner do
         subject.new.bundler?.must_equal true
       end
 
-      it 'default should be true if Gemfile don\'t exist' do
+      it 'default should be false if Gemfile don\'t exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
         subject.new.bundler?.must_equal false
       end
@@ -64,10 +64,12 @@ describe Guard::Minitest::Runner do
     describe 'rubygems' do
 
       it 'default should be false if Gemfile exist' do
+        Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
         subject.new.rubygems?.must_equal false
       end
 
-      it 'default should be true if Gemfile don\'t exist' do
+      it 'default should be false if Gemfile don\'t exist' do
+        Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
         subject.new.rubygems?.must_equal false
       end
 
