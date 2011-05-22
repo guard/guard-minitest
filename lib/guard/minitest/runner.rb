@@ -55,7 +55,7 @@ module Guard
         cmd_parts << '-r rubygems' if rubygems?
         cmd_parts << '-r bundler/setup' if bundler?
         paths.each do |path|
-          cmd_parts << "-r #{path}"
+          cmd_parts << "-r ./#{path}"
         end
         cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
         if notify?
