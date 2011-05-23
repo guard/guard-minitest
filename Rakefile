@@ -25,10 +25,19 @@ namespace(:test) do
       system <<-BASH
         bash -c 'source ~/.rvm/scripts/rvm;
                  rvm #{version};
-                 echo "--------- version #{version} ----------\n";
-                 bundle install;
-                 rake test'
+                 echo "--------- ruby version #{version} - minitest version 1 ----------\n";
+                 minitest_version=1 bundle install;
+                 minitest_version=1 bundle exec rake test'
       BASH
+      if version !~ /^1\.8/
+        system <<-BASH
+          bash -c 'source ~/.rvm/scripts/rvm;
+                   rvm #{version};
+                   echo "--------- ruby version #{version} - minitest version 2 ----------\n";
+                   minitest_version=2 bundle install;
+                   minitest_version=2 bundle exec rake test'
+        BASH
+      end
     end
   end
 end

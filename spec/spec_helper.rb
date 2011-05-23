@@ -18,7 +18,7 @@ class MiniTest::Spec < MiniTest::Unit::TestCase
   def subject; end
 
   def self.subject(&block)
-    define_inheritable_method :subject, &block
+    define_method :subject, &block
   end
 
   def fixtures_path
