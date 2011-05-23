@@ -146,6 +146,33 @@ describe Guard::Minitest::Runner do
       runner.run(['test/test_minitest.rb'])
     end
 
+    it 'should run with specified seed' do
+      runner = subject.new(:seed => 12345)
+      Guard::UI.expects(:info)
+      runner.expects(:system).with(
+        "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' -- --seed 12345"
+      )
+      runner.run(['test/test_minitest.rb'])
+    end
+
+    it 'should run in verbose mode' do
+      runner = subject.new(:verbose => true)
+      Guard::UI.expects(:info)
+      runner.expects(:system).with(
+        "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' -- --verbose"
+      )
+      runner.run(['test/test_minitest.rb'])
+    end
+
+    it 'should disable notification' do
+      runner = subject.new(:notify => false)
+      Guard::UI.expects(:info)
+      runner.expects(:system).with(
+        "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=false; MiniTest::Unit.autorun' --"
+      )
+      runner.run(['test/test_minitest.rb'])
+    end
+
     describe 'in empty folder' do
 
       before(:each) do
@@ -166,33 +193,6 @@ describe Guard::Minitest::Runner do
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "ruby -Itest -Ispec -r rubygems -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --"
-        )
-        runner.run(['test/test_minitest.rb'])
-      end
-
-      it 'should run with specified seed' do
-        runner = subject.new(:seed => 12345)
-        Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' -- --seed 12345"
-        )
-        runner.run(['test/test_minitest.rb'])
-      end
-
-      it 'should run in verbose mode' do
-        runner = subject.new(:verbose => true)
-        Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' -- --verbose"
-        )
-        runner.run(['test/test_minitest.rb'])
-      end
-
-      it 'should disable notification' do
-        runner = subject.new(:notify => false)
-        Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=false; MiniTest::Unit.autorun' --"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -230,33 +230,6 @@ describe Guard::Minitest::Runner do
           "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --"
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => false)
-      end
-
-      it 'should run with specified seed' do
-        runner = subject.new(:seed => 12345)
-        Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' -- --seed 12345"
-        )
-        runner.run(['test/test_minitest.rb'])
-      end
-
-      it 'should run in verbose mode' do
-        runner = subject.new(:verbose => true)
-        Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' -- --verbose"
-        )
-        runner.run(['test/test_minitest.rb'])
-      end
-
-      it 'should disable notification' do
-        runner = subject.new(:notify => false)
-        Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "bundle exec ruby -Itest -Ispec -r bundler/setup -r test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=false; MiniTest::Unit.autorun' --"
-        )
-        runner.run(['test/test_minitest.rb'])
       end
 
     end
