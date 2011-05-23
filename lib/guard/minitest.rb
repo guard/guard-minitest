@@ -15,7 +15,6 @@ module Guard
     end
 
     def start
-      UI.info "Guard running MiniTest #{@runner.version}"
       true
     end
 

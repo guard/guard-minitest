@@ -82,68 +82,13 @@ describe Guard::Minitest::Runner do
       end
 
     end
-
-    describe 'version' do
-      it 'default should be 1 if minitest 1 is loaded' do
-        MiniTest::Unit::VERSION.replace('1.7.2')
-        subject.new.version.must_equal 1
-      end
-
-      it 'default should be 2 if minitest 2 is loaded' do
-        MiniTest::Unit::VERSION.replace('2.1.0')
-        subject.new.version.must_equal 2
-      end
-
-      it 'default should be 2 if minitest is not loaded' do
-        MiniTest::Unit.send(:remove_const, :VERSION)
-        subject.new.version.must_equal 2
-      end
-
-      it 'should be forced to 1 (useful if minitest is not loaded with guard)' do
-        subject.new(:version => 1).version.must_equal 1
-      end
-
-      it 'should be forced to 2 (useful if minitest is not loaded with guard)' do
-        subject.new(:version => 2).version.must_equal 2
-      end
-
-    end
   end
 
   describe 'run' do
 
     before(:each) do
       Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
-      @version_1_runner = File.expand_path('../../../../lib/guard/minitest/runners/version_1_runner.rb', __FILE__)
-      @version_2_runner = File.expand_path('../../../../lib/guard/minitest/runners/version_2_runner.rb', __FILE__)
-      @default_runner   = File.expand_path("../../../../lib/guard/minitest/runners/version_#{subject.new.version}_runner.rb", __FILE__)
-    end
-
-    it 'should run version 1 runner if minitest 1 is used' do
-      runner = subject.new(:version => 1)
-      Guard::UI.expects(:info)
-      runner.expects(:system).with(
-        "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@version_1_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --"
-      )
-      runner.run(['test/test_minitest.rb'])
-    end
-
-    it 'should run version 2 runner if minitest 2 is used' do
-      runner = subject.new(:version => 2)
-      Guard::UI.expects(:info)
-      runner.expects(:system).with(
-        "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@version_2_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --"
-      )
-      runner.run(['test/test_minitest.rb'])
-    end
-
-    it 'should run version 2 runner by default' do
-      runner = subject.new(:version => nil)
-      Guard::UI.expects(:info)
-      runner.expects(:system).with(
-        "ruby -Itest -Ispec -r test/test_minitest.rb -r #{@version_2_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --"
-      )
-      runner.run(['test/test_minitest.rb'])
+      @default_runner = File.expand_path('../../../../lib/guard/minitest/runners/default_runner.rb', __FILE__)
     end
 
     it 'should run with specified seed' do
