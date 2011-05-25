@@ -16,7 +16,8 @@ module Guard
           :verbose  => false,
           :notify   => true,
           :bundler  => File.exist?("#{Dir.pwd}/Gemfile"),
-          :rubygems => false
+          :rubygems => false,
+          :drb => false
         }.merge(options)
       end
 
