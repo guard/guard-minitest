@@ -79,6 +79,12 @@ You can enable rubygems usage to run minitest (only if bundler is not present or
       ...
     end
 
+If you use {spork-testunit}[https://github.com/timcharper/spork-testunit] you can enable it with (you'll have to load it before):
+
+    guard 'minitest', :drb => true do
+      ...
+    end
+
 == Development
 
 - Source hosted at {GitHub}[http://github.com/guard/guard-minitest]

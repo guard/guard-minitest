@@ -191,7 +191,7 @@ describe Guard::Minitest::Runner do
         end
       end
 
-      describe 'when using test_helper' do
+      describe 'when using spec_helper' do
         it 'should run with drb' do
           runner = subject.new(:drb => true)
           Guard::UI.expects(:info)
