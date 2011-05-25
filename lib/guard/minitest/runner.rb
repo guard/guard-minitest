@@ -46,26 +46,39 @@ module Guard
         !bundler? && @options[:rubygems]
       end
 
+      def drb?
+        @options[:drb]
+      end
+
       private
 
       def minitest_command(paths)
         cmd_parts = []
         cmd_parts << "bundle exec" if bundler?
-        cmd_parts << 'ruby -Itest -Ispec'
-        cmd_parts << '-r rubygems' if rubygems?
-        cmd_parts << '-r bundler/setup' if bundler?
-        paths.each do |path|
-          cmd_parts << "-r ./#{path}"
-        end
-        cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
-        if notify?
-          cmd_parts << '-e \'GUARD_NOTIFY=true; MiniTest::Unit.autorun\''
+        if drb?
+          cmd_parts << 'testdrb'
+          cmd_parts << 'test/test_helper.rb' if File.exist?('test/test_helper.rb')
+          cmd_parts << 'spec/spec_helper.rb' if File.exist?('spec/spec_helper.rb')
+          paths.each do |path|
+            cmd_parts << "./#{path}"
+          end
         else
-          cmd_parts << '-e \'GUARD_NOTIFY=false; MiniTest::Unit.autorun\''
+          cmd_parts << 'ruby -Itest -Ispec'
+          cmd_parts << '-r rubygems' if rubygems?
+          cmd_parts << '-r bundler/setup' if bundler?
+          paths.each do |path|
+            cmd_parts << "-r ./#{path}"
+          end
+          cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
+          if notify?
+            cmd_parts << '-e \'GUARD_NOTIFY=true; MiniTest::Unit.autorun\''
+          else
+            cmd_parts << '-e \'GUARD_NOTIFY=false; MiniTest::Unit.autorun\''
+          end
+          cmd_parts << '--'
+          cmd_parts << "--seed #{seed}" unless seed.nil?
+          cmd_parts << '--verbose' if verbose?
         end
-        cmd_parts << '--'
-        cmd_parts << "--seed #{seed}" unless seed.nil?
-        cmd_parts << '--verbose' if verbose?
         cmd_parts.join(' ')
       end
 
