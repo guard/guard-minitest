@@ -176,8 +176,33 @@ describe Guard::Minitest::Runner do
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => false)
       end
-
     end
+    describe 'drb' do
+      describe 'when using test_helper' do
+        it 'should run with drb' do
+          runner = subject.new(:drb => true)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('test/test_helper.rb').returns(true)
+          File.expects(:exist?).with('spec/spec_helper.rb').returns(false)
+          runner.expects(:system).with(
+            "testdrb test/test_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+      end
 
+      describe 'when using spec_helper' do
+        it 'should run with drb' do
+          runner = subject.new(:drb => true)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('test/test_helper.rb').returns(false)
+          File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
+          runner.expects(:system).with(
+            "testdrb spec/spec_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+      end
+    end
   end
 end
