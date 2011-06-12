@@ -82,6 +82,18 @@ describe Guard::Minitest::Runner do
       end
 
     end
+
+    describe 'drb' do
+
+      it 'default should be false' do
+        subject.new.drb?.must_equal false
+      end
+
+      it 'should be set' do
+        subject.new(:drb => true).drb?.must_equal true
+      end
+
+    end
   end
 
   describe 'run' do
@@ -179,5 +191,32 @@ describe Guard::Minitest::Runner do
 
     end
 
+    describe 'drb' do
+      describe 'when using test_helper' do
+        it 'should run with drb' do
+          runner = subject.new(:drb => true)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('test/test_helper.rb').returns(true)
+          File.expects(:exist?).with('spec/spec_helper.rb').returns(false)
+          runner.expects(:system).with(
+            "testdrb test/test_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+      end
+
+      describe 'when using spec_helper' do
+        it 'should run with drb' do
+          runner = subject.new(:drb => true)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('test/test_helper.rb').returns(false)
+          File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
+          runner.expects(:system).with(
+            "testdrb spec/spec_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+      end
+    end
   end
 end
