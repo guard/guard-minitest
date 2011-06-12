@@ -18,7 +18,7 @@ describe Guard::Minitest do
     end
 
   end
-  
+
   describe 'start' do
 
     it 'should return true' do
@@ -26,7 +26,7 @@ describe Guard::Minitest do
     end
 
   end
-  
+
   describe 'stop' do
 
     it 'should return true' do
@@ -34,7 +34,7 @@ describe Guard::Minitest do
     end
 
   end
-  
+
   describe 'reload' do
 
     it 'should return true' do
