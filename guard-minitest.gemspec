@@ -20,17 +20,13 @@ Gem::Specification.new do |s|
   # Use this environment variable only for testing
   if ENV["minitest_version"] =~ /^1/
     s.add_development_dependency 'minitest',  '~> 1.7.2'
-    s.add_development_dependency 'bundler',   '~> 1.0.2'
-    s.add_development_dependency 'mocha',     '~> 0.9.8'
+  elsif ENV["minitest_version"] =~ /^2\.0/
+    s.add_development_dependency 'minitest',  '~> 2.0.0'
   else
-    if ENV["minitest_version"] =~ /^2\.0/
-      s.add_development_dependency 'minitest',  '~> 2.0.0'
-    else
-      s.add_development_dependency 'minitest',  '>= 2.0.0'
-    end
-    s.add_development_dependency 'bundler',   '>= 1.0.2'
-    s.add_development_dependency 'mocha',     '>= 0.9.8'
+    s.add_development_dependency 'minitest',  '~> 2.1.0'
   end
+  s.add_development_dependency 'bundler',   '>= 1.0.2'
+  s.add_development_dependency 'mocha',     '>= 0.9.8'
 
   s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.rdoc]
   s.require_path = 'lib'
