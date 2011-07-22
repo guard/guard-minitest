@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
-# Specify your gem's dependencies in guard-minitest.gemspec
 gemspec
+
+gem 'rake'
 
 # optional development dependencies
 require 'rbconfig'
@@ -14,4 +15,8 @@ if Config::CONFIG['target_os'] =~ /linux/i
   gem 'rb-inotify', '>= 0.5.1'
   gem 'libnotify',  '~> 0.1.3'
 end
-
+if RbConfig::CONFIG['target_os'] =~ /mswin|mingw/i
+  gem 'win32console',             :require => false
+  gem 'rb-fchange',   '~> 0.0.2', :require => false
+  gem 'rb-notifu',    '~> 0.0.4', :require => false
+end
