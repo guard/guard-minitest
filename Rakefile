@@ -18,25 +18,55 @@ end
 
 task :default => :test
 
+require 'rbconfig'
 namespace(:test) do
-  desc "Run all tests on multiple ruby versions (requires rvm)"
-  task(:portability) do
-    %w[1.8.6 1.8.7 1.9.2].each do |version|
-      system <<-BASH
-        bash -c 'source ~/.rvm/scripts/rvm;
-                 rvm #{version};
-                 echo "--------- ruby version #{version} - minitest version 1 ----------\n";
-                 minitest_version=1 bundle install;
-                 minitest_version=1 bundle exec rake test'
-      BASH
-      if version !~ /^1\.8/
+  if RbConfig::CONFIG['host_os'] =~ /mswin|mingw/i
+    desc "Run all specs on multiple ruby versions (requires pik)"
+    task(:portability) do
+      puts 'minitest can\'t be tested on MS Windows for now'
+    end
+  else
+    desc "Run all specs on multiple ruby versions (requires rvm)"
+    task(:portability) do
+      travis_config_file = File.expand_path("../.travis.yml", __FILE__)
+      begin
+        travis_options ||= YAML::load_file(travis_config_file)
+      rescue => ex
+        puts "Travis config file '#{travis_config_file}' could not be found: #{ex.message}"
+        return
+      end
+
+      travis_options['rvm'].each do |version|
         system <<-BASH
           bash -c 'source ~/.rvm/scripts/rvm;
                    rvm #{version};
-                   echo "--------- ruby version #{version} - minitest version 2 ----------\n";
-                   minitest_version=2 bundle install;
-                   minitest_version=2 bundle exec rake test'
+                   ruby_version_string_size=`ruby -v | wc -m`
+                   echo;
+                   for ((c=1; c<$ruby_version_string_size+21; c++)); do echo -n "="; done
+                   echo;
+                   echo "minitest version 1 - `ruby -v`";
+                   for ((c=1; c<$ruby_version_string_size+21; c++)); do echo -n "="; done
+                   echo;
+                   minitest_version=1 bundle install;
+                   minitest_version=1 bundle exec rake test 2>&1'
         BASH
+        puts version.class
+        puts version
+        if version =~ /^1\.9/
+          system <<-BASH
+            bash -c 'source ~/.rvm/scripts/rvm;
+                     rvm #{version};
+                     ruby_version_string_size=`ruby -v | wc -m`
+                     echo;
+                     for ((c=1; c<$ruby_version_string_size+21; c++)); do echo -n "="; done
+                     echo;
+                     echo "minitest version 2 - `ruby -v`";
+                     for ((c=1; c<$ruby_version_string_size+21; c++)); do echo -n "="; done
+                     echo;
+                     minitest_version=2 bundle install;
+                     minitest_version=2 bundle exec rake test 2>&1'
+          BASH
+        end
       end
     end
   end
