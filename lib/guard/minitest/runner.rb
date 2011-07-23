@@ -17,7 +17,9 @@ module Guard
           :notify   => true,
           :bundler  => File.exist?("#{Dir.pwd}/Gemfile"),
           :rubygems => false,
-          :drb      => false
+          :drb      => false,
+          :colour   => false,
+          :color    => false
         }.merge(options)
       end
 
@@ -51,6 +53,11 @@ module Guard
         @options[:drb]
       end
 
+      def colour?
+        @options[:colour] || @options[:color]
+      end
+      alias color? colour?
+
       private
 
       def minitest_command(paths)
@@ -65,7 +72,8 @@ module Guard
           end
         else
           cmd_parts << 'ruby -Itest -Ispec'
-          cmd_parts << '-r rubygems' if rubygems?
+          cmd_parts << '-rminitest/pride' if colour?
+          cmd_parts << '-r rubygems'      if rubygems?
           cmd_parts << '-r bundler/setup' if bundler?
           paths.each do |path|
             cmd_parts << "-r ./#{path}"
