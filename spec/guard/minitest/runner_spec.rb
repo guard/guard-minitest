@@ -94,6 +94,22 @@ describe Guard::Minitest::Runner do
       end
 
     end
+
+    describe 'colour/color' do
+
+      it 'default should be false' do
+        subject.new.colour?.must_equal false
+        subject.new.color? .must_equal false
+      end
+
+      it 'should be set' do
+        subject.new(:colour=> true).colour?.must_equal true
+        subject.new(:colour=> true).color? .must_equal true
+        subject.new(:color => true).colour?.must_equal true
+        subject.new(:color => true).color? .must_equal true
+      end
+
+    end
   end
 
   describe 'run' do
@@ -108,6 +124,24 @@ describe Guard::Minitest::Runner do
       Guard::UI.expects(:info)
       runner.expects(:system).with(
         "ruby -Itest -Ispec -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' -- --seed 12345"
+      )
+      runner.run(['test/test_minitest.rb'])
+    end
+
+    it 'should run with specified colour mode' do
+      runner = subject.new(:colour => true)
+      Guard::UI.expects(:info)
+      runner.expects(:system).with(
+        "ruby -Itest -Ispec -rminitest/pride -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --"
+      )
+      runner.run(['test/test_minitest.rb'])
+    end
+
+    it 'should run with specified color mode' do
+      runner = subject.new(:color => true)
+      Guard::UI.expects(:info)
+      runner.expects(:system).with(
+        "ruby -Itest -Ispec -rminitest/pride -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --"
       )
       runner.run(['test/test_minitest.rb'])
     end

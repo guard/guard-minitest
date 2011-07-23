@@ -61,6 +61,19 @@ You can set minitest verbose mode with:
       ...
     end
 
+You can colour the test output (via minitest/pride) with:
+  (Remark : the "minitest" gem must be installed.)
+
+    guard 'minitest', :colour => true do
+      ...
+    end
+  or
+    guard 'minitest', :color => true do
+      ...
+    end
+
+
+
 You can disable desktop notification with:
 
     guard 'minitest', :notify => false do
