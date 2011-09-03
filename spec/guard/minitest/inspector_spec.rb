@@ -6,16 +6,20 @@ describe Guard::Minitest::Inspector do
 
   describe 'clean' do
 
+    before(:each) do
+      @files_on_disk = ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb', 'test/guard/minitest_test.rb'].sort
+    end
+
     it "should add all test files under the given dir" do
-      subject.clean(['test']).must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb']
+      subject.clean(['test']).sort.must_equal @files_on_disk
     end
 
     it 'should remove non-test files' do
-      subject.clean(['test/guard/test_minitest.rb', 'bob.rb']).must_equal ['test/guard/test_minitest.rb']
+      subject.clean(['test/guard/test_minitest.rb', 'bob.rb']).wont_include 'bob.rb'
     end
 
-    it 'should remove non-test existing files' do
-      subject.clean(['test/guard/test_minitest.rb', 'test_bob.rb']).must_equal ['test/guard/test_minitest.rb']
+    it 'should remove non-existing test files' do
+      subject.clean(['test/guard/test_minitest.rb', 'test_bob.rb']).wont_include 'test_bob.rb'
     end
 
     it 'should remove non-test existing files (2)' do
@@ -23,7 +27,7 @@ describe Guard::Minitest::Inspector do
     end
 
     it 'should keep test folder path' do
-      subject.clean(['test/guard/test_minitest.rb', 'test']).must_equal ['test/guard/test_minitest.rb', 'test/guard/minitest/test_inspector.rb']
+      subject.clean(['test/guard/test_minitest.rb', 'test']).sort.must_equal @files_on_disk
     end
 
     it 'should remove duplication' do
@@ -31,11 +35,15 @@ describe Guard::Minitest::Inspector do
     end
 
     it 'should remove duplication (2)' do
-      subject.clean(['test', 'test']).must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb']
+      subject.clean(['test', 'test']).sort.must_equal @files_on_disk
     end
 
     it 'should remove test folder includes in other test folder' do
-      subject.clean(['test/minitest', 'test']).must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb']
+      subject.clean(['test/minitest', 'test']).sort.must_equal @files_on_disk
+    end
+
+    it 'should not include test files not in the given dir' do
+      subject.clean(['test/guard/minitest']).wont_include 'test/guard/minitest_test.rb'
     end
 
   end
