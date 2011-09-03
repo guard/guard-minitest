@@ -17,14 +17,21 @@ module Guard
           :notify   => true,
           :bundler  => File.exist?("#{Dir.pwd}/Gemfile"),
           :rubygems => false,
-          :drb      => false
+          :drb      => false,
+          :all      => %w{test spec}
         }.merge(options)
+
+        @options[:all] = [@options[:all]].flatten
       end
 
       def run(paths, options = {})
         message = options[:message] || "Running: #{paths.join(' ')}"
         UI.info message, :reset => true
         system(minitest_command(paths))
+      end
+
+      def all
+        @options[:all]
       end
 
       def seed
