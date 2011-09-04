@@ -63,7 +63,7 @@ You can set minitest verbose mode with:
 
 You can colour the test output (via minitest/pride) with:
 
-    guard 'minitest', :colour => true, :bundler => true do
+    guard 'minitest', :colour => true do
       ...
     end
   or
@@ -71,7 +71,7 @@ You can colour the test output (via minitest/pride) with:
       ...
     end
 
-  (Remark : the "minitest" gem must be installed -> you must specify either :bundler or :rubygems)
+  (Remark : the "minitest" gem must be installed -> unless you have a Gemfile, you must also specify either :bundler or :rubygems)
 
 
 You can disable desktop notification with:
