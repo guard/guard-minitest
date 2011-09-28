@@ -51,6 +51,10 @@ module Guard
         @options[:drb]
       end
 
+      def required_files
+        [@options[:require] ||= []].flatten
+      end
+
       private
 
       def minitest_command(paths)
@@ -67,9 +71,15 @@ module Guard
           cmd_parts << 'ruby -Itest -Ispec'
           cmd_parts << '-r rubygems' if rubygems?
           cmd_parts << '-r bundler/setup' if bundler?
+
+          required_files.each do |path|
+            cmd_parts << "-r #{path}"
+          end
+
           paths.each do |path|
             cmd_parts << "-r ./#{path}"
           end
+
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
           if notify?
             cmd_parts << '-e \'GUARD_NOTIFY=true; MiniTest::Unit.autorun\''
