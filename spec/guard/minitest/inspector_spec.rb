@@ -7,7 +7,7 @@ describe Guard::Minitest::Inspector do
   describe 'clean' do
 
     it "should add all test files under the given dir" do
-      subject.clean(['test']).must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb']
+      subject.clean(['test']).sort.must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'].sort
     end
 
     it 'should remove non-test files' do
@@ -31,11 +31,11 @@ describe Guard::Minitest::Inspector do
     end
 
     it 'should remove duplication (2)' do
-      subject.clean(['test', 'test']).must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb']
+      subject.clean(['test', 'test']).sort.must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'].sort
     end
 
     it 'should remove test folder includes in other test folder' do
-      subject.clean(['test/minitest', 'test']).must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb']
+      subject.clean(['test/minitest', 'test']).sort.must_equal ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'].sort
     end
 
   end
