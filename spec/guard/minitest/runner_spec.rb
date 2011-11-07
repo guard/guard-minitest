@@ -199,7 +199,18 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('test/test_helper.rb').returns(true)
           File.expects(:exist?).with('spec/spec_helper.rb').returns(false)
           runner.expects(:system).with(
-            "testdrb test/test_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' test/test_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+
+        it 'should run with drb and notify=false' do
+          runner = subject.new(:drb => true, :notify => false)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('test/test_helper.rb').returns(true)
+          File.expects(:exist?).with('spec/spec_helper.rb').returns(false)
+          runner.expects(:system).with(
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' test/test_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
@@ -212,7 +223,18 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('test/test_helper.rb').returns(false)
           File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
           runner.expects(:system).with(
-            "testdrb spec/spec_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' spec/spec_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+
+        it 'should run with drb and notify=false' do
+          runner = subject.new(:drb => true, :notify => false)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('test/test_helper.rb').returns(false)
+          File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
+          runner.expects(:system).with(
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' spec/spec_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
