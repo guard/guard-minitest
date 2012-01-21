@@ -11,7 +11,7 @@ module MiniTest
         start = Time.now
         _run_anything_without_guard(type)
         duration = Time.now - start
-        Guard::MinitestNotifier.notify(test_count, assertion_count, failures, errors, skips, duration) if GUARD_NOTIFY
+        ::Guard::MinitestNotifier.notify(test_count, assertion_count, failures, errors, skips, duration) if GUARD_NOTIFY
       end
     rescue NameError
       puts "*** WARN: if you use MiniTest 1, please add version option in your 'Guardfile`."
