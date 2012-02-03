@@ -1,5 +1,7 @@
 = Guard::Minitest
 
+{<img src="https://secure.travis-ci.org/guard/guard-minitest.png" />}[http://travis-ci.org/guard/guard-minitest]
+
 Minitest guard allows to automatically & intelligently launch tests with
 {minitest framework}[http://github.com/seattlerb/minitest] when files are modified.
 
