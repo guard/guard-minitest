@@ -51,6 +51,12 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
 
 == Options
 
+You can specify the paths for "test all", perhaps to skip slow/remote/profiling tests:
+
+    guard 'minitest', :all => %w{test/unit test/functional test/integration test/lib}
+      ...
+    end
+
 You can force minitest seed with:
 
     guard 'minitest', :seed => 12345 do

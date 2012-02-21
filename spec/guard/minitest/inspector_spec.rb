@@ -10,7 +10,7 @@ describe Guard::Minitest::Inspector do
       @files_on_disk = ['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb', 'test/guard/minitest_test.rb'].sort
     end
 
-    it "should add all test files under the given dir" do
+    it 'should add all test files under the given dir' do
       subject.clean(['test']).sort.must_equal @files_on_disk
     end
 
@@ -44,6 +44,10 @@ describe Guard::Minitest::Inspector do
 
     it 'should not include test files not in the given dir' do
       subject.clean(['test/guard/minitest']).wont_include 'test/guard/minitest_test.rb'
+    end
+
+    it 'should cope with trailing slashes' do
+      subject.clean(['test/guard/']).sort.must_equal @files_on_disk
     end
 
   end

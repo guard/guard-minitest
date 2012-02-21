@@ -27,7 +27,7 @@ module Guard
     end
 
     def run_all
-      paths = Inspector.clean(['test', 'spec'])
+      paths = Inspector.clean(@runner.all)
       return @runner.run(paths, :message => 'Running all tests') unless paths.empty?
       true
     end

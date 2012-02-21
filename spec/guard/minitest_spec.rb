@@ -5,8 +5,7 @@ describe Guard::Minitest do
   subject { Guard::Minitest }
 
   before(:each) do
-    @runner = Guard::Minitest::Runner.new
-    Guard::Minitest::Runner.stubs(:new).returns(@runner)
+    @runner = runner_with_options
     @guard = subject.new
   end
 
@@ -62,4 +61,34 @@ describe Guard::Minitest do
     end
 
   end
+end
+
+describe 'Custom options' do
+  subject { Guard::Minitest }
+
+  describe 'with custom :all option' do
+
+    it 'should run all tests' do
+      @folders = ['test/unit', 'test/functional']
+      @runner = runner_with_options(:all => @folders)
+      @guard = subject.new
+
+      # verify: inspector should get the set folders
+      Guard::Minitest::Inspector.expects(:clean).with(@folders).returns([])
+      @guard.run_all
+    end
+
+  end
+
+end
+
+# helpers
+class MiniTest::Spec < MiniTest::Unit::TestCase
+
+  def runner_with_options(options = {})
+    runner = Guard::Minitest::Runner.new(options)
+    Guard::Minitest::Runner.expects(:new).returns(runner)
+    runner
+  end
+
 end

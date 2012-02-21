@@ -6,6 +6,23 @@ describe Guard::Minitest::Runner do
 
   describe 'options' do
 
+    describe 'all' do
+
+      it "default should be ['test', 'spec']" do
+        subject.new.all.must_equal %w{test spec}
+      end
+
+      it 'should be set' do
+        folders = ['test/unit', 'test/functional']
+        subject.new(:all => folders).all.must_equal folders
+      end
+
+      it 'should be an array' do
+        subject.new(:all => 'test').all.must_equal ['test']
+      end
+
+    end
+
     describe 'seed' do
 
       it 'default should be nil' do
