@@ -12,7 +12,7 @@ module Guard
           paths.dup.each do |path|
             if File.directory?(path)
               paths.delete(path)
-              paths += Dir.glob("#{path}/**/test_*.rb") + Dir.glob('test/**/*_test.rb') + Dir.glob("#{path}/**/*_spec.rb")
+              paths += Dir.glob("#{path}/**/test_*.rb") + Dir.glob("#{path}/**/*_test.rb") + Dir.glob("#{path}/**/*_spec.rb")
             end
           end
 
