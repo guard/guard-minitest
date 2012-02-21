@@ -63,6 +63,12 @@ You can set minitest verbose mode with:
       ...
     end
 
+You can change the default location and pattern of minitest files:
+
+    guard 'minitest', test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
+      ...
+    end
+
 You can disable desktop notification with:
 
     guard 'minitest', :notify => false do
