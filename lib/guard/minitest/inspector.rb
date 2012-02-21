@@ -6,8 +6,8 @@ module Guard
       attr_reader :test_folders, :test_file_patterns
 
       def initialize(test_folders, test_file_patterns)
-        @test_folders= test_folders.uniq.compact.freeze
-        @test_file_patterns= test_file_patterns.uniq.compact.freeze
+        @test_folders = test_folders.uniq.compact.freeze
+        @test_file_patterns = test_file_patterns.uniq.compact.freeze
       end
 
       def clean_all
@@ -15,7 +15,7 @@ module Guard
       end
 
       def clean(paths)
-        paths= paths.uniq.compact unless paths == @test_folders
+        paths = paths.uniq.compact unless paths == @test_folders
         paths = paths.select { |p| test_file?(p) || test_folder?(p) }
 
         paths.dup.each do |path|
