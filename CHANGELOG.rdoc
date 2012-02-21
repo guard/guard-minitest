@@ -1,3 +1,31 @@
+== 0.5.0 (current)
+
+Bug Fixes:
+
+- Hard coded tests folders path (Nathan Youngman)
+- Watch subfolder in Guardfile template (Wilker Lúcio, Mark Kremer)
+- Notification work with DRB (Brian Morearty)
+- Initialized constant with ruby 1.9 (Jonas Grimfelt)
+
+Fixtures:
+
+- Option to overwrite test folders et test files pattern (japgolly)
+
+Dependencies:
+
+- Need guard 1.0 (Jonas Pfenniger)
+
+== 0.4.0 (Jun 15, 2011)
+
+Fixtures:
+
+- Support of MiniTest 2 (Yann Lugrin)
+- DRB support (Oriol Gual)
+- Use regexp in Guardfile Template (Emmanuel Gomez)
+
+Dependencies:
+
+- Need guard 0.4 (Yann Lugrin)
 
 == 0.3.0 (Oct 27, 2010)
 
@@ -32,3 +60,4 @@ Documentation:
 == 0.2.0 (Oct 20, 2010)
 
 First stable release
+
