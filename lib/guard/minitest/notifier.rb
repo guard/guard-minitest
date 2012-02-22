@@ -9,7 +9,9 @@ module Guard
       if skip_count > 0
         message << " (#{skip_count} skips)"
       end
-      message << "\nin %.6f seconds, %.4f tests/s, %.4f assertions/s." % [duration, test_count / duration, assertion_count / duration]
+      if test_count && assertion_count
+        message << "\nin %.6f seconds, %.4f tests/s, %.4f assertions/s." % [duration, test_count / duration, assertion_count / duration]
+      end
       message
     end
 
