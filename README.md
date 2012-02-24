@@ -108,5 +108,5 @@ you make.
 Authors
 -------
 
-{Yann Lugrin}[http://github.com/yannlugrin]
+[Yann Lugrin](http://github.com/yannlugrin)
 
