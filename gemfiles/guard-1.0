@@ -1,0 +1,8 @@
+source 'http://rubygems.org'
+
+gem 'rake'
+gem 'guard',    '~> 1.0'
+gem 'minitest', '~> 2.1.0'
+gem 'bundler',  '~> 1.0.2'
+gem 'mocha',    '~> 0.9.8'
+

@@ -47,11 +47,9 @@ namespace(:test) do
                    echo "minitest version 1 - `ruby -v`";
                    for ((c=1; c<$ruby_version_string_size+21; c++)); do echo -n "="; done
                    echo;
-                   minitest_version=1 bundle install;
-                   minitest_version=1 bundle exec rake test 2>&1'
+                   BUNDLE_GEMFILE=./gemfiles/minitest-1.7 bundle install;
+                   BUNDLE_GEMFILE=./gemfiles/minitest-1.7 bundle exec rake test 2>&1'
         BASH
-        puts version.class
-        puts version
         if version =~ /^1\.9/
           system <<-BASH
             bash -c 'source ~/.rvm/scripts/rvm;
@@ -63,8 +61,8 @@ namespace(:test) do
                      echo "minitest version 2 - `ruby -v`";
                      for ((c=1; c<$ruby_version_string_size+21; c++)); do echo -n "="; done
                      echo;
-                     minitest_version=2 bundle install;
-                     minitest_version=2 bundle exec rake test 2>&1'
+                     BUNDLE_GEMFILE=./gemfiles/minitest-2.1 bundle install;
+                     BUNDLE_GEMFILE=./gemfiles/minitest-2.1 bundle exec rake test 2>&1'
           BASH
         end
       end

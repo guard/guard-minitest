@@ -1,5 +1,7 @@
 = Guard::Minitest
 
+{<img src="https://secure.travis-ci.org/guard/guard-minitest.png" />}[http://travis-ci.org/guard/guard-minitest]
+
 Minitest guard allows to automatically & intelligently launch tests with
 {minitest framework}[http://github.com/seattlerb/minitest] when files are modified.
 
@@ -35,7 +37,7 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
 
     guard 'minitest' do
       watch(%r|^test/test_(.*)\.rb|)
-      watch(%r|^lib/(.*)([^/]+)\.rb|)     { |m| "test/#{m[1]}test_#{m[2]}.rb" }
+      watch(%r{^lib/(.*/)?([^/]+)\.rb$})  { |m| "test/#{m[1]}test_#{m[2]}.rb" }
       watch(%r|^test/test_helper\.rb|)    { "test" }
     end
 
@@ -43,7 +45,7 @@ Please read {guard doc}[http://github.com/guard/guard#readme] for more info abou
 
     guard 'minitest' do
       watch(%r|^spec/(.*)_spec\.rb|)
-      watch(%r|^lib/(.*)\.rb|)            { |m| "spec/#{m[1]}_spec.rb" }
+      watch(%r{^lib/(.*/)?([^/]+)\.rb$})  { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
       watch(%r|^spec/spec_helper\.rb|)    { "spec" }
     end
 
@@ -58,6 +60,12 @@ You can force minitest seed with:
 You can set minitest verbose mode with:
 
     guard 'minitest', :verbose => true do
+      ...
+    end
+
+You can change the default location and pattern of minitest files:
+
+    guard 'minitest', test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
       ...
     end
 
