@@ -72,6 +72,14 @@ guard 'minitest', test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
 end
 ```
 
+You can pass any of the standard MiniTest CLI options using the :cli option:
+
+```ruby
+guard 'minitest', :cli => "--seed 123456 --verbose" do
+  # ...
+end
+```
+
 If you use {spork-testunit}[https://github.com/timcharper/spork-testunit] you can enable it with (you'll have to load it before):
 
 ```ruby
@@ -83,11 +91,9 @@ end
 ### List of available options:
 
 ```ruby
-:seed => 12345          # force minitest seed
-:verbose => true        # set minitest verbose mode, default: false
-:notify => false        # disable desktop notifications
-:bundler => false            # don't use "bundle exec" to run the minitest command, default: true
-:rubygems => true            # require rubygems when run the minitest command (only if bundler is disabled), default: false
+:notify => false            # disable desktop notifications
+:bundler => false           # don't use "bundle exec" to run the minitest command, default: true
+:rubygems => true           # require rubygems when run the minitest command (only if bundler is disabled), default: false
 ```
 
 Development

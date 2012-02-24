@@ -12,14 +12,16 @@ module Guard
       end
 
       def initialize(options = {})
+        parse_deprecated_options(options)
+
         @options = {
-          :verbose  => false,
           :notify   => true,
           :bundler  => File.exist?("#{Dir.pwd}/Gemfile"),
           :rubygems => false,
           :drb      => false,
           :test_folders       => %w[test spec],
           :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
+          :cli      => ''
         }.merge(options)
         [:test_folders,:test_file_patterns].each {|k| (@options[k]= [@options[k]].flatten.uniq.compact).freeze}
         options= options.freeze
@@ -31,12 +33,12 @@ module Guard
         system(minitest_command(paths))
       end
 
-      def seed
-        @options[:seed]
+      def cli_options
+        @options[:cli] ||= ''
       end
 
       def verbose?
-        @options[:verbose]
+        @options[:cli] =~ /verbose/
       end
 
       def notify?
@@ -97,15 +99,27 @@ module Guard
           else
             cmd_parts << '-e \'GUARD_NOTIFY=false; MiniTest::Unit.autorun\''
           end
-          cmd_parts << '--'
-          cmd_parts << "--seed #{seed}" unless seed.nil?
-          cmd_parts << '--verbose' if verbose?
+          cmd_parts << '--' << cli_options unless cli_options.empty?
         end
         cmd= cmd_parts.join(' ')
         puts "Running: #{cmd}\n\n" if verbose?
         cmd
       end
 
+      def parse_deprecated_options(options)
+        options[:cli] ||= ''
+
+        [:seed, :verbose].each do |key|
+          if value = options.delete(key)
+             options[:cli] << " --#{key}"
+            if ![TrueClass, FalseClass].include?(value.class)
+              options[:cli] << " #{value}"
+            end
+
+            UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to MiniTest with the :cli option.}
+          end
+        end
+      end
     end
   end
 end
