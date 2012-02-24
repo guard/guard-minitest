@@ -15,7 +15,6 @@ module Guard
         parse_deprecated_options(options)
 
         @options = {
-          :notify   => true,
           :bundler  => File.exist?("#{Dir.pwd}/Gemfile"),
           :rubygems => false,
           :drb      => false,
@@ -38,11 +37,11 @@ module Guard
       end
 
       def verbose?
-        @options[:cli] =~ /verbose/
+        @options[:cli].include?('--verbose')
       end
 
       def notify?
-        @options[:notify]
+        !!@options[:notification]
       end
 
       def bundler?
@@ -69,45 +68,38 @@ module Guard
 
       def minitest_command(paths)
         cmd_parts = []
+
         cmd_parts << "bundle exec" if bundler?
         if drb?
           cmd_parts << 'testdrb'
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
-          if notify?
-            cmd_parts << '-e \'::GUARD_NOTIFY=true\''
-          else
-            cmd_parts << '-e \'::GUARD_NOTIFY=false\''
-          end
+          cmd_parts << "-e '::GUARD_NOTIFY=#{notify?}'"
           test_folders.each do |f|
             cmd_parts << "#{f}/test_helper.rb" if File.exist?("#{f}/test_helper.rb")
             cmd_parts << "#{f}/spec_helper.rb" if File.exist?("#{f}/spec_helper.rb")
           end
-          paths.each do |path|
-            cmd_parts << "./#{path}"
-          end
+          cmd_parts += paths.map{|path| "./#{path}" }
         else
           cmd_parts << 'ruby'
-          cmd_parts.concat test_folders.map{|f| %[-I"#{f}"]}
+          cmd_parts += test_folders.map{|f| %[-I"#{f}"] }
           cmd_parts << '-r rubygems' if rubygems?
           cmd_parts << '-r bundler/setup' if bundler?
-          paths.each do |path|
-            cmd_parts << "-r ./#{path}"
-          end
+          cmd_parts += paths.map{|path| "-r ./#{path}" }
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
-          if notify?
-            cmd_parts << '-e \'GUARD_NOTIFY=true; MiniTest::Unit.autorun\''
-          else
-            cmd_parts << '-e \'GUARD_NOTIFY=false; MiniTest::Unit.autorun\''
-          end
+          cmd_parts << '-e \'MiniTest::Unit.autorun\''
           cmd_parts << '--' << cli_options unless cli_options.empty?
         end
-        cmd= cmd_parts.join(' ')
-        puts "Running: #{cmd}\n\n" if verbose?
-        cmd
+
+        cmd_parts.join(' ')
       end
 
       def parse_deprecated_options(options)
         options[:cli] ||= ''
+
+        if value = options.delete(:notify)
+          options[:notification] = value
+          UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
+        end
 
         [:seed, :verbose].each do |key|
           if value = options.delete(key)

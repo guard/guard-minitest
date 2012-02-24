@@ -34,18 +34,6 @@ describe Guard::Minitest::Runner do
 
     end
 
-    describe 'notify' do
-
-      it 'default should be true' do
-        subject.new.notify?.must_equal true
-      end
-
-      it 'should be set' do
-        subject.new(:notify => false).notify?.must_equal false
-      end
-
-    end
-
     describe 'bundler' do
 
       it 'default should be true if Gemfile exist' do
@@ -111,7 +99,7 @@ describe Guard::Minitest::Runner do
       runner = subject.new(:test_folders => %w[test], :seed => 12345)
       Guard::UI.expects(:info)
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --  --seed 12345"
+        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --  --seed 12345"
       )
       runner.run(['test/test_minitest.rb'])
     end
@@ -120,16 +108,7 @@ describe Guard::Minitest::Runner do
       runner = subject.new(:test_folders => %w[test], :verbose => true)
       Guard::UI.expects(:info)
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun' --  --verbose"
-      )
-      runner.run(['test/test_minitest.rb'])
-    end
-
-    it 'should disable notification' do
-      runner = subject.new(:test_folders => %w[test], :notify => false)
-      Guard::UI.expects(:info)
-      runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=false; MiniTest::Unit.autorun'"
+        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --  --verbose"
       )
       runner.run(['test/test_minitest.rb'])
     end
@@ -144,7 +123,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test])
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -153,7 +132,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :rubygems => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -170,7 +149,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => true, :rubygems => false)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "bundle exec ruby -I\"test\" -r bundler/setup -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun'"
+          "bundle exec ruby -I\"test\" -r bundler/setup -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -179,7 +158,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => false, :rubygems => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => true)
       end
@@ -188,7 +167,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => false, :rubygems => false)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'GUARD_NOTIFY=true; MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => false)
       end
@@ -203,18 +182,29 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('test/test_helper.rb').returns(true)
           File.expects(:exist?).with('test/spec_helper.rb').returns(false)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' test/test_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' test/test_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
 
-        it 'should run with drb and notify=false' do
-          runner = subject.new(:test_folders => %w[test], :drb => true, :notify => false)
+        it 'should run with drb and notification disable' do
+          runner = subject.new(:test_folders => %w[test], :drb => true, :notification => false)
           Guard::UI.expects(:info)
           File.expects(:exist?).with('test/test_helper.rb').returns(true)
           File.expects(:exist?).with('test/spec_helper.rb').returns(false)
           runner.expects(:system).with(
             "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' test/test_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+
+        it 'should run with drb and notification enable' do
+          runner = subject.new(:test_folders => %w[test], :drb => true, :notification => true)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('test/test_helper.rb').returns(true)
+          File.expects(:exist?).with('test/spec_helper.rb').returns(false)
+          runner.expects(:system).with(
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' test/test_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
@@ -227,18 +217,29 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('spec/test_helper.rb').returns(false)
           File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' spec/spec_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' spec/spec_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
 
-        it 'should run with drb and notify=false' do
-          runner = subject.new(:test_folders => %w[spec], :drb => true, :notify => false)
+        it 'should run with drb and notification disable' do
+          runner = subject.new(:test_folders => %w[spec], :drb => true, :notification => false)
           Guard::UI.expects(:info)
           File.expects(:exist?).with('spec/test_helper.rb').returns(false)
           File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
           runner.expects(:system).with(
             "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' spec/spec_helper.rb ./test/test_minitest.rb"
+          )
+          runner.run(['test/test_minitest.rb'], :drb => true)
+        end
+
+        it 'should run with drb and notification disable' do
+          runner = subject.new(:test_folders => %w[spec], :drb => true, :notification => true)
+          Guard::UI.expects(:info)
+          File.expects(:exist?).with('spec/test_helper.rb').returns(false)
+          File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
+          runner.expects(:system).with(
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' spec/spec_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
