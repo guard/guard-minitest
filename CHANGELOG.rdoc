@@ -9,11 +9,7 @@ Bug Fixes:
 
 Fixtures:
 
-- Option to overwrite test folders et test files pattern (japgolly)
-
-Dependencies:
-
-- Need guard 1.0 (Jonas Pfenniger)
+- Option to overwrite test folders and test files pattern (japgolly)
 
 == 0.4.0 (Jun 15, 2011)
 
