@@ -1,3 +1,5 @@
+== 1.0.0 (next major release)
+
 == 0.5.0 (Feb 24, 2012)
 
 Bug Fixes:
