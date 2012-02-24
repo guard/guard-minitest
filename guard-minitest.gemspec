@@ -15,13 +15,14 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project         = 'guard-minitest'
 
-  s.add_dependency 'guard', '>= 0.4'
+  s.add_dependency 'guard', '~> 1.0'
 
-  s.add_development_dependency 'minitest',  '~> 2.1.0'
-  s.add_development_dependency 'bundler',   '>= 1.0.2'
-  s.add_development_dependency 'mocha',     '>= 0.9.8'
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'minitest',  '~> 2.1'
+  s.add_development_dependency 'bundler',   '~> 1.0'
+  s.add_development_dependency 'mocha',     '~> 0.10'
 
-  s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.rdoc]
+  s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.md CHANGELOG.md]
   s.require_path = 'lib'
 
   s.rdoc_options = ["--charset=UTF-8", "--main=README.rdoc", "--exclude='(lib|test|spec)|(Gem|Guard|Rake)file'"]

@@ -2,8 +2,6 @@ source 'http://rubygems.org'
 
 gemspec
 
-gem 'rake'
-
 require 'rbconfig'
 if RbConfig::CONFIG['target_os'] =~ /darwin/i
   gem 'rb-fsevent', '>= 0.3.2',  :require => false
