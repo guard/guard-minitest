@@ -11,8 +11,8 @@ module Guard
     def initialize(watchers = [], options = {})
       super
 
-      @runner ||= Runner.new(options)
-      @inspector= Inspector.new(@runner.test_folders, @runner.test_file_patterns)
+      @runner = Runner.new(options)
+      @inspector = Inspector.new(@runner.test_folders, @runner.test_file_patterns)
     end
 
     def start
