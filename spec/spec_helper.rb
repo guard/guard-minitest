@@ -13,6 +13,8 @@ class MiniTest::Spec < MiniTest::Unit::TestCase
 
   after(:each) do
     ENV['GUARD_ENV'] = nil
+    @_memoized = nil
+
     if MiniTest::Unit.const_defined?(:VERSION)
       MiniTest::Unit::VERSION.replace(@real_minitest_version)
     else
@@ -20,10 +22,15 @@ class MiniTest::Spec < MiniTest::Unit::TestCase
     end
   end
 
-  def subject; end
+  def self.let(name, &block)
+    define_method name do
+      @_memoized ||= {}
+      @_memoized.fetch(name) { |k| @_memoized[k] = instance_eval(&block) }
+    end
+  end
 
   def self.subject(&block)
-    define_method :subject, &block
+    let :subject, &block
   end
 
   def fixtures_path
