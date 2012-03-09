@@ -38,7 +38,7 @@ Please read [Guard usage doc](http://github.com/guard/guard#readme)
 Guardfile
 ---------
 
-Minitest guard can be really be adapated to all kind of projects.
+Minitest guard can be really adapated to all kind of projects.
 Please read {guard doc}[http://github.com/guard/guard#readme] for more info about Guardfile DSL.
 
 ### Standard ruby gems with Minitest::Unit
@@ -80,7 +80,7 @@ guard 'minitest', :cli => "--seed 123456 --verbose" do
 end
 ```
 
-If you use {spork-testunit}[https://github.com/timcharper/spork-testunit] you can enable it with (you'll have to load it before):
+If you use {spork-testunit}[https://github.com/sporkrb/spork-testunit] you can enable it with (you'll have to load it before):
 
 ```ruby
 guard 'minitest', :drb => true do
