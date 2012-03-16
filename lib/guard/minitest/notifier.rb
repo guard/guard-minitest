@@ -5,12 +5,13 @@ module Guard
   class MinitestNotifier
 
     def self.guard_message(test_count, assertion_count, failure_count, error_count, skip_count, duration)
-      message = "#{test_count} examples, #{assertion_count} assertions, #{failure_count} failures, #{error_count} errors"
+      message = "#{test_count} tests"
       if skip_count > 0
-        message << " (#{skip_count} skips)"
+        message << " (#{skip_count} skipped)"
       end
+      message << "\n#{assertion_count} assertions, #{failure_count} failures, #{error_count} errors"
       if test_count && assertion_count
-        message << "\nin %.6f seconds, %.4f tests/s, %.4f assertions/s." % [duration, test_count / duration, assertion_count / duration]
+        message << "\n\n%.2f tests/s \n%.2f assertions/s.\n\nFinished in %.6f seconds" % [ test_count / duration, assertion_count / duration, duration]
       end
       message
     end
