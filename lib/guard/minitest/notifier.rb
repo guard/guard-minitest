@@ -30,6 +30,7 @@ module Guard
       message = guard_message(test_count, assertion_count, failure_count, error_count, skip_count, duration)
       image   = guard_image(failure_count + error_count, skip_count)
 
+      ::Guard::Notifier.turn_on
       ::Guard::Notifier.notify(message, :title => 'MiniTest results', :image => image)
     end
 
