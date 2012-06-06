@@ -86,7 +86,7 @@ module Guard
           cmd_parts << '-r bundler/setup' if bundler?
           cmd_parts += paths.map{|path| "-r ./#{path}" }
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
-          cmd_parts << '-e \'MiniTest::Unit.autorun\''
+          cmd_parts << "-e '::GUARD_NOTIFY=#{notify?}; MiniTest::Unit.autorun'"
           cmd_parts << '--' << cli_options unless cli_options.empty?
         end
 

@@ -99,7 +99,7 @@ describe Guard::Minitest::Runner do
       runner = subject.new(:test_folders => %w[test], :seed => 12345)
       Guard::UI.expects(:info)
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --  --seed 12345"
+        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '::GUARD_NOTIFY=false; MiniTest::Unit.autorun' --  --seed 12345"
       )
       runner.run(['test/test_minitest.rb'])
     end
@@ -108,7 +108,7 @@ describe Guard::Minitest::Runner do
       runner = subject.new(:test_folders => %w[test], :verbose => true)
       Guard::UI.expects(:info)
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --  --verbose"
+        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '::GUARD_NOTIFY=false; MiniTest::Unit.autorun' --  --verbose"
       )
       runner.run(['test/test_minitest.rb'])
     end
@@ -123,7 +123,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test])
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '::GUARD_NOTIFY=false; MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -132,7 +132,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :rubygems => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e '::GUARD_NOTIFY=false; MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -149,7 +149,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => true, :rubygems => false)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "bundle exec ruby -I\"test\" -r bundler/setup -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
+          "bundle exec ruby -I\"test\" -r bundler/setup -r ./test/test_minitest.rb -r #{@default_runner} -e '::GUARD_NOTIFY=false; MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -158,7 +158,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => false, :rubygems => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e '::GUARD_NOTIFY=false; MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => true)
       end
@@ -167,7 +167,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => false, :rubygems => false)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun'"
+          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '::GUARD_NOTIFY=false; MiniTest::Unit.autorun'"
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => false)
       end
