@@ -80,7 +80,7 @@ guard 'minitest', :cli => "--seed 123456 --verbose" do
 end
 ```
 
-If you use {spork-testunit}[https://github.com/sporkrb/spork-testunit] you can enable it with (you'll have to load it before):
+If you use [spork-testunit](https://github.com/sporkrb/spork-testunit) you can enable it with (you'll have to load it before):
 
 ```ruby
 guard 'minitest', :drb => true do
