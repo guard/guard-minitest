@@ -39,7 +39,7 @@ Guardfile
 ---------
 
 Minitest guard can be really adapated to all kind of projects.
-Please read {guard doc}[http://github.com/guard/guard#readme] for more info about Guardfile DSL.
+Please read [guard doc](http://github.com/guard/guard#readme) for more info about Guardfile DSL.
 
 ### Standard ruby gems with Minitest::Unit
 
