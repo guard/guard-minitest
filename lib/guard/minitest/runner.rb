@@ -38,10 +38,6 @@ module Guard
         @options[:cli] ||= ''
       end
 
-      def notify?
-        !!@options[:notification]
-      end
-
       def bundler?
         @options[:bundler]
       end
@@ -71,7 +67,6 @@ module Guard
         if drb?
           cmd_parts << 'testdrb'
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
-          cmd_parts << "-e '::GUARD_NOTIFY=#{notify?}'"
           test_folders.each do |f|
             cmd_parts << "#{f}/test_helper.rb" if File.exist?("#{f}/test_helper.rb")
             cmd_parts << "#{f}/spec_helper.rb" if File.exist?("#{f}/spec_helper.rb")

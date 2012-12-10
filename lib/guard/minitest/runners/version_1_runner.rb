@@ -10,7 +10,7 @@ module MiniTest
       start = Time.now
       run_without_guard(args)
       duration = Time.now - start
-      ::Guard::MinitestNotifier.notify(test_count, assertion_count, failures, errors, skips, duration) if GUARD_NOTIFY
+      ::Guard::MinitestNotifier.notify(test_count, assertion_count, failures, errors, skips, duration)
     end
 
   end

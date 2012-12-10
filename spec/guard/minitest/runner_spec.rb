@@ -7,7 +7,6 @@ describe Guard::Minitest::Runner do
   describe 'options' do
 
     describe 'cli_options' do
-
       it 'default should be empty string' do
         subject.new.cli_options.must_equal ''
       end
@@ -15,27 +14,25 @@ describe Guard::Minitest::Runner do
       it 'should be set with \'cli\'' do
         subject.new(:cli => '--test').cli_options.must_equal '--test'
       end
-
     end
 
-    describe 'seed' do
-
-      it 'should set cli options' do
-        subject.new(:seed => 123456789).cli_options.must_match /--seed 123456789/
+    describe 'deprecated options' do
+      describe 'seed' do
+        it 'should set cli options' do
+          Guard::UI.expects(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to MiniTest with the :cli option.')
+          subject.new(:seed => 123456789).cli_options.must_match /--seed 123456789/
+        end
       end
 
-    end
-
-    describe 'verbose' do
-
-      it 'should set cli options' do
-        subject.new(:verbose => true).cli_options.must_match /--verbose/
+      describe 'verbose' do
+        it 'should set cli options' do
+          Guard::UI.expects(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to MiniTest with the :cli option.')
+          subject.new(:verbose => true).cli_options.must_match /--verbose/
+        end
       end
-
     end
 
     describe 'bundler' do
-
       it 'default should be true if Gemfile exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
         subject.new.bundler?.must_equal true
@@ -50,11 +47,9 @@ describe Guard::Minitest::Runner do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
         subject.new(:bundler => false).bundler?.must_equal false
       end
-
     end
 
     describe 'rubygems' do
-
       it 'default should be false if Gemfile exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
         subject.new.rubygems?.must_equal false
@@ -72,11 +67,9 @@ describe Guard::Minitest::Runner do
       it 'should not be set to true if bundler is enabled' do
         subject.new(:bundler => true, :rubygems => true).rubygems?.must_equal false
       end
-
     end
 
     describe 'drb' do
-
       it 'default should be false' do
         subject.new.drb?.must_equal false
       end
@@ -84,31 +77,27 @@ describe Guard::Minitest::Runner do
       it 'should be set' do
         subject.new(:drb => true).drb?.must_equal true
       end
-
     end
   end
 
   describe 'run' do
-
     before(:each) do
       Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
       @default_runner = File.expand_path('../../../../lib/guard/minitest/runners/default_runner.rb', __FILE__)
     end
 
     it 'should run with specified seed' do
-      runner = subject.new(:test_folders => %w[test], :seed => 12345)
-      Guard::UI.expects(:info)
+      runner = subject.new(:test_folders => %w[test], :cli => '--seed 12345')
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --  --seed 12345"
+        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --seed 12345"
       )
       runner.run(['test/test_minitest.rb'])
     end
 
     it 'should run in verbose mode' do
-      runner = subject.new(:test_folders => %w[test], :verbose => true)
-      Guard::UI.expects(:info)
+      runner = subject.new(:test_folders => %w[test], :cli => '--verbose')
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' --  --verbose"
+        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e 'MiniTest::Unit.autorun' -- --verbose"
       )
       runner.run(['test/test_minitest.rb'])
     end
@@ -140,7 +129,6 @@ describe Guard::Minitest::Runner do
     end
 
     describe 'in bundler folder' do
-
       before(:each) do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
       end
@@ -182,7 +170,7 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('test/test_helper.rb').returns(true)
           File.expects(:exist?).with('test/spec_helper.rb').returns(false)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' test/test_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb test/test_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
@@ -193,7 +181,7 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('test/test_helper.rb').returns(true)
           File.expects(:exist?).with('test/spec_helper.rb').returns(false)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' test/test_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb test/test_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
@@ -204,7 +192,7 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('test/test_helper.rb').returns(true)
           File.expects(:exist?).with('test/spec_helper.rb').returns(false)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' test/test_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb test/test_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
@@ -217,29 +205,29 @@ describe Guard::Minitest::Runner do
           File.expects(:exist?).with('spec/test_helper.rb').returns(false)
           File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' spec/spec_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb spec/spec_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
 
-        it 'should run with drb and notification disable' do
+        it 'should run with drb and notification disabled' do
           runner = subject.new(:test_folders => %w[spec], :drb => true, :notification => false)
           Guard::UI.expects(:info)
           File.expects(:exist?).with('spec/test_helper.rb').returns(false)
           File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=false' spec/spec_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb spec/spec_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
 
-        it 'should run with drb and notification disable' do
+        it 'should run with drb and notification enabled' do
           runner = subject.new(:test_folders => %w[spec], :drb => true, :notification => true)
           Guard::UI.expects(:info)
           File.expects(:exist?).with('spec/test_helper.rb').returns(false)
           File.expects(:exist?).with('spec/spec_helper.rb').returns(true)
           runner.expects(:system).with(
-            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb -e '::GUARD_NOTIFY=true' spec/spec_helper.rb ./test/test_minitest.rb"
+            "testdrb -r #{File.expand_path('.')}/lib/guard/minitest/runners/default_runner.rb spec/spec_helper.rb ./test/test_minitest.rb"
           )
           runner.run(['test/test_minitest.rb'], :drb => true)
         end
