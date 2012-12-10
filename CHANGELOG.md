@@ -1,14 +1,20 @@
-## 1.0.0 (next major release)
+## 1.0.0 (beta 1)
 
-Upgrade to match Guard 1.0 API:
+Upgrade to match Guard 1.1 API:
 
  * Deprecate `:notify` option, use guard notification configuration (Yann
    Lugrin)
+ * Use `guard_on_change` method (Jason Staten)
 
 Features:
 
  * Add `:cli` option and deprecate `:seed` and `:verbose` options (Yann
    Lugrin)
+
+Documentation:
+
+ * Update Guardfile template for Rails 4 (itzki)
+ * Fix README links (Mike Manewitz & Sebastian Boehm)
 
 ## 0.5.0 (Feb 24, 2012)
 
