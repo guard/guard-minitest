@@ -18,9 +18,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'guard', '~> 1.1'
 
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'minitest',  '~> 2.1'
-  s.add_development_dependency 'bundler',   '~> 1.0'
-  s.add_development_dependency 'mocha',     '~> 0.10'
+  s.add_development_dependency 'minitest', '~> 2.1'
+  s.add_development_dependency 'bundler',  '~> 1.0'
+  s.add_development_dependency 'mocha',    '~> 0.10'
 
   s.files        = Dir.glob('{lib}/**/*') + %w[LICENSE README.md CHANGELOG.md]
   s.require_path = 'lib'

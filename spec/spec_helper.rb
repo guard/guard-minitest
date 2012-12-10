@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'minitest/spec'
-require 'mocha'
+require 'mocha/setup'
 
 require 'guard/minitest'
 

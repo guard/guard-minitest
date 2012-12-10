@@ -21,7 +21,7 @@ module Guard
         paths.dup.each do |path|
           if File.directory?(path)
             paths.delete(path)
-            paths += test_files_for_pathes([path])
+            paths += test_files_for_paths([path])
           end
         end
 
@@ -48,17 +48,17 @@ module Guard
       end
 
       def test_files
-        @test_files ||= test_files_for_pathes(self.test_folders)
+        @test_files ||= test_files_for_paths(self.test_folders)
       end
 
       def join_for_glob(fragments)
         "{#{fragments.join ','}}"
       end
 
-      def test_files_for_pathes(pathes)
-        pathes= join_for_glob(pathes)
-        files= join_for_glob(self.test_file_patterns)
-        Dir.glob(pathes + '/**/' + files)
+      def test_files_for_paths(paths)
+        paths = join_for_glob(paths)
+        files = join_for_glob(self.test_file_patterns)
+        Dir.glob(paths + '/**/' + files)
       end
 
       def clear_test_files_list

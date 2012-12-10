@@ -15,15 +15,17 @@ module Guard
         parse_deprecated_options(options)
 
         @options = {
-          :bundler  => File.exist?("#{Dir.pwd}/Gemfile"),
-          :rubygems => false,
-          :drb      => false,
+          :bundler            => File.exist?("#{Dir.pwd}/Gemfile"),
+          :rubygems           => false,
+          :drb                => false,
           :test_folders       => %w[test spec],
           :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
-          :cli      => ''
+          :cli                => ''
         }.merge(options)
-        [:test_folders,:test_file_patterns].each {|k| (@options[k]= [@options[k]].flatten.uniq.compact).freeze}
-        options= options.freeze
+
+        [:test_folders, :test_file_patterns].each do |k|
+          @options[k] = Array(@options[k]).uniq.compact
+        end
       end
 
       def run(paths, options = {})
@@ -34,10 +36,6 @@ module Guard
 
       def cli_options
         @options[:cli] ||= ''
-      end
-
-      def verbose?
-        @options[:cli].include?('--verbose')
       end
 
       def notify?
@@ -78,13 +76,13 @@ module Guard
             cmd_parts << "#{f}/test_helper.rb" if File.exist?("#{f}/test_helper.rb")
             cmd_parts << "#{f}/spec_helper.rb" if File.exist?("#{f}/spec_helper.rb")
           end
-          cmd_parts += paths.map{|path| "./#{path}" }
+          cmd_parts += paths.map{ |path| "./#{path}" }
         else
           cmd_parts << 'ruby'
           cmd_parts += test_folders.map{|f| %[-I"#{f}"] }
           cmd_parts << '-r rubygems' if rubygems?
           cmd_parts << '-r bundler/setup' if bundler?
-          cmd_parts += paths.map{|path| "-r ./#{path}" }
+          cmd_parts += paths.map{ |path| "-r ./#{path}" }
           cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
           cmd_parts << '-e \'MiniTest::Unit.autorun\''
           cmd_parts << '--' << cli_options unless cli_options.empty?
@@ -96,8 +94,7 @@ module Guard
       def parse_deprecated_options(options)
         options[:cli] ||= ''
 
-        if value = options.delete(:notify)
-          options[:notification] = value
+        if options.key?(:notify)
           UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
         end
 
