@@ -33,7 +33,7 @@ module Guard
       true
     end
 
-    def run_on_change(paths = [])
+    def run_on_changes(paths = [])
       paths = @inspector.clean(paths)
       return @runner.run(paths) unless paths.empty?
       true
