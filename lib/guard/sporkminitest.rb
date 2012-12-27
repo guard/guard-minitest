@@ -3,10 +3,10 @@ require 'guard'
 require 'guard/guard'
 
 module Guard
-  class Minitest < Guard
+  class SporkMinitest < Guard
 
-    autoload :Runner,    'guard/minitest/runner'
-    autoload :Inspector, 'guard/minitest/inspector'
+    autoload :Runner,    'guard/sporkminitest/runner'
+    autoload :Inspector, 'guard/sporkminitest/inspector'
 
     def initialize(watchers = [], options = {})
       super

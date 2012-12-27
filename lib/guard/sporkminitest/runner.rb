@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Guard
-  class Minitest
+  class SporkMinitest
     class Runner
 
       class << self
@@ -63,11 +63,13 @@ module Guard
       def minitest_command(paths)
         cmd_parts = []
 
-        cmd_parts << "bundle exec" if bundler?
+        # Does nothing but slow things down. Please correct me if I'm wrong:
+        # cmd_parts << "bundle exec" if bundler?
         if drb?
           cmd_parts << 'testdrb'
           cmd_parts += paths.map{ |path| "./#{path}" }
         else
+          # TODO: nuke this branch
           cmd_parts << 'ruby'
           cmd_parts += test_folders.map{|f| %[-I"#{f}"] }
           cmd_parts << '-r rubygems' if rubygems?
@@ -84,6 +86,7 @@ module Guard
       def parse_deprecated_options(options)
         options[:cli] ||= ''
 
+        # TODO remove this
         if options.key?(:notify)
           UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
         end

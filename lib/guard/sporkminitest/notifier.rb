@@ -2,7 +2,7 @@
 require 'guard/notifier'
 
 module Guard
-  class MinitestNotifier
+  class SporkMinitestNotifier
 
     def self.guard_message(test_count, assertion_count, failure_count, error_count, skip_count, duration)
       message = "#{test_count} examples, #{assertion_count} assertions, #{failure_count} failures, #{error_count} errors"
