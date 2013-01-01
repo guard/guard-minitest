@@ -8,10 +8,10 @@ Gem::Specification.new do |gem|
   gem.authors     = ['Yann Lugrin', '☈king']
   gem.email       = ['rking-guard-sporkminitest@sharpsaw.org']
   gem.homepage    = 'https://github.com/rking/guard-minitest'
-  gem.description = s.summary = 'Guard test files for Spork-owned MiniTest'
-  gem.files         = `git ls-files`.split($/)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{|f| File.basename f}
-  gem.test_files    = gem.files.grep %r{^ test|spec|features/}
+  gem.description = gem.summary = 'Guard test files for Spork-owned MiniTest'
+  gem.files       = `git ls-files`.split($/)
+  gem.executables = gem.files.grep(%r{^bin/}).map{|f| File.basename f}
+  gem.test_files  = gem.files.grep %r{^ test|spec|features/}
   gem.require_path = 'lib'
 
   # TODO doc these a bit
