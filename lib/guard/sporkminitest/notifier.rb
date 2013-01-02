@@ -2,9 +2,10 @@
 require 'guard/notifier'
 
 module Guard
-  class MinitestNotifier
+  class SporkMinitestNotifier
 
     def self.guard_message(test_count, assertion_count, failure_count, error_count, skip_count, duration)
+      # TODO: use a dang Hash
       message = "#{test_count} examples, #{assertion_count} assertions, #{failure_count} failures, #{error_count} errors"
       if skip_count > 0
         message << " (#{skip_count} skips)"
