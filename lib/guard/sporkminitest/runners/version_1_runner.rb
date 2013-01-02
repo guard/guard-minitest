@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'minitest/unit'
-require 'guard/minitest/notifier'
+
+require 'guard/sporkminitest/notifier'
 
 module MiniTest
   class MiniTest::Unit
@@ -10,7 +11,7 @@ module MiniTest
       start = Time.now
       run_without_guard(args)
       duration = Time.now - start
-      ::Guard::MinitestNotifier.notify(test_count, assertion_count, failures, errors, skips, duration)
+      ::Guard::SporkMinitestNotifier.notify(test_count, assertion_count, failures, errors, skips, duration)
     end
 
   end

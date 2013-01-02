@@ -4,7 +4,7 @@ require 'guard/sporkminitest/version'
 
 Gem::Specification.new do |gem|
   gem.name        = 'guard-sporkminitest'
-  gem.version     = Guard::SporkMinitest::VERSION
+  gem.version     = Guard::SporkMinitestVERSION
   gem.authors     = ['Yann Lugrin', '☈king']
   gem.email       = ['rking-guard-sporkminitest@sharpsaw.org']
   gem.homepage    = 'https://github.com/rking/guard-minitest'

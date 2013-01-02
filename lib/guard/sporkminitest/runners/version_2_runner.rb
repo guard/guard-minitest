@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'minitest/unit'
-require 'guard/minitest/notifier'
+require 'guard/sporkminitest/notifier'
 
 module MiniTest
   class MiniTest::Unit

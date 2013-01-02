@@ -2,7 +2,7 @@
 require 'minitest/spec'
 require 'mocha/setup'
 
-require 'guard/minitest'
+require 'guard/sporkminitest'
 
 class MiniTest::Spec < MiniTest::Unit::TestCase
 

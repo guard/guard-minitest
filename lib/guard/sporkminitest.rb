@@ -4,9 +4,10 @@ require 'guard/guard'
 
 module Guard
   class SporkMinitest < Guard
+    VERSION = '0.0.2'
 
-    autoload :Runner,    'guard/sporkminitest/runner'
-    autoload :Inspector, 'guard/sporkminitest/inspector'
+    require 'guard/sporkminitest/runner'
+    require 'guard/sporkminitest/inspector'
 
     def initialize(watchers = [], options = {})
       super
@@ -15,17 +16,9 @@ module Guard
       @inspector = Inspector.new(@runner.test_folders, @runner.test_file_patterns)
     end
 
-    def start
-      true
-    end
-
-    def stop
-      true
-    end
-
-    def reload
-      true
-    end
+    def start; true end
+    def stop; true end
+    def reload; true end
 
     def run_all
       paths = @inspector.clean_all

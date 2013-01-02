@@ -1,9 +1,9 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'guard/minitest/notifier'
+require 'guard/sporkminitest/notifier'
 
-describe Guard::MinitestNotifier do
-  subject { Guard::MinitestNotifier }
+describe 'Guard::SporkMinitestNotifier' do
+  subject { Guard::SporkMinitestNotifier }
 
   it 'should format message without skipped test' do
     message = subject.guard_message(1, 2, 3, 4, 0, 10.0)
