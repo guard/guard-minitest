@@ -78,6 +78,20 @@ describe Guard::Minitest::Runner do
         subject.new(:drb => true).drb?.must_equal true
       end
     end
+
+    describe 'zeus' do
+      it 'default should be false' do
+        subject.new.zeus?.must_equal false
+      end
+
+      it 'should be settable using a boolean' do
+        subject.new(:zeus => true).zeus?.must_equal true
+      end
+
+      it 'should be settable using a string which represents the command to send to zeus' do
+        subject.new(:zeus => 'blah').zeus?.must_equal true
+      end
+    end
   end
 
   describe 'run' do
@@ -160,6 +174,26 @@ describe Guard::Minitest::Runner do
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => false)
       end
 
+    end
+
+    describe 'zeus' do
+      it 'should run with default zeus command' do
+        runner = subject.new(:test_folders => %w[test], zeus: true)
+        Guard::UI.expects(:info)
+        runner.expects(:system).with(
+          "zeus test ./test/test_minitest.rb"
+        )
+        runner.run(['test/test_minitest.rb'], :zeus => true)
+      end
+
+      it 'should run with custom zeus command' do
+        runner = subject.new(:test_folders => %w[test], zeus: 'abcxyz')
+        Guard::UI.expects(:info)
+        runner.expects(:system).with(
+          "zeus abcxyz ./test/test_minitest.rb"
+        )
+        runner.run(['test/test_minitest.rb'], :zeus => 'abcxyz')
+      end
     end
 
     describe 'drb' do

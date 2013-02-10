@@ -18,6 +18,7 @@ module Guard
           :bundler            => File.exist?("#{Dir.pwd}/Gemfile"),
           :rubygems           => false,
           :drb                => false,
+          :zeus               => false,
           :test_folders       => %w[test spec],
           :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
           :cli                => ''
@@ -50,6 +51,10 @@ module Guard
         @options[:drb]
       end
 
+      def zeus?
+        @options[:zeus].is_a?(String) || @options[:zeus]
+      end
+
       def test_folders
         @options[:test_folders]
       end
@@ -71,6 +76,10 @@ module Guard
             cmd_parts << "#{f}/test_helper.rb" if File.exist?("#{f}/test_helper.rb")
             cmd_parts << "#{f}/spec_helper.rb" if File.exist?("#{f}/spec_helper.rb")
           end
+          cmd_parts += paths.map{ |path| "./#{path}" }
+        elsif zeus?
+          command = @options[:zeus].is_a?(String) ? @options[:zeus] : 'test'
+          cmd_parts << "zeus #{command}"
           cmd_parts += paths.map{ |path| "./#{path}" }
         else
           cmd_parts << 'ruby'
