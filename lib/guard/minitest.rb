@@ -13,6 +13,9 @@ module Guard
 
       @runner = Runner.new(options)
       @inspector = Inspector.new(@runner.test_folders, @runner.test_file_patterns)
+      if options[:all_on_start]
+        run_all
+      end
     end
 
     def start
