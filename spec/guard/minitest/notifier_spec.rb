@@ -7,12 +7,12 @@ describe Guard::MinitestNotifier do
 
   it 'should format message without skipped test' do
     message = subject.guard_message(1, 2, 3, 4, 0, 10.0)
-    message.must_equal "1 examples, 2 assertions, 3 failures, 4 errors\nin 10.000000 seconds, 0.1000 tests/s, 0.2000 assertions/s."
+    message.must_equal "1 tests\n2 assertions, 3 failures, 4 errors\n\n0.10 tests/s, 0.20 assertions/s\n\nFinished in 10.0000 seconds"
   end
 
   it 'should format message with skipped test' do
     message = subject.guard_message(1, 2, 3, 4, 5, 10.0)
-    message.must_equal "1 examples, 2 assertions, 3 failures, 4 errors (5 skips)\nin 10.000000 seconds, 0.1000 tests/s, 0.2000 assertions/s."
+    message.must_equal "1 tests (5 skipped)\n2 assertions, 3 failures, 4 errors\n\n0.10 tests/s, 0.20 assertions/s\n\nFinished in 10.0000 seconds"
   end
 
   it 'should select failed image' do
@@ -30,7 +30,7 @@ describe Guard::MinitestNotifier do
 
   it 'should call Guard::Notifier' do
     ::Guard::Notifier.expects(:notify).with(
-      "1 examples, 2 assertions, 0 failures, 0 errors\nin 10.000000 seconds, 0.1000 tests/s, 0.2000 assertions/s.",
+      "1 tests\n2 assertions, 0 failures, 0 errors\n\n0.10 tests/s, 0.20 assertions/s\n\nFinished in 10.0000 seconds",
       :title => 'MiniTest results',
       :image => :success
     )

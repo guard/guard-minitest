@@ -21,13 +21,8 @@ describe Guard::Minitest do
   describe 'initialization' do
 
     it 'should initialize runner with options' do
-      Guard::Minitest::Runner.expects(:new).with({}).returns(runner)
+      Guard::Minitest::Runner.expects(:new).with({ :all_on_start => true }).returns(runner)
       subject.new
-    end
-
-    it 'should run all tests if you pass options[:run_all_on_start]' do
-      subject.any_instance.expects(:run_all)
-      subject.new([], {all_on_start: true})
     end
 
     it 'should initialize inspector with options' do
@@ -39,9 +34,20 @@ describe Guard::Minitest do
 
   describe 'start' do
 
-    it 'should return true' do
-      guard.start.must_equal true
+    it 'should run all tests at start' do
+      subject.any_instance.expects(:run_all)
+
+      guard.start
     end
+
+    # FIXME
+    # it 'should not run all tests if you pass :run_all_on_start => false' do
+    #   subject.any_instance.expects(:run_all)
+    #   subject.new([], { :all_on_start => false })
+    #   assert_raises(MockExpectationError, "update should not be called") do
+    #     subject.any_instance.verify
+    #   end
+    # end
 
   end
 

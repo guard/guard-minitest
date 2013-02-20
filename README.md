@@ -96,7 +96,7 @@ end
 :drb => true                # enable DRb support, default: false
 :test_folders => ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
 :test_file_patterns => true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
-:all_on_start => true       # run all tests in group on startup, default: false
+:all_on_start => false      # run all tests in group on startup, default: true
 ```
 
 ## Development
