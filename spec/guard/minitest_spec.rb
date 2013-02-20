@@ -25,6 +25,11 @@ describe Guard::Minitest do
       subject.new
     end
 
+    it 'should run all tests if you pass options[:run_all_on_start]' do
+      subject.any_instance.expects(:run_all)
+      subject.new([], {all_on_start: true})
+    end
+
     it 'should initialize inspector with options' do
       Guard::Minitest::Inspector.expects(:new).with(runner.test_folders, runner.test_file_patterns).returns(inspector)
       subject.new
