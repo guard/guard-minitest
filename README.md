@@ -1,68 +1,67 @@
-Guard::Minitest [![Build Status](https://secure.travis-ci.org/guard/guard-minitest.png?branch=master)](http://travis-ci.org/guard/guard-minitest)
-===============
+# Guard::Minitest [![Build Status](https://secure.travis-ci.org/guard/guard-minitest.png?branch=master)](http://travis-ci.org/guard/guard-minitest)
 
-Minitest guard allows to automatically & intelligently launch tests with
-[minitest framework](http://github.com/seattlerb/minitest) when files are modified.
+Guard::Minitest allows to automatically & intelligently launch tests with the
+[minitest framework](https://github.com/seattlerb/minitest) when files are modified.
 
- * Compatible with MiniTest 1.7.x & 2.x
- * Tested on Ruby 1.8.7, 1.9.2 & 1.9.3
+* Compatible with minitest 1.7.x & 2.x.
+* Tested against Ruby 1.8.7, 1.9.2, 1.9.3, REE and the latest versions of JRuby & Rubinius.
 
-Install
--------
+## Install
 
 Please be sure to have [Guard](http://github.com/guard/guard) installed before continue.
 
-Install the gem:
+The simplest way to install Guard::Minitest is to use [Bundler](http://gembundler.com/).
 
-```bash
-gem install guard-minitest
-```
-
-Add it to your Gemfile (inside test group):
+Add Guard::Minitest to your `Gemfile`:
 
 ```ruby
-gem 'guard-minitest'
+group :development do
+  gem 'guard-minitest'
+end
 ```
 
-Add guard definition to your Guardfile by running this command:
+and install it by running Bundler:
+
+```bash
+$ bundle
+```
+
+Add guard definition to your Guardfile by running the following command:
 
 ```bash
 guard init minitest
 ```
 
-Usage
------
+## Usage
 
 Please read [Guard usage doc](http://github.com/guard/guard#readme)
 
-Guardfile
----------
+## Guardfile
 
-Minitest guard can be really adapated to all kind of projects.
+Guard::Minitest can be really adapated to all kind of projects.
 Please read [guard doc](http://github.com/guard/guard#readme) for more info about Guardfile DSL.
 
-### Standard ruby gems with Minitest::Unit
+### Standard Guardfile when using Minitest::Unit
 
 ```ruby
 guard 'minitest' do
   watch(%r|^test/test_(.*)\.rb|)
-  watch(%r{^lib/(.*/)?([^/]+)\.rb$})  { |m| "test/#{m[1]}test_#{m[2]}.rb" }
-  watch(%r|^test/test_helper\.rb|)    { "test" }
+  watch(%r{^lib/(.*/)?([^/]+)\.rb$}) { |m| "test/#{m[1]}test_#{m[2]}.rb" }
+  watch(%r|^test/test_helper\.rb|)   { "test" }
 end
 ```
 
-### Standard ruby gems with Minitest::Spec
+### Standard Guardfile when using Minitest::Spec
 
 ```ruby
 guard 'minitest' do
   watch(%r|^spec/(.*)_spec\.rb|)
-  watch(%r{^lib/(.*/)?([^/]+)\.rb$})  { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
-  watch(%r|^spec/spec_helper\.rb|)    { "spec" }
+  watch(%r{^lib/(.*/)?([^/]+)\.rb$}) { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
+  watch(%r|^spec/spec_helper\.rb|)   { "spec" }
 end
 ```
 
-Options
--------
+## Options
 
 You can change the default location and pattern of minitest files:
 
@@ -100,17 +99,22 @@ end
 :all_on_start => true       # run all tests in group on startup, default: false
 ```
 
-Development
------------
+## Development
 
-* Source hosted on [GitHub](http://github.com/guard/guard-minitest)
-* Report issues/Questions/Feature requests on [GitHub Issues](http://github.com/guard/guard-minitest/issues)
+* Documentation hosted at [RubyDoc](http://rubydoc.info/github/guard/guard-minitest/master/frames).
+* Source hosted at [GitHub](https://github.com/guard/guard-minitest).
 
-Pull requests are very welcome! Make sure your patches are well tested. Please create a topic branch for every separate change
-you make.
+Pull requests are very welcome! Please try to follow these simple rules if applicable:
 
-Authors
--------
+* Please create a topic branch for every separate change you make.
+* Make sure your patches are well tested. All specs run by Travis CI must pass.
+* Update the [README](https://github.com/guard/guard-minitest/blob/master/README.md).
+* Please **do not change** the version number.
 
-[Yann Lugrin](http://github.com/yannlugrin)
+For questions please join us in our [Google group](http://groups.google.com/group/guard-dev) or on
+`#guard` (irc.freenode.net).
+
+## Author
+
+[Yann Lugrin](https://github.com/yannlugrin)
 
