@@ -167,7 +167,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :drb => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "testdrb ./test/test_minitest.rb"
+          "testdrb -Itest ./test/test_minitest.rb"
         )
         runner.run(['test/test_minitest.rb'], :drb => true)
       end

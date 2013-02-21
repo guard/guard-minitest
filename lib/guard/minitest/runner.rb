@@ -65,7 +65,7 @@ module Guard
 
         cmd_parts << "bundle exec" if bundler?
         if drb?
-          cmd_parts << 'testdrb'
+          cmd_parts << 'testdrb -Itest'
           cmd_parts += paths.map{ |path| "./#{path}" }
         else
           cmd_parts << 'ruby'
