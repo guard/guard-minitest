@@ -1,18 +1,17 @@
 # encoding: utf-8
 require 'minitest/spec'
-require 'mocha'
+require 'mocha/setup'
 
 require 'guard/minitest'
+ENV["GUARD_ENV"] = 'test'
 
 class MiniTest::Spec < MiniTest::Unit::TestCase
 
   before(:each) do
-    ENV['GUARD_ENV'] = 'test'
     @real_minitest_version = MiniTest::Unit::VERSION.dup
   end
 
   after(:each) do
-    ENV['GUARD_ENV'] = nil
     @_memoized = nil
 
     if MiniTest::Unit.const_defined?(:VERSION)
