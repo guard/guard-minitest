@@ -178,7 +178,7 @@ describe Guard::Minitest::Runner do
 
     describe 'zeus' do
       it 'should run with default zeus command' do
-        runner = subject.new(:test_folders => %w[test], zeus: true)
+        runner = subject.new(:test_folders => %w[test], :zeus => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "zeus test ./test/test_minitest.rb"
@@ -187,7 +187,7 @@ describe Guard::Minitest::Runner do
       end
 
       it 'should run with custom zeus command' do
-        runner = subject.new(:test_folders => %w[test], zeus: 'abcxyz')
+        runner = subject.new(:test_folders => %w[test], :zeus => 'abcxyz')
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "zeus abcxyz ./test/test_minitest.rb"
