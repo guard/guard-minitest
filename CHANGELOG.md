@@ -2,8 +2,9 @@
 
 Improvements:
 
+* [#57][]: Added support for spring. ([@aspiers][])
 * [#56][]: Include test directory in load path when DRb used. ([@sbleon][])
-* [#54][]: Added zeus support. ([@leemhenson][])
+* [#54][]: Added support for zeus. ([@leemhenson][])
 * [#55][]: Add `:all_on_start` option. ([@aflock][])
 * [#41][]: Simplifying the DRb version of the runner. ([@chadoh][])
 * [#38][]: Improves notification message formatting. ([@arronmabrey][])
@@ -93,8 +94,10 @@ First stable release
 [#54]: https://github.com/guard/guard/issues/54
 [#55]: https://github.com/guard/guard/issues/55
 [#56]: https://github.com/guard/guard/issues/56
+[#57]: https://github.com/guard/guard/issues/57
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
+[@aspiers]: https://github.com/aspiers
 [@chadoh]: https://github.com/chadoh
 [@itzki]: https://github.com/itzki
 [@japgolly]: https://github.com/japgolly
