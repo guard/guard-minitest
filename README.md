@@ -87,6 +87,14 @@ guard 'minitest', :drb => true do
 end
 ```
 
+If you use [spring](https://github.com/jonleighton/spring) you can enable it with (you'll have to load it before):
+
+```ruby
+guard 'minitest', :spring => true do
+  # ...
+end
+```
+
 ### List of available options:
 
 ```ruby
@@ -94,6 +102,7 @@ end
 :bundler => false           # don't use "bundle exec" to run the minitest command, default: true
 :rubygems => true           # require rubygems when run the minitest command (only if bundler is disabled), default: false
 :drb => true                # enable DRb support, default: false
+:spring => true             # enable spring support, default: false
 :test_folders => ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
 :test_file_patterns => true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
 :all_on_start => false      # run all tests in group on startup, default: true

@@ -19,6 +19,7 @@ module Guard
           :rubygems           => false,
           :drb                => false,
           :zeus               => false,
+          :spring             => false,
           :test_folders       => %w[test spec],
           :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
           :cli                => ''
@@ -40,7 +41,7 @@ module Guard
       end
 
       def bundler?
-        @options[:bundler]
+        @options[:bundler] && ! @options[:spring]
       end
 
       def rubygems?
@@ -53,6 +54,10 @@ module Guard
 
       def zeus?
         @options[:zeus].is_a?(String) || @options[:zeus]
+      end
+
+      def spring?
+        @options[:spring]
       end
 
       def test_folders
@@ -76,6 +81,9 @@ module Guard
           command = @options[:zeus].is_a?(String) ? @options[:zeus] : 'test'
           cmd_parts << "zeus #{command}"
           cmd_parts += paths.map{ |path| "./#{path}" }
+        elsif spring?
+          cmd_parts += %w{spring test}
+          cmd_parts += paths
         else
           cmd_parts << 'ruby'
           cmd_parts += test_folders.map{|f| %[-I"#{f}"] }
