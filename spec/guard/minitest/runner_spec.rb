@@ -47,6 +47,11 @@ describe Guard::Minitest::Runner do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
         subject.new(:bundler => false).bundler?.must_equal false
       end
+
+      it 'should be forced to false if spring is enabled' do
+        Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
+        subject.new(:spring => true).bundler?.must_equal false
+      end
     end
 
     describe 'rubygems' do
@@ -90,6 +95,16 @@ describe Guard::Minitest::Runner do
 
       it 'should be settable using a string which represents the command to send to zeus' do
         subject.new(:zeus => 'blah').zeus?.must_equal true
+      end
+    end
+
+    describe 'spring' do
+      it 'default should be false' do
+        subject.new.spring?.must_equal false
+      end
+
+      it 'should be settable using a boolean' do
+        subject.new(:spring => true).spring?.must_equal true
       end
     end
   end
@@ -193,6 +208,17 @@ describe Guard::Minitest::Runner do
           "zeus abcxyz ./test/test_minitest.rb"
         )
         runner.run(['test/test_minitest.rb'], :zeus => 'abcxyz')
+      end
+    end
+
+    describe 'spring' do
+      it 'should run with default spring command' do
+        runner = subject.new(:test_folders => %w[test], :spring => true)
+        Guard::UI.expects(:info)
+        runner.expects(:system).with(
+          "spring test test/test_minitest.rb"
+        )
+        runner.run(['test/test_minitest.rb'], :spring => true)
       end
     end
 
