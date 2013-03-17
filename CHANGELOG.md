@@ -2,9 +2,11 @@
 
 Improvements:
 
-* [#38][]: Improves notification message formatting. ([@arronmabrey][])
-* [#41][]: Simplifying the DRb version of the runner. ([@chadoh][])
+* [#56][]: Include test directory in load path when DRb used. ([@sbleon][])
+* [#54][]: Added zeus support. ([@leemhenson][])
 * [#55][]: Add `:all_on_start` option. ([@aflock][])
+* [#41][]: Simplifying the DRb version of the runner. ([@chadoh][])
+* [#38][]: Improves notification message formatting. ([@arronmabrey][])
 
 ## 1.0.0 (beta 1)
 
@@ -88,13 +90,17 @@ First stable release
 [#45]: https://github.com/guard/guard/issues/45
 [#46]: https://github.com/guard/guard/issues/46
 [#49]: https://github.com/guard/guard/issues/49
+[#54]: https://github.com/guard/guard/issues/54
 [#55]: https://github.com/guard/guard/issues/55
+[#56]: https://github.com/guard/guard/issues/56
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@chadoh]: https://github.com/chadoh
 [@itzki]: https://github.com/itzki
 [@japgolly]: https://github.com/japgolly
+[@leemhenson]: https://github.com/leemhenson
 [@manewitz]: https://github.com/manewitz
+[@sbleon]: https://github.com/sbleon
 [@sometimesfood]: https://github.com/sometimesfood
 [@statianzo]: https://github.com/statianzo
 [@yannlugrin]: https://github.com/yannlugrin
