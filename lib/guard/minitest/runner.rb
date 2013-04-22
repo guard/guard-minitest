@@ -82,7 +82,7 @@ module Guard
           cmd_parts << "zeus #{command}"
           cmd_parts += paths.map{ |path| "./#{path}" }
         elsif spring?
-          cmd_parts += %w{spring test}
+          cmd_parts += %w{spring testunit}
           cmd_parts += paths
         else
           cmd_parts << 'ruby'
