@@ -216,7 +216,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :spring => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "spring test test/test_minitest.rb"
+          "spring testunit test/test_minitest.rb"
         )
         runner.run(['test/test_minitest.rb'], :spring => true)
       end
