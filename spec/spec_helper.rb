@@ -1,5 +1,7 @@
-# encoding: utf-8
 require 'minitest/spec'
+require 'coveralls'
+Coveralls.wear!
+
 require 'mocha/setup'
 
 require 'guard/minitest'
