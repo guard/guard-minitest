@@ -1,10 +1,11 @@
-# Guard::Minitest [![Build Status](https://secure.travis-ci.org/guard/guard-minitest.png?branch=master)](http://travis-ci.org/guard/guard-minitest)
+# Guard::Minitest
+[![Gem Version](https://badge.fury.io/rb/guard-minitest.png)](http://badge.fury.io/rb/guard-minitest) [![Build Status](https://travis-ci.org/guard/guard-minitest.png?branch=master)](https://travis-ci.org/guard/guard-minitest) [![Dependency Status](https://gemnasium.com/guard/guard-minitest.png)](https://gemnasium.com/guard/guard-minitest) [![Code Climate](https://codeclimate.com/github/guard/guard-minitest.png)](https://codeclimate.com/github/guard/guard-minitest) [![Coverage Status](https://coveralls.io/repos/guard/guard-minitest/badge.png?branch=master)](https://coveralls.io/r/guard/guard-minitest)
 
 Guard::Minitest allows to automatically & intelligently launch tests with the
 [minitest framework](https://github.com/seattlerb/minitest) when files are modified.
 
 * Compatible with minitest 1.7.x & 2.x.
-* Tested against Ruby 1.8.7, 1.9.2, 1.9.3, Ruby HEAD, REE and the latest versions of JRuby.
+* Tested against Ruby 1.8.7, 1.9.2, 1.9.3, 2.0.0, REE, JRuby (1.8 & 1.9 mode) & Rubinius (1.8 & 1.9 mode).
 
 ## Install
 
