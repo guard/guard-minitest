@@ -3,7 +3,7 @@ require 'guard'
 require 'guard/guard'
 require 'guard/minitest/runner'
 require 'guard/minitest/inspector'
-require 'minitest'
+require 'minitest/autorun'
 
 module Guard
   class Minitest < Guard
