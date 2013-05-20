@@ -14,5 +14,6 @@ end
 # installed on Travis CI
 #
 group :test do
+  gem 'mocha'
   gem 'coveralls', :require => false
 end

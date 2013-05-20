@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'minitest', '>= 2.1'
 
   s.add_development_dependency 'bundler', '~> 1.3'
-  s.add_development_dependency 'mocha',   '~> 0.14'
 
   s.files        = Dir.glob('{lib}/**/*') + %w[CHANGELOG.md LICENSE README.md]
   s.require_path = 'lib'
