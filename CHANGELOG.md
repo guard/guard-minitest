@@ -1,23 +1,28 @@
-## git master
+## Unreleased Changes
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/3065d05ca91fc4faa5a038577b1430349ce899a2...master)
 
 ### Improvements
 
+* [#51][] Add color using the pride Minitest plugin (`-p` option).
 * [#59][] Update spring command from test to testunit. ([@sbrink][])
-* [#57][]: Added support for spring. ([@aspiers][])
-* [#56][]: Include test directory in load path when DRb used. ([@sbleon][])
-* [#54][]: Added support for zeus. ([@leemhenson][])
-* [#55][]: Add `:all_on_start` option. ([@aflock][])
-* [#41][]: Simplifying the DRb version of the runner. ([@chadoh][])
-* [#38][]: Improves notification message formatting. ([@arronmabrey][])
+* [#57][] Added support for spring. ([@aspiers][])
+* [#56][] Include test directory in load path when DRb used. ([@sbleon][])
+* [#54][] Added support for zeus. ([@leemhenson][])
+* [#55][] Add `:all_on_start` option. ([@aflock][])
+* [#41][] Simplifying the DRb version of the runner. ([@chadoh][])
+* [#38][] Improves notification message formatting. ([@arronmabrey][])
 
-## 1.0.0 beta 1 - Dec 10, 2012
+## 1.0.0.beta1 - Dec 10, 2012
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.5.0...3065d05ca91fc4faa5a038577b1430349ce899a2)
 
 ### Improvements
 
 Upgrade to match Guard 1.1 API:
 
 * Deprecate the `:notify` option. Use Guard notification configuration instead ([via the CLI](https://github.com/guard/guard#-n--notify-option) or [via the Guardfile](https://github.com/guard/guard#notification)) ([@yannlugrin][])
-* [#45][]: Use `run_on_changes` method. ([@statianzo][])
+* [#45][] Use `run_on_changes` method. ([@statianzo][])
 
 ###  New feature
 
@@ -25,10 +30,12 @@ Upgrade to match Guard 1.1 API:
 
 ### Improvements
 
-* [#49][]: Update Guardfile template for Rails 4. ([@itzki][])
-* [#43][] & [#46][]: Fix README links. ([@manewitz][] & [@sometimesfood][])
+* [#49][] Update Guardfile template for Rails 4. ([@itzki][])
+* [#43][] & [#46][] Fix README links. ([@manewitz][] & [@sometimesfood][])
 
 ## 0.5.0 - Feb 24, 2012
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.4.0...v0.5.0)
 
 ### Bug fixes
 
@@ -43,6 +50,8 @@ Upgrade to match Guard 1.1 API:
 
 ## 0.4.0 - Jun 15, 2011
 
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.3.0...v0.4.0)
+
 ### New features
 
 * Support of MiniTest 2. ([@yannlugrin][])
@@ -54,6 +63,8 @@ Upgrade to match Guard 1.1 API:
 * Need guard 0.4 ([@yannlugrin][])
 
 ## 0.3.0 - Oct 27, 2010
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.2.2...v0.3.0)
 
 ### Bug fixes
 
@@ -68,12 +79,16 @@ Upgrade to match Guard 1.1 API:
 
 ## 0.2.2 - Oct 24, 2010
 
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.2.1...v0.2.2)
+
 ### Bug fixes
 
 * Depends on guard 0.2.1 to fix linux watching probalems
 * Remove duplicate code
 
 ## 0.2.1 - Oct 22, 2010
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.2.0...v0.2.1)
 
 ### Bug fixes
 
@@ -94,6 +109,7 @@ First stable release.
 [#45]: https://github.com/guard/guard/issues/45
 [#46]: https://github.com/guard/guard/issues/46
 [#49]: https://github.com/guard/guard/issues/49
+[#51]: https://github.com/guard/guard/issues/51
 [#54]: https://github.com/guard/guard/issues/54
 [#55]: https://github.com/guard/guard/issues/55
 [#56]: https://github.com/guard/guard/issues/56
