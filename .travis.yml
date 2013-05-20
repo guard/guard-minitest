@@ -12,12 +12,11 @@ rvm:
   - rbx-19mode
   - ruby-head
   - jruby-head
-  - rbx-head
 gemfile:
-  - gemfiles/minitest-1
-  - gemfiles/minitest-2
-  - gemfiles/minitest-3
-  - gemfiles/minitest-4
+  # - gemfiles/minitest-1
+  # - gemfiles/minitest-2
+  # - gemfiles/minitest-3
+  # - gemfiles/minitest-4
   - gemfiles/minitest-5
 matrix:
   exclude:
