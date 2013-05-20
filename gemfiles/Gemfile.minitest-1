@@ -1,18 +1,14 @@
 source 'https://rubygems.org'
 
-gemspec
-
 gem 'rake'
-
-group :development do
-  gem 'ruby_gntp'
-  gem 'guard-rspec'
-  gem 'pimpmychangelog'
-end
+gem 'bundler'
+gem 'mocha'
+gem 'guard'
 
 # The test group will be
 # installed on Travis CI
 #
 group :test do
+  gem 'minitest', '~> 1.0'
   gem 'coveralls', :require => false
 end

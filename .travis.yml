@@ -13,14 +13,12 @@ rvm:
   - jruby-19mode
   # - rbx-18mode
   # - rbx-19mode
-  # - ruby-head
-  - jruby-head
 gemfile:
-  - gemfiles/minitest-1
-  # - gemfiles/minitest-2
-  # - gemfiles/minitest-3
-  # - gemfiles/minitest-4
-  - gemfiles/minitest-5
+  - gemfiles/Gemfile.minitest-1
+  # - gemfiles/Gemfile.minitest-2
+  # - gemfiles/Gemfile.minitest-3
+  # - gemfiles/Gemfile.minitest-4
+  - gemfiles/Gemfile.minitest-5
 matrix:
   exclude:
     - rvm: 1.8.7
