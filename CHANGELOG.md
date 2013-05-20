@@ -4,7 +4,7 @@
 
 ### Improvements
 
-* [#51][] Add color using the pride Minitest plugin (`-p` option).
+* [#51][] Add color using the pride Minitest plugin (`-p` option). ([@rymai][])
 * [#59][] Update spring command from test to testunit. ([@sbrink][])
 * [#57][] Added support for spring. ([@aspiers][])
 * [#56][] Include test directory in load path when DRb used. ([@sbleon][])
@@ -123,6 +123,7 @@ First stable release.
 [@japgolly]: https://github.com/japgolly
 [@leemhenson]: https://github.com/leemhenson
 [@manewitz]: https://github.com/manewitz
+[@rymai]: https://github.com/rymai
 [@sbleon]: https://github.com/sbleon
 [@sbrink]: https://github.com/sbrink
 [@sometimesfood]: https://github.com/sometimesfood
