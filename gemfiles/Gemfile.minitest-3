@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
+gemspec :path => '../'
+
 group :test do
   gem 'rake'
-  gem 'mocha'
   gem 'minitest', '~> 3.0'
-  gem 'guard-minitest'
   gem 'coveralls', :require => false
 end
