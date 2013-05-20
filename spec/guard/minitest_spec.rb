@@ -20,12 +20,12 @@ describe Guard::Minitest do
 
   describe 'initialization' do
 
-    it 'should initialize runner with options' do
+    it 'initializes runner with options' do
       Guard::Minitest::Runner.expects(:new).with({ :all_on_start => true }).returns(runner)
       subject.new
     end
 
-    it 'should initialize inspector with options' do
+    it 'initializes inspector with options' do
       Guard::Minitest::Inspector.expects(:new).with(runner.test_folders, runner.test_file_patterns).returns(inspector)
       subject.new
     end
@@ -34,56 +34,47 @@ describe Guard::Minitest do
 
   describe 'start' do
 
-    it 'should run all tests at start' do
+    it 'runs all tests at start' do
       subject.any_instance.expects(:run_all)
 
-      guard.start
+      subject.new.start
     end
 
-    # FIXME
-    # it 'should not run all tests if you pass :run_all_on_start => false' do
-    #   subject.any_instance.expects(:run_all)
-    #   subject.new([], { :all_on_start => false })
-    #   assert_raises(MockExpectationError, "update should not be called") do
-    #     subject.any_instance.verify
-    #   end
-    # end
+    it 'do not run all tests if you pass :run_all_on_start => false' do
+      subject.any_instance.expects(:run_all).never
+
+      subject.new([], { :all_on_start => false })
+    end
 
   end
 
   describe 'stop' do
-
-    it 'should return true' do
-      guard.stop.must_equal true
+    it 'returns true' do
+      subject.new.stop.must_equal true
     end
-
   end
 
   describe 'reload' do
-
-    it 'should return true' do
-      guard.reload.must_equal true
+    it 'returns true' do
+      subject.new.reload.must_equal true
     end
-
   end
 
   describe 'run_all' do
-
-    it 'should run all tests' do
+    it 'runs all tests' do
       inspector.stubs(:clean_all).returns(['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'])
       runner.expects(:run).with(['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'], {:message => 'Running all tests'}).returns(true)
-      guard.run_all.must_equal true
-    end
 
+      subject.new.run_all.must_equal true
+    end
   end
 
   describe 'run_on_changes' do
-
-    it 'should run minitest in paths' do
+    it 'runs minitest in paths' do
       inspector.stubs(:clean).with(['test/guard/minitest/test_inspector.rb']).returns(['test/guard/minitest/test_inspector.rb'])
       runner.expects(:run).with(['test/guard/minitest/test_inspector.rb']).returns(true)
-      guard.run_on_changes(['test/guard/minitest/test_inspector.rb']).must_equal true
-    end
 
+      subject.new.run_on_changes(['test/guard/minitest/test_inspector.rb']).must_equal true
+    end
   end
 end

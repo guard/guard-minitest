@@ -2,7 +2,7 @@ require 'coveralls'
 Coveralls.wear!
 
 require 'minitest/autorun'
-superclass = if ::MiniTest::Unit::VERSION =~ /^5/
+superclass = if MiniTest::Unit::VERSION =~ /^5/
   Minitest::Test
 else
   MiniTest::Unit::TestCase
@@ -11,7 +11,7 @@ end
 require 'mocha/setup'
 
 require 'guard/minitest'
-ENV["GUARD_ENV"] = 'test'
+ENV['GUARD_ENV'] = 'test'
 
 class MiniTest::Spec < superclass
 
