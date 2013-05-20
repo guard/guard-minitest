@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Guard
-  class Minitest
+  class Minitest < Guard
     class Runner
 
       class << self
@@ -12,8 +12,6 @@ module Guard
       end
 
       def initialize(options = {})
-        parse_deprecated_options(options)
-
         @options = {
           :bundler            => File.exist?("#{Dir.pwd}/Gemfile"),
           :rubygems           => false,
@@ -22,8 +20,10 @@ module Guard
           :spring             => false,
           :test_folders       => %w[test spec],
           :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
-          :cli                => ''
+          :cli                => nil
         }.merge(options)
+
+        parse_deprecated_options
 
         [:test_folders, :test_file_patterns].each do |k|
           @options[k] = Array(@options[k]).uniq.compact
@@ -37,7 +37,7 @@ module Guard
       end
 
       def cli_options
-        @options[:cli] ||= ''
+        @cli_options ||= Array(@options[:cli])
       end
 
       def bundler?
@@ -73,44 +73,65 @@ module Guard
       def minitest_command(paths)
         cmd_parts = []
 
-        cmd_parts << "bundle exec" if bundler?
-        if drb?
-          cmd_parts << 'testdrb -Itest'
-          cmd_parts += paths.map{ |path| "./#{path}" }
+        cmd_parts << 'bundle exec' if bundler?
+        cmd_parts << if drb?
+          drb_command(paths)
         elsif zeus?
-          command = @options[:zeus].is_a?(String) ? @options[:zeus] : 'test'
-          cmd_parts << "zeus #{command}"
-          cmd_parts += paths.map{ |path| "./#{path}" }
+          zeus_command(paths)
         elsif spring?
-          cmd_parts += %w{spring testunit}
-          cmd_parts += paths
+          spring_command(paths)
         else
-          cmd_parts << 'ruby'
-          cmd_parts += test_folders.map{|f| %[-I"#{f}"] }
-          cmd_parts << '-r rubygems' if rubygems?
-          cmd_parts << '-r bundler/setup' if bundler?
-          cmd_parts += paths.map{ |path| "-r ./#{path}" }
-          cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
-          cmd_parts << '-e \'MiniTest::Unit.autorun\''
-          cmd_parts << '--' << cli_options unless cli_options.empty?
+          ruby_command(paths)
         end
 
-        cmd_parts.join(' ')
+        cmd_parts.compact.join(' ')
       end
 
-      def parse_deprecated_options(options)
-        options[:cli] ||= ''
+      def drb_command(paths)
+        %w[testdrb -Itest] + relative_paths(paths)
+      end
 
-        if options.key?(:notify)
+      def zeus_command(paths)
+        command = @options[:zeus].is_a?(String) ? @options[:zeus] : 'test'
+
+        ['zeus', command] + relative_paths(paths)
+      end
+
+      def spring_command(paths)
+        %w[spring testunit] + relative_paths(paths)
+      end
+
+      def ruby_command(paths)
+        cmd_parts  = ['ruby']
+        cmd_parts += test_folders.map {|f| %[-I"#{f}"] }
+        cmd_parts << '-r rubygems' if rubygems?
+        cmd_parts << '-r bundler/setup' if bundler?
+        cmd_parts += paths.map { |path| "-r ./#{path}" }
+        cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
+        if ::MiniTest::Unit::VERSION =~ /^5/
+          cmd_parts << '-e \'Minitest.autorun\''
+        else
+          cmd_parts << '-e \'MiniTest::Unit.autorun\''
+        end
+        cmd_parts << '--'
+        cmd_parts += cli_options
+        cmd_parts << '-p' # uses pride for output colorization
+      end
+
+      def relative_paths(paths)
+        paths.map { |p| "./#{p}" }
+      end
+
+      def parse_deprecated_options
+        if @options.key?(:notify)
           UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
         end
 
         [:seed, :verbose].each do |key|
-          if value = options.delete(key)
-             options[:cli] << " --#{key}"
-            if ![TrueClass, FalseClass].include?(value.class)
-              options[:cli] << " #{value}"
-            end
+          if value = @options.delete(key)
+            final_value = "--#{key}"
+            final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
+            cli_options << final_value
 
             UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to MiniTest with the :cli option.}
           end

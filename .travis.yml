@@ -1,19 +1,22 @@
 language: ruby
+before_install:
+  - gem update bundler
+  - bundle -v
 bundler_args: --without development
 rvm:
   - 1.8.7
-  - 1.9.2
-  - 1.9.3
+  # - 1.9.2
+  # - 1.9.3
   - 2.0.0
-  - ree
+  # - ree
   - jruby-18mode
   - jruby-19mode
-  - rbx-18mode
-  - rbx-19mode
-  - ruby-head
+  # - rbx-18mode
+  # - rbx-19mode
+  # - ruby-head
   - jruby-head
 gemfile:
-  # - gemfiles/minitest-1
+  - gemfiles/minitest-1
   # - gemfiles/minitest-2
   # - gemfiles/minitest-3
   # - gemfiles/minitest-4

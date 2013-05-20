@@ -1,25 +1,32 @@
-require 'minitest/spec'
 require 'coveralls'
 Coveralls.wear!
 
+require 'minitest/autorun'
 require 'mocha/setup'
 
 require 'guard/minitest'
 ENV["GUARD_ENV"] = 'test'
 
-class MiniTest::Spec < MiniTest::Unit::TestCase
+class Minitest::Spec < Minitest::Test
 
   before(:each) do
-    @real_minitest_version = MiniTest::Unit::VERSION.dup
+    @real_minitest_version = Minitest::VERSION.dup
+
+    # Stub all UI methods, so no visible output appears for the UI class
+    ::Guard::UI.stubs(:info)
+    ::Guard::UI.stubs(:warning)
+    ::Guard::UI.stubs(:error)
+    ::Guard::UI.stubs(:debug)
+    ::Guard::UI.stubs(:deprecation)
   end
 
   after(:each) do
     @_memoized = nil
 
-    if MiniTest::Unit.const_defined?(:VERSION)
-      MiniTest::Unit::VERSION.replace(@real_minitest_version)
+    if Minitest.const_defined?(:VERSION)
+      Minitest::VERSION.replace(@real_minitest_version)
     else
-      MiniTest::Unit.send(:const_set, :VERSION, @real_minitest_version)
+      Minitest.send(:const_set, :VERSION, @real_minitest_version)
     end
   end
 

@@ -1,7 +1,7 @@
 require 'bundler'
 Bundler::GemHelper.install_tasks
 
-require 'minitest/unit'
+require 'minitest/autorun'
 
 desc 'Run all tests'
 task :test do
