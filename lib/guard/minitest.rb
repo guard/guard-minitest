@@ -21,7 +21,7 @@ module Guard
     end
 
     def start
-      UI.info "Guard::Minitest #{VERSION} is running, with Minitest::Unit #{::MiniTest::Unit::VERSION}!"
+      UI.info "Guard::Minitest #{MinitestVersion::VERSION} is running, with Minitest::Unit #{::MiniTest::Unit::VERSION}!"
       run_all if @options[:all_on_start]
     end
 
