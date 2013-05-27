@@ -1,4 +1,4 @@
-require 'guard/minitest'
+require File.expand_path('../../minitest', __FILE__)
 
 module Guard
   class Minitest
