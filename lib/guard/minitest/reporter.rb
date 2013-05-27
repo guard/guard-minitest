@@ -3,7 +3,7 @@ require 'minitest'
 require 'guard/minitest/notifier'
 
 module Guard
-  class Minitest < Guard
+  class Minitest
     class Reporter < ::Minitest::Reporter
 
       def report
@@ -15,7 +15,7 @@ module Guard
         s = aggregate[::Minitest::Skip].size
         t = Time.now - start_time
 
-        ::Guard::MinitestNotifier.notify(count, self.assertions, f, e, s, t)
+        ::Guard::Minitest::Notifier.notify(count, self.assertions, f, e, s, t)
       end
 
     end

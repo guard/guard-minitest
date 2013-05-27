@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'minitest/unit'
+require 'minitest/autorun'
 
 case MiniTest::Unit::VERSION
 when /^1/

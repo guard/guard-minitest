@@ -1,12 +1,13 @@
 # encoding: utf-8
-Kernel.load File.expand_path('../lib/guard/minitest/version.rb', __FILE__)
+$:.push File.expand_path('../lib', __FILE__)
+require 'guard/minitest/version'
 
 Gem::Specification.new do |s|
   s.name        = 'guard-minitest'
-  s.version     = Guard::MinitestVersion::VERSION
+  s.version     = Guard::Minitest::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.summary     = 'Guard gem for MiniTest framework'
-  s.description = 'Guard::Minitest automatically run your tests with MiniTest framework (much like autotest)'
+  s.summary     = 'Guard gem for the Minitest framework'
+  s.description = 'Guard::Minitest automatically run your tests with Minitest framework (much like autotest)'
   s.author      = 'Yann Lugrin'
   s.email       = 'yann.lugrin@sans-savoir.net'
   s.homepage    = 'https://github.com/guard/guard-minitest'

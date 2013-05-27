@@ -2,8 +2,8 @@
 require 'spec_helper'
 require 'guard/minitest/notifier'
 
-describe Guard::MinitestNotifier do
-  subject { Guard::MinitestNotifier }
+describe Guard::Minitest::Notifier do
+  subject { Guard::Minitest::Notifier }
 
   it 'should format message without skipped test' do
     message = subject.guard_message(1, 2, 3, 4, 0, 10.0)
@@ -31,7 +31,7 @@ describe Guard::MinitestNotifier do
   it 'should call Guard::Notifier' do
     ::Guard::Notifier.expects(:notify).with(
       "1 tests\n2 assertions, 0 failures, 0 errors\n\n0.10 tests/s, 0.20 assertions/s\n\nFinished in 10.0000 seconds",
-      :title => 'MiniTest results',
+      :title => 'Minitest results',
       :image => :success
     )
     subject.notify(1, 2, 0, 0, 0, 10.0)

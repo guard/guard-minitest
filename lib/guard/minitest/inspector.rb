@@ -1,6 +1,6 @@
 # encoding: utf-8
 module Guard
-  class Minitest < Guard
+  class Minitest
     class Inspector
 
       attr_reader :test_folders, :test_file_patterns

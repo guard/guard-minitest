@@ -23,14 +23,14 @@ describe Guard::Minitest::Runner do
     describe 'deprecated options' do
       describe 'seed' do
         it 'should set cli options' do
-          Guard::UI.expects(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to MiniTest with the :cli option.')
+          Guard::UI.expects(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to Minitest with the :cli option.')
           subject.new(:seed => 123456789).cli_options.must_equal ['--seed 123456789']
         end
       end
 
       describe 'verbose' do
         it 'should set cli options' do
-          Guard::UI.expects(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to MiniTest with the :cli option.')
+          Guard::UI.expects(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to Minitest with the :cli option.')
           subject.new(:verbose => true).cli_options.must_equal ['--verbose']
         end
       end

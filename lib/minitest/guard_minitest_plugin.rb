@@ -5,7 +5,6 @@ module Minitest
   end
 
   def self.plugin_guard_minitest_init(options) # :nodoc:
-    puts 'custom reporter'
     self.reporter << ::Guard::Minitest::Reporter.new(File.open('/dev/null', 'w'))
   end
 end

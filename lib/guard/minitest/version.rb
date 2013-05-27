@@ -1,6 +1,9 @@
-# encoding: utf-8
+require 'guard/minitest'
+
 module Guard
-  module MinitestVersion
+  class Minitest
+
     VERSION = '1.0.0.beta1'
+
   end
 end

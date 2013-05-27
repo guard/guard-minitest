@@ -1,14 +1,10 @@
 # encoding: utf-8
 module Guard
-  class Minitest < Guard
+  class Minitest
     class Runner
 
-      class << self
-
-        def run(paths = [], options = {})
-          Runner.new(options).run(paths, options)
-        end
-
+      def self.run(paths = [], options = {})
+        Runner.new(options).run(paths, options)
       end
 
       def initialize(options = {})
@@ -133,11 +129,11 @@ module Guard
             final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
             cli_options << final_value
 
-            UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to MiniTest with the :cli option.}
+            UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.}
           end
         end
       end
+
     end
   end
 end
-
