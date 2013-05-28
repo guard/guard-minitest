@@ -94,7 +94,7 @@ module Guard
       end
 
       def spring_command(paths)
-        %w[spring testunit] + relative_paths(paths)
+        ['spring testunit', File.expand_path('../runners/default_runner.rb', __FILE__)] + relative_paths(paths)
       end
 
       def ruby_command(paths)

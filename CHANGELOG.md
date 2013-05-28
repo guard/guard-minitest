@@ -4,6 +4,7 @@
 
 ### Improvements
 
+* [#62][] Add notification when `spring` is used. ([@rymai][])
 * [#39][] Fix `watch` `Regex` for `lib` directory. ([@rymai][])
 * [#51][] Add color using the pride Minitest plugin (`-p` option). ([@rymai][])
 * [#59][] Update spring command from test to testunit. ([@sbrink][])
@@ -117,6 +118,7 @@ First stable release.
 [#56]: https://github.com/guard/guard/issues/56
 [#57]: https://github.com/guard/guard/issues/57
 [#59]: https://github.com/guard/guard/issues/59
+[#62]: https://github.com/guard/guard/issues/62
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
