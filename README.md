@@ -106,8 +106,8 @@ end
 
 [Zeus](https://github.com/burke/zeus) is supported, but you must enable it.
 Please note that notification are currently disabled when using Zeus, if
-you're interested in adding notification support for Zeus, please participate
-in the [issue #62](https://github.com/guard/guard-minitest/issues/62).
+you're interested in adding notification support for Zeus, please
+[open a new issue](https://github.com/guard/guard-minitest/issues/new).
 
 ```ruby
 guard :minitest, :zeus => true do
@@ -122,6 +122,10 @@ guard :minitest, :drb => true do
   # ...
 end
 ```
+
+## Roadmap
+
+* Add notification support when using `zeus`.
 
 ## Development
 
