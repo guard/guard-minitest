@@ -1,6 +1,10 @@
 ## Unreleased Changes
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/3065d05ca91fc4faa5a038577b1430349ce899a2...master)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.beta.2...master)
+
+## 1.0.0.beta.2 - Jun 5, 2013
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.beta1...v1.0.0.beta.2)
 
 ### Improvements
 
@@ -17,7 +21,7 @@
 
 ## 1.0.0.beta1 - Dec 10, 2012
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.5.0...3065d05ca91fc4faa5a038577b1430349ce899a2)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/0.5.0...v1.0.0.beta1)
 
 ### Improvements
 
@@ -37,7 +41,7 @@ Upgrade to match Guard 1.1 API:
 
 ## 0.5.0 - Feb 24, 2012
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.4.0...v0.5.0)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/0.4.0...0.5.0)
 
 ### Bug fixes
 
@@ -52,7 +56,7 @@ Upgrade to match Guard 1.1 API:
 
 ## 0.4.0 - Jun 15, 2011
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.3.0...v0.4.0)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/0.3.0...0.4.0)
 
 ### New features
 
@@ -66,7 +70,7 @@ Upgrade to match Guard 1.1 API:
 
 ## 0.3.0 - Oct 27, 2010
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.2.2...v0.3.0)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/0.2.2...0.3.0)
 
 ### Bug fixes
 
@@ -81,7 +85,7 @@ Upgrade to match Guard 1.1 API:
 
 ## 0.2.2 - Oct 24, 2010
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.2.1...v0.2.2)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/0.2.1...0.2.2)
 
 ### Bug fixes
 
@@ -90,7 +94,7 @@ Upgrade to match Guard 1.1 API:
 
 ## 0.2.1 - Oct 22, 2010
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v0.2.0...v0.2.1)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/0.2.0...0.2.1)
 
 ### Bug fixes
 
