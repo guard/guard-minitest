@@ -12,7 +12,7 @@ module Guard
         end
         message << "\n#{assertion_count} assertions, #{failure_count} failures, #{error_count} errors"
         if test_count && assertion_count
-          message << "\n\n%.2f tests/s, %.2f assertions/s\n\nFinished in %.4f seconds" % [ test_count / duration, assertion_count / duration, duration]
+          message << "\n\n%.2f tests/s, %.2f assertions/s\n\nFinished in %.4f seconds" % [test_count / duration, assertion_count / duration, duration]
         end
         message
       end

@@ -11,7 +11,7 @@ module Guard
       end
 
       def clean_all
-        clean self.test_folders
+        clean(test_folders)
       end
 
       def clean(paths)
@@ -31,12 +31,13 @@ module Guard
         paths
       end
 
-    private
+      private
+
       def test_folder_regex
-        @test_folder_regex ||= (
-          folders= self.test_folders.map {|f| Regexp.quote f}.join '|'
+        @_test_folder_regex ||= begin
+          folders = test_folders.map { |f| Regexp.quote(f) }.join('|')
           Regexp.new("^/?(?:#{folders})(?:/|$)")
-        )
+        end
       end
 
       def test_folder?(path)
@@ -48,21 +49,21 @@ module Guard
       end
 
       def test_files
-        @test_files ||= test_files_for_paths(self.test_folders)
+        @_test_files ||= test_files_for_paths(test_folders)
       end
 
       def join_for_glob(fragments)
-        "{#{fragments.join ','}}"
+        "{#{fragments.join(',')}}"
       end
 
       def test_files_for_paths(paths)
         paths = join_for_glob(paths)
-        files = join_for_glob(self.test_file_patterns)
+        files = join_for_glob(test_file_patterns)
         Dir.glob(paths + '/**/' + files)
       end
 
       def clear_test_files_list
-        @test_files = nil
+        @_test_files = nil
       end
 
     end
