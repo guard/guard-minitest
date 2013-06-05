@@ -4,7 +4,7 @@
 Guard::Minitest allows to automatically & intelligently launch tests with the
 [minitest framework](https://github.com/seattlerb/minitest) when files are modified.
 
-* Compatible with minitest 1.7.x & 2.x.
+* Compatible with minitest >= 2.1 (optimal support for 5.x).
 * Tested against Ruby 1.8.7, 1.9.3, 2.0.0, JRuby (1.8 mode & 1.9 mode) & Rubinius (1.8 mode & 1.9 mode).
 
 ## Install
@@ -45,29 +45,45 @@ Please read [guard doc](http://github.com/guard/guard#readme) for more info abou
 ### Standard Guardfile when using Minitest::Unit
 
 ```ruby
-guard 'minitest' do
-  watch(%r|^test/test_(.*)\.rb|)
-  watch(%r{^lib/(.*/)?([^/]+)\.rb$}) { |m| "test/#{m[1]}test_#{m[2]}.rb" }
-  watch(%r|^test/test_helper\.rb|)   { "test" }
+guard :minitest do
+  watch(%r{^test/(.*)\/?test_(.*)\.rb})
+  watch(%r{^lib/(.*/)?([^/]+)\.rb})     { |m| "test/#{m[1]}test_#{m[2]}.rb" }
+  watch(%r{^test/test_helper\.rb})      { 'test' }
 end
 ```
 
 ### Standard Guardfile when using Minitest::Spec
 
 ```ruby
-guard 'minitest' do
-  watch(%r|^spec/(.*)_spec\.rb|)
-  watch(%r{^lib/(.*/)?([^/]+)\.rb$}) { |m| "spec/#{m[1]}#{m[2]}_spec.rb" }
-  watch(%r|^spec/spec_helper\.rb|)   { "spec" }
+guard :minitest do
+  watch(%r{^spec/(.*)_spec\.rb})
+  watch(%r{^lib/(.+)\.rb})         { |m| "spec/#{m[1]}_spec.rb" }
+  watch(%r{^spec/spec_helper\.rb}) { 'spec' }
 end
 ```
 
 ## Options
 
+### List of available options
+
+```ruby
+all_on_start: false      # run all tests in group on startup, default: true
+cli: '--test'            # pass arbitrary Minitest CLI arguments, default: ''
+test_folders: ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
+test_file_patterns: true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
+spring: true             # enable spring support, default: false
+zeus: true               # enable zeus support; default: false
+drb: true                # enable DRb support, default: false
+bundler: false           # don't use "bundle exec" to run the minitest command, default: true
+rubygems: true           # require rubygems when run the minitest command (only if bundler is disabled), default: false
+```
+
+### Options usage examples
+
 You can change the default location and pattern of minitest files:
 
 ```ruby
-guard 'minitest', test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
+guard :minitest, test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
   # ...
 end
 ```
@@ -75,39 +91,33 @@ end
 You can pass any of the standard MiniTest CLI options using the :cli option:
 
 ```ruby
-guard 'minitest', :cli => "--seed 123456 --verbose" do
+guard :minitest, cli: '--seed 123456 --verbose' do
   # ...
 end
 ```
 
-If you use [spork-testunit](https://github.com/sporkrb/spork-testunit) you can enable it with (you'll have to load it before):
+If you're using [spring](https://github.com/jonleighton/spring) you can enable it with (you'll have to load it before):
 
 ```ruby
-guard 'minitest', :drb => true do
+guard :minitest, spring: true do
   # ...
 end
 ```
 
-If you use [spring](https://github.com/jonleighton/spring) you can enable it with (you'll have to load it before):
+If you're using [zeus](https://github.com/burke/zeus) you can enable it with (you'll have to start it before):
 
 ```ruby
-guard 'minitest', :spring => true do
+guard :minitest, zeus: true do
   # ...
 end
 ```
 
-### List of available options:
+If you're using [spork-testunit](https://github.com/sporkrb/spork-testunit) you can enable it with (you'll have to load it before):
 
 ```ruby
-:cli => '--test'            # pass arbitrary Minitest CLI arguments, default: ''
-:bundler => false           # don't use "bundle exec" to run the minitest command, default: true
-:rubygems => true           # require rubygems when run the minitest command (only if bundler is disabled), default: false
-:spring => true             # enable spring support, default: false
-:zeus => true               # enable zeus support; default: false
-:drb => true                # enable DRb support, default: false
-:test_folders => ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
-:test_file_patterns => true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
-:all_on_start => false      # run all tests in group on startup, default: true
+guard :minitest, drb: true do
+  # ...
+end
 ```
 
 ## Development
@@ -128,4 +138,8 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 ## Author
 
 [Yann Lugrin](https://github.com/yannlugrin)
+
+## Maintainer
+
+[Rémy Coutable](https://github.com/rymai)
 

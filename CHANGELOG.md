@@ -6,7 +6,7 @@
 
 * [#62][] Add notification when `spring` is used. ([@rymai][])
 * [#39][] Fix `watch` `Regex` for `lib` directory. ([@rymai][])
-* [#51][] Add color using the pride Minitest plugin (`-p` option). ([@rymai][])
+* [#51][] Add color using the pride Minitest plugin (`--pride` option). ([@rymai][])
 * [#59][] Update spring command from test to testunit. ([@sbrink][])
 * [#57][] Added support for spring. ([@aspiers][])
 * [#56][] Include test directory in load path when DRb used. ([@sbleon][])

@@ -8,14 +8,14 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.summary     = 'Guard gem for the Minitest framework'
   s.description = 'Guard::Minitest automatically run your tests with Minitest framework (much like autotest)'
-  s.author      = 'Yann Lugrin'
-  s.email       = 'yann.lugrin@sans-savoir.net'
+  s.authors     = ['Yann Lugrin', 'Rémy Coutable']
+  s.email       = ['remy@rymai.me']
   s.homepage    = 'https://github.com/guard/guard-minitest'
 
-  s.add_runtime_dependency 'guard',    '>= 1.8'
-  s.add_runtime_dependency 'minitest', '>= 2.1'
+  s.add_dependency 'guard',    '>= 1.8'
+  s.add_dependency 'minitest', '>= 2.1'
 
-  s.add_development_dependency 'bundler', '~> 1.3'
+  s.add_development_dependency 'bundler'
 
   s.files        = Dir.glob('{lib}/**/*') + %w[CHANGELOG.md LICENSE README.md]
   s.require_path = 'lib'
