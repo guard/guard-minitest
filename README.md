@@ -67,55 +67,58 @@ end
 ### List of available options
 
 ```ruby
-all_on_start: false      # run all tests in group on startup, default: true
-cli: '--test'            # pass arbitrary Minitest CLI arguments, default: ''
-test_folders: ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
-test_file_patterns: true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
-spring: true             # enable spring support, default: false
-zeus: true               # enable zeus support; default: false
-drb: true                # enable DRb support, default: false
-bundler: false           # don't use "bundle exec" to run the minitest command, default: true
-rubygems: true           # require rubygems when run the minitest command (only if bundler is disabled), default: false
+:all_on_start => false      # run all tests in group on startup, default: true
+:cli => '--test'            # pass arbitrary Minitest CLI arguments, default: ''
+:test_folders => ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
+:test_file_patterns => true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
+:spring => true             # enable spring support, default: false
+:zeus => true               # enable zeus support; default: false
+:drb => true                # enable DRb support, default: false
+:bundler => false           # don't use "bundle exec" to run the minitest command, default: true
+:rubygems => true           # require rubygems when run the minitest command (only if bundler is disabled), default: false
 ```
 
 ### Options usage examples
 
-You can change the default location and pattern of minitest files:
+You can change the default location of test files using the `:test_folders` option and pattern of test files using the `:test_file_patterns` option:
 
 ```ruby
-guard :minitest, test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
+guard :minitest, :test_folders => 'test/unit', :test_file_patterns => '*_test.rb' do
   # ...
 end
 ```
 
-You can pass any of the standard MiniTest CLI options using the :cli option:
+You can pass any of the standard MiniTest CLI options using the `:cli` option:
 
 ```ruby
-guard :minitest, cli: '--seed 123456 --verbose' do
+guard :minitest, :cli => '--seed 123456 --verbose' do
   # ...
 end
 ```
 
-If you're using [spring](https://github.com/jonleighton/spring) you can enable it with (you'll have to load it before):
+[Spring](https://github.com/jonleighton/spring) is supported (Ruby 1.9.X / Rails 3.2+ only), but you must enable it:
 
 ```ruby
-guard :minitest, spring: true do
+guard :minitest, :spring => true do
   # ...
 end
 ```
 
-If you're using [zeus](https://github.com/burke/zeus) you can enable it with (you'll have to start it before):
+[Zeus](https://github.com/burke/zeus) is supported, but you must enable it.
+Please note that notification are currently disabled when using Zeus, if
+you're interested in adding notification support for Zeus, please participate
+in the [issue #62](https://github.com/guard/guard-minitest/issues/62).
 
 ```ruby
-guard :minitest, zeus: true do
+guard :minitest, :zeus => true do
   # ...
 end
 ```
 
-If you're using [spork-testunit](https://github.com/sporkrb/spork-testunit) you can enable it with (you'll have to load it before):
+[Spork / spork-testunit](https://github.com/sporkrb/spork-testunit) is supported, but you must enable it:
 
 ```ruby
-guard :minitest, drb: true do
+guard :minitest, :drb => true do
   # ...
 end
 ```
@@ -135,11 +138,10 @@ Pull requests are very welcome! Please try to follow these simple rules if appli
 For questions please join us in our [Google group](http://groups.google.com/group/guard-dev) or on
 `#guard` (irc.freenode.net).
 
+## Maintainer
+
+[Rémy Coutable](https://github.com/rymai) ([@rymai](http://twitter.com/rymai), [rymai.me](http://rymai.me))
+
 ## Author
 
 [Yann Lugrin](https://github.com/yannlugrin)
-
-## Maintainer
-
-[Rémy Coutable](https://github.com/rymai)
-
