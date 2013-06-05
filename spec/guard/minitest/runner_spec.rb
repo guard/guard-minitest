@@ -5,9 +5,9 @@ describe Guard::Minitest::Runner do
   subject { Guard::Minitest::Runner }
 
   before do
-    @old_runner = File.expand_path('../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)
+    @old_runner = ::MiniTest::Unit::VERSION =~ /^5/ ? '' : " #{File.expand_path('../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)}"
     @minitest_autorun = ::MiniTest::Unit::VERSION =~ /^5/ ? 'Minitest.autorun' : 'MiniTest::Unit.autorun'
-    @require_old_runner = ::MiniTest::Unit::VERSION =~ /^5/ ? '' : " -r #{@old_runner}"
+    @require_old_runner = ::MiniTest::Unit::VERSION =~ /^5/ ? '' : " -r#{@old_runner}"
   end
 
   describe 'options' do
@@ -26,6 +26,7 @@ describe Guard::Minitest::Runner do
       describe 'seed' do
         it 'should set cli options' do
           Guard::UI.expects(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to Minitest with the :cli option.')
+
           subject.new(:seed => 123456789).cli_options.must_equal ['--seed 123456789']
         end
       end
@@ -33,6 +34,7 @@ describe Guard::Minitest::Runner do
       describe 'verbose' do
         it 'should set cli options' do
           Guard::UI.expects(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to Minitest with the :cli option.')
+
           subject.new(:verbose => true).cli_options.must_equal ['--verbose']
         end
       end
@@ -41,21 +43,25 @@ describe Guard::Minitest::Runner do
     describe 'bundler' do
       it 'default should be true if Gemfile exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
+
         subject.new.bundler?.must_equal true
       end
 
       it 'default should be false if Gemfile don\'t exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
+
         subject.new.bundler?.must_equal false
       end
 
       it 'should be forced to false' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
+
         subject.new(:bundler => false).bundler?.must_equal false
       end
 
       it 'should be forced to false if spring is enabled' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
+
         subject.new(:spring => true).bundler?.must_equal false
       end
     end
@@ -63,11 +69,13 @@ describe Guard::Minitest::Runner do
     describe 'rubygems' do
       it 'default should be false if Gemfile exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
+
         subject.new.rubygems?.must_equal false
       end
 
       it 'default should be false if Gemfile don\'t exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
+
         subject.new.rubygems?.must_equal false
       end
 
@@ -116,7 +124,7 @@ describe Guard::Minitest::Runner do
   end
 
   describe 'run' do
-    before(:each) do
+    before do
       Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
     end
 
@@ -125,6 +133,7 @@ describe Guard::Minitest::Runner do
       runner.expects(:system).with(
         "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --seed 12345 --pride"
       )
+
       runner.run(['test/test_minitest.rb'])
     end
 
@@ -133,12 +142,13 @@ describe Guard::Minitest::Runner do
       runner.expects(:system).with(
         "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --verbose --pride"
       )
+
       runner.run(['test/test_minitest.rb'])
     end
 
     describe 'in empty folder' do
 
-      before(:each) do
+      before do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
       end
 
@@ -148,6 +158,7 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with(
           "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
+
         runner.run(['test/test_minitest.rb'])
       end
 
@@ -157,13 +168,14 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with(
           "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
+
         runner.run(['test/test_minitest.rb'])
       end
 
     end
 
     describe 'in bundler folder' do
-      before(:each) do
+      before do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
       end
 
@@ -173,6 +185,7 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with(
           "bundle exec ruby -I\"test\" -r bundler/setup -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
+
         runner.run(['test/test_minitest.rb'])
       end
 
@@ -182,6 +195,7 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with(
           "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
+
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => true)
       end
 
@@ -191,6 +205,7 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with(
           "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
+
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => false)
       end
 
@@ -201,6 +216,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :zeus => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with('zeus test ./test/test_minitest.rb')
+
         runner.run(['test/test_minitest.rb'], :zeus => true)
       end
 
@@ -208,6 +224,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :zeus => 'abcxyz')
         Guard::UI.expects(:info)
         runner.expects(:system).with('zeus abcxyz ./test/test_minitest.rb')
+
         runner.run(['test/test_minitest.rb'], :zeus => 'abcxyz')
       end
     end
@@ -216,8 +233,8 @@ describe Guard::Minitest::Runner do
       it 'should run with default spring command' do
         runner = subject.new(:test_folders => %w[test], :spring => true)
         Guard::UI.expects(:info)
-        puts "@require_old_runner : #{@require_old_runner}"
-        runner.expects(:system).with("spring testunit#{@require_old_runner} ./test/test_minitest.rb")
+        runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb")
+
         runner.run(['test/test_minitest.rb'], :spring => true)
       end
     end
@@ -227,6 +244,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :drb => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with('testdrb -Itest ./test/test_minitest.rb')
+
         runner.run(['test/test_minitest.rb'], :drb => true)
       end
     end
