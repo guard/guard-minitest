@@ -13,9 +13,6 @@ module MiniTest
         duration = Time.now - start
         ::Guard::Minitest::Notifier.notify(test_count, assertion_count, failures, errors, skips, duration)
       end
-    rescue NameError
-      puts "*** WARN: if you use MiniTest 1, please add version option in your 'Guardfile`."
-      raise
     end
 
   end

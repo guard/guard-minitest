@@ -5,7 +5,9 @@ describe Guard::Minitest::Runner do
   subject { Guard::Minitest::Runner }
 
   before do
+    @old_runner = File.expand_path('../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)
     @minitest_autorun = ::MiniTest::Unit::VERSION =~ /^5/ ? 'Minitest.autorun' : 'MiniTest::Unit.autorun'
+    @require_old_runner = ::MiniTest::Unit::VERSION =~ /^5/ ? '' : " -r #{@old_runner}"
   end
 
   describe 'options' do
@@ -116,13 +118,12 @@ describe Guard::Minitest::Runner do
   describe 'run' do
     before(:each) do
       Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
-      @default_runner = File.expand_path('../../../../lib/guard/minitest/runners/default_runner.rb', __FILE__)
     end
 
     it 'should run with specified seed' do
       runner = subject.new(:test_folders => %w[test], :cli => '--seed 12345')
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '#{@minitest_autorun}' -- --seed 12345 -p"
+        "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --seed 12345 --pride"
       )
       runner.run(['test/test_minitest.rb'])
     end
@@ -130,7 +131,7 @@ describe Guard::Minitest::Runner do
     it 'should run in verbose mode' do
       runner = subject.new(:test_folders => %w[test], :cli => '--verbose')
       runner.expects(:system).with(
-        "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '#{@minitest_autorun}' -- --verbose -p"
+        "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --verbose --pride"
       )
       runner.run(['test/test_minitest.rb'])
     end
@@ -145,7 +146,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test])
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '#{@minitest_autorun}' -- -p"
+          "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -154,7 +155,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :rubygems => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e '#{@minitest_autorun}' -- -p"
+          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -170,7 +171,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => true, :rubygems => false)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "bundle exec ruby -I\"test\" -r bundler/setup -r ./test/test_minitest.rb -r #{@default_runner} -e '#{@minitest_autorun}' -- -p"
+          "bundle exec ruby -I\"test\" -r bundler/setup -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
         runner.run(['test/test_minitest.rb'])
       end
@@ -179,7 +180,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => false, :rubygems => true)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb -r #{@default_runner} -e '#{@minitest_autorun}' -- -p"
+          "ruby -I\"test\" -r rubygems -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => true)
       end
@@ -188,7 +189,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(:test_folders => %w[test], :bundler => false, :rubygems => false)
         Guard::UI.expects(:info)
         runner.expects(:system).with(
-          "ruby -I\"test\" -r ./test/test_minitest.rb -r #{@default_runner} -e '#{@minitest_autorun}' -- -p"
+          "ruby -I\"test\" -r ./test/test_minitest.rb#{@require_old_runner} -e '#{@minitest_autorun}' -- --pride"
         )
         runner.run(['test/test_minitest.rb'], :bundler => false, :rubygems => false)
       end
@@ -199,18 +200,14 @@ describe Guard::Minitest::Runner do
       it 'should run with default zeus command' do
         runner = subject.new(:test_folders => %w[test], :zeus => true)
         Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "zeus test ./test/test_minitest.rb"
-        )
+        runner.expects(:system).with('zeus test ./test/test_minitest.rb')
         runner.run(['test/test_minitest.rb'], :zeus => true)
       end
 
       it 'should run with custom zeus command' do
         runner = subject.new(:test_folders => %w[test], :zeus => 'abcxyz')
         Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "zeus abcxyz ./test/test_minitest.rb"
-        )
+        runner.expects(:system).with('zeus abcxyz ./test/test_minitest.rb')
         runner.run(['test/test_minitest.rb'], :zeus => 'abcxyz')
       end
     end
@@ -219,9 +216,8 @@ describe Guard::Minitest::Runner do
       it 'should run with default spring command' do
         runner = subject.new(:test_folders => %w[test], :spring => true)
         Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "spring testunit #{@default_runner} ./test/test_minitest.rb"
-        )
+        puts "@require_old_runner : #{@require_old_runner}"
+        runner.expects(:system).with("spring testunit#{@require_old_runner} ./test/test_minitest.rb")
         runner.run(['test/test_minitest.rb'], :spring => true)
       end
     end
@@ -230,9 +226,7 @@ describe Guard::Minitest::Runner do
       it 'should run with drb' do
         runner = subject.new(:test_folders => %w[test], :drb => true)
         Guard::UI.expects(:info)
-        runner.expects(:system).with(
-          "testdrb -Itest ./test/test_minitest.rb"
-        )
+        runner.expects(:system).with('testdrb -Itest ./test/test_minitest.rb')
         runner.run(['test/test_minitest.rb'], :drb => true)
       end
     end

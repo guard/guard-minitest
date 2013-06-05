@@ -94,7 +94,10 @@ module Guard
       end
 
       def spring_command(paths)
-        ['spring testunit', File.expand_path('../runners/default_runner.rb', __FILE__)] + relative_paths(paths)
+        cmd_parts = ['spring testunit']
+        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless ::MiniTest::Unit::VERSION =~ /^5/
+
+        cmd_parts + relative_paths(paths)
       end
 
       def ruby_command(paths)
@@ -103,15 +106,15 @@ module Guard
         cmd_parts << '-r rubygems' if rubygems?
         cmd_parts << '-r bundler/setup' if bundler?
         cmd_parts += paths.map { |path| "-r ./#{path}" }
-        cmd_parts << "-r #{File.expand_path('../runners/default_runner.rb', __FILE__)}"
         if ::MiniTest::Unit::VERSION =~ /^5/
           cmd_parts << '-e \'Minitest.autorun\''
         else
+          cmd_parts << "-r #{File.expand_path('../runners/old_runner.rb', __FILE__)}"
           cmd_parts << '-e \'MiniTest::Unit.autorun\''
         end
         cmd_parts << '--'
         cmd_parts += cli_options
-        cmd_parts << '-p' # uses pride for output colorization
+        cmd_parts << '--pride' # uses pride for output colorization
       end
 
       def relative_paths(paths)
