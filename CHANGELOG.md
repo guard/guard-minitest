@@ -12,12 +12,12 @@
 * [#39][] Fix `watch` `Regex` for `lib` directory. ([@rymai][])
 * [#51][] Add color using the pride Minitest plugin (`--pride` option). ([@rymai][])
 * [#59][] Update spring command from test to testunit. ([@sbrink][])
-* [#57][] Added support for spring. ([@aspiers][])
+* [#57][] Add support for spring. ([@aspiers][])
 * [#56][] Include test directory in load path when DRb used. ([@sbleon][])
-* [#54][] Added support for zeus. ([@leemhenson][])
+* [#54][] Add support for zeus. ([@leemhenson][])
 * [#55][] Add `:all_on_start` option. ([@aflock][])
 * [#41][] Simplifying the DRb version of the runner. ([@chadoh][])
-* [#38][] Improves notification message formatting. ([@arronmabrey][])
+* [#38][] Improve notification message formatting. ([@arronmabrey][])
 
 ## 1.0.0.beta1 - Dec 10, 2012
 
