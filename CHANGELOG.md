@@ -4,6 +4,7 @@
 
 ### Bug fixes
 
+* [#65][] Use `Minitest::StatisticsReporter` instead of `Minitest::Reporter` for Minitest > 5.0. ([@kejadlen][])
 * [#66][] Don't use the `--pride` option for Minitest < 5.0. ([@sbl][])
 
 ## 1.0.0.beta.2 - Jun 5, 2013
@@ -127,6 +128,7 @@ First stable release.
 [#57]: https://github.com/guard/guard/issues/57
 [#59]: https://github.com/guard/guard/issues/59
 [#62]: https://github.com/guard/guard/issues/62
+[#65]: https://github.com/guard/guard/issues/65
 [#66]: https://github.com/guard/guard/issues/66
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
@@ -134,6 +136,7 @@ First stable release.
 [@chadoh]: https://github.com/chadoh
 [@itzki]: https://github.com/itzki
 [@japgolly]: https://github.com/japgolly
+[@kejadlen]: https://github.com/kejadlen
 [@leemhenson]: https://github.com/leemhenson
 [@manewitz]: https://github.com/manewitz
 [@rymai]: https://github.com/rymai
