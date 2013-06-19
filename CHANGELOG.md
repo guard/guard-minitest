@@ -2,6 +2,10 @@
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.beta.2...master)
 
+### Bug fixes
+
+* [#66][] Don't use the `--pride` option for Minitest < 5.0. ([@sbl][])
+
 ## 1.0.0.beta.2 - Jun 5, 2013
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.beta1...v1.0.0.beta.2)
@@ -123,6 +127,7 @@ First stable release.
 [#57]: https://github.com/guard/guard/issues/57
 [#59]: https://github.com/guard/guard/issues/59
 [#62]: https://github.com/guard/guard/issues/62
+[#66]: https://github.com/guard/guard/issues/66
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
@@ -132,6 +137,7 @@ First stable release.
 [@leemhenson]: https://github.com/leemhenson
 [@manewitz]: https://github.com/manewitz
 [@rymai]: https://github.com/rymai
+[@sbl]: https://github.com/sbl
 [@sbleon]: https://github.com/sbleon
 [@sbrink]: https://github.com/sbrink
 [@sometimesfood]: https://github.com/sometimesfood
