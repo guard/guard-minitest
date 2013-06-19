@@ -108,7 +108,6 @@ module Guard
         cmd_parts += paths.map { |path| "-r ./#{path}" }
         if ::MiniTest::Unit::VERSION =~ /^5/
           cmd_parts << '-e \'Minitest.autorun\''
-          cmd_parts << '--pride' # uses pride for output colorization
         else
           cmd_parts << "-r #{File.expand_path('../runners/old_runner.rb', __FILE__)}"
           cmd_parts << '-e \'MiniTest::Unit.autorun\''
