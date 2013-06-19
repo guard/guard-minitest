@@ -4,7 +4,9 @@ require 'guard/minitest/notifier'
 
 module Guard
   class Minitest
-    class Reporter < ::Minitest::Reporter
+    # NB: Minitest 5.0.4 uses ::Minitest:;StatisticsReporter; older minitest uses ::Minitest::Reporter
+    parent_class = defined?(::Minitest::StatisticsReporter) ? ::Minitest::StatisticsReporter : ::Minitest::Reporter
+    class Reporter < parent_class
 
       def report
         aggregate = results.group_by { |r| r.failure.class }
