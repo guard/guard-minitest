@@ -1,6 +1,15 @@
 ## Unreleased Changes
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.1...master)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.2...master)
+
+## 1.0.0.rc.2 - Jun 19, 2013
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.1...v1.0.0.rc.2)
+
+### Bug fixes
+
+* Drop the `--pride` option. Users should add `require 'minitest/pride'` to their `test_helper.rb` instead. ([@rymai][])
+* Ensure `Minitest::Reporter` is used for Minitest < 5.0.4 (precisely). ([@rymai][])
 
 ## 1.0.0.rc.1 - Jun 19, 2013
 
