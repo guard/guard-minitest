@@ -4,18 +4,14 @@ require 'guard/minitest/notifier'
 
 module Guard
   class Minitest
-    class Reporter < ::Minitest::Reporter
+    class Reporter < ::Minitest::StatisticsReporter
 
       def report
-        aggregate = results.group_by { |r| r.failure.class }
-        aggregate.default = [] # dumb. group_by should provide this
+        super
 
-        f = aggregate[::Minitest::Assertion].size
-        e = aggregate[::Minitest::UnexpectedError].size
-        s = aggregate[::Minitest::Skip].size
-        t = Time.now - start_time
-
-        ::Guard::Minitest::Notifier.notify(count, self.assertions, f, e, s, t)
+        ::Guard::Minitest::Notifier.notify(self.count, self.assertions,
+                                           self.failures, self.errors,
+                                           self.skips, self.total_time)
       end
 
     end
