@@ -6,8 +6,8 @@ module Guard
       attr_reader :test_folders, :test_file_patterns
 
       def initialize(test_folders, test_file_patterns)
-        @test_folders = test_folders.uniq.compact.freeze
-        @test_file_patterns = test_file_patterns.uniq.compact.freeze
+        @test_folders = test_folders.uniq.compact
+        @test_file_patterns = test_file_patterns.uniq.compact
       end
 
       def clean_all
@@ -15,55 +15,35 @@ module Guard
       end
 
       def clean(paths)
-        paths = paths.uniq.compact unless paths == @test_folders
-        paths = paths.select { |p| test_file?(p) || test_folder?(p) }
-
-        paths.dup.each do |path|
+        paths.reduce([]) do |memo, path|
           if File.directory?(path)
-            paths.delete(path)
-            paths += test_files_for_paths([path])
+            memo += _test_files_for_paths(path)
+          else
+            memo << path if _test_file?(path)
           end
-        end
-
-        paths.uniq!
-        paths.compact!
-        clear_test_files_list
-        paths
+          memo
+        end.uniq
       end
 
       private
 
-      def test_folder_regex
-        @_test_folder_regex ||= begin
-          folders = test_folders.map { |f| Regexp.quote(f) }.join('|')
-          Regexp.new("^/?(?:#{folders})(?:/|$)")
-        end
+      def _test_files_for_paths(paths = test_folders)
+        paths = _join_for_glob(Array(paths))
+        files = _join_for_glob(test_file_patterns)
+
+        Dir["#{paths}/**/#{files}"]
       end
 
-      def test_folder?(path)
-        path.match(test_folder_regex) && !path.match(/\..+$/) && File.directory?(path)
+      def _all_test_files
+        @_all_test_files ||= _test_files_for_paths
       end
 
-      def test_file?(path)
-        test_files.include?(path)
+      def _test_file?(path)
+        _all_test_files.include?(path)
       end
 
-      def test_files
-        @_test_files ||= test_files_for_paths(test_folders)
-      end
-
-      def join_for_glob(fragments)
+      def _join_for_glob(fragments)
         "{#{fragments.join(',')}}"
-      end
-
-      def test_files_for_paths(paths)
-        paths = join_for_glob(paths)
-        files = join_for_glob(test_file_patterns)
-        Dir.glob(paths + '/**/' + files)
-      end
-
-      def clear_test_files_list
-        @_test_files = nil
       end
 
     end
