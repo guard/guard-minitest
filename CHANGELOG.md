@@ -2,6 +2,12 @@
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.2...master)
 
+### Improvements
+
+* Refactor / simplify `Guard::Minitest::Inspector`. ([@rymai][])
+* [#69][] Use `Gem::Requirement.new` to compare versions. ([@kejadlen][])
+* [#68][] Remove the unused test directory. ([@kejadlen][])
+
 ## 1.0.0.rc.2 - Jun 19, 2013
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.1...v1.0.0.rc.2)
@@ -143,6 +149,8 @@ First stable release.
 [#62]: https://github.com/guard/guard/issues/62
 [#65]: https://github.com/guard/guard/issues/65
 [#66]: https://github.com/guard/guard/issues/66
+[#68]: https://github.com/guard/guard/issues/68
+[#69]: https://github.com/guard/guard/issues/69
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
