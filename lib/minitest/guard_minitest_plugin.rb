@@ -1,5 +1,8 @@
-minitest_version = ::MiniTest::Unit::VERSION.split(/\./)
-if minitest_version[0].to_i >= 5 && (minitest_version[1].to_i > 0 || minitest_version[2].to_i >= 4)
+require 'rubygems/requirement'
+
+requirement = Gem::Requirement.new('>= 5.0.4')
+minitest_version = Gem::Version.new(::MiniTest::Unit::VERSION)
+if requirement.satisfied_by?(minitest_version)
   require 'guard/minitest/reporter'
 else
   require 'guard/minitest/reporters/old_reporter'
