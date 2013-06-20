@@ -1,8 +1,6 @@
-Contribute to Guard::Minitest
-==========================
+# Contribute to Guard::Minitest
 
-File an issue
--------------
+## File an issue
 
 You can report bugs and feature requests to [GitHub Issues](https://github.com/guard/guard-minitest/issues).
 
@@ -21,8 +19,7 @@ When you file a bug, please try to follow these simple rules if applicable:
 
 **It's most likely that your bug gets resolved faster if you provide as much information as possible!**
 
-Development
------------
+## Development
 
 * Documentation hosted at [RubyDoc](http://rubydoc.info/github/guard/guard-minitest/master/frames).
 * Source hosted at [GitHub](https://github.com/guard/guard-minitest).
@@ -30,8 +27,9 @@ Development
 Pull requests are very welcome! Please try to follow these simple rules if applicable:
 
 * Please create a topic branch for every separate change you make.
-* Make sure your patches are well tested. All specs run with `rake spec:portability` must pass.
+* Make sure your patches are well tested. All specs run by Travis CI must pass.
 * Update the [README](https://github.com/guard/guard-minitest/blob/master/README.md).
+* Update the [CHANGELOG](https://github.com/guard/guard/blob/master/CHANGELOG.md) for noteworthy changes (don't forget to run `bundle exec pimpmychangelog` and watch the magic happen)!
 * Please **do not change** the version number.
 
 For questions please join us in our [Google group](http://groups.google.com/group/guard-dev) or on

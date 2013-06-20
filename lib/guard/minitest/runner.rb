@@ -114,7 +114,6 @@ module Guard
         end
         cmd_parts << '--'
         cmd_parts += cli_options
-        cmd_parts << '--pride' # uses pride for output colorization
       end
 
       def relative_paths(paths)

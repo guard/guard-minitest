@@ -8,17 +8,18 @@ SimpleCov.start do
   add_filter '/spec/'
 end
 
-require 'minitest/autorun'
-superclass = if MiniTest::Unit::VERSION =~ /^5/
-  Minitest::Test
-else
-  MiniTest::Unit::TestCase
-end
+ENV['GUARD_ENV'] = 'test'
+require 'guard/minitest'
 
+require 'minitest/autorun'
+require 'minitest/pride'
 require 'mocha/setup'
 
-require 'guard/minitest'
-ENV['GUARD_ENV'] = 'test'
+superclass = if ::MiniTest::Unit::VERSION =~ /^5/
+  ::Minitest::Test
+else
+  ::MiniTest::Unit::TestCase
+end
 
 class MiniTest::Spec < superclass
 
