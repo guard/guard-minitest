@@ -4,6 +4,7 @@
 
 ### Improvements
 
+* [#70][] Use `-r minitest/autorun` instead of `-e 'Minitest.autorun'` in the runner. ([@kejadlen][])
 * Refactor / simplify `Guard::Minitest::Inspector`. ([@rymai][])
 * [#69][] Use `Gem::Requirement.new` to compare versions. ([@kejadlen][])
 * [#68][] Remove the unused test directory. ([@kejadlen][])
@@ -151,6 +152,7 @@ First stable release.
 [#66]: https://github.com/guard/guard/issues/66
 [#68]: https://github.com/guard/guard/issues/68
 [#69]: https://github.com/guard/guard/issues/69
+[#70]: https://github.com/guard/guard/issues/70
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
