@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'rubygems/requirement'
+
 module Guard
   class Minitest
     class Runner
@@ -95,23 +97,29 @@ module Guard
 
       def spring_command(paths)
         cmd_parts = ['spring testunit']
-        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless ::MiniTest::Unit::VERSION =~ /^5/
+        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless minitest_version_gte_5?
 
         cmd_parts + relative_paths(paths)
       end
 
       def ruby_command(paths)
         cmd_parts  = ['ruby']
-        cmd_parts += test_folders.map {|f| %[-I"#{f}"] }
+        cmd_parts.concat(test_folders.map {|f| %[-I"#{f}"] })
         cmd_parts << '-r rubygems' if rubygems?
         cmd_parts << '-r bundler/setup' if bundler?
-        cmd_parts += paths.map { |path| "-r ./#{path}" }
-        if ::MiniTest::Unit::VERSION =~ /^5/
-          cmd_parts << '-e \'Minitest.autorun\''
-        else
+        cmd_parts << '-r minitest/autorun'
+        cmd_parts.concat(paths.map { |path| "-r ./#{path}" })
+
+        unless minitest_version_gte_5?
           cmd_parts << "-r #{File.expand_path('../runners/old_runner.rb', __FILE__)}"
-          cmd_parts << '-e \'MiniTest::Unit.autorun\''
         end
+
+        # All the work is done through minitest/autorun
+        # and requiring the test files, so this is just
+        # a placeholder so Ruby doesn't try to exceute
+        # code from STDIN.
+        cmd_parts << '-e ""'
+
         cmd_parts << '--'
         cmd_parts += cli_options
       end
@@ -134,6 +142,12 @@ module Guard
             UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.}
           end
         end
+      end
+
+      def minitest_version_gte_5?
+        requirement = Gem::Requirement.new('>= 5')
+        minitest_version = Gem::Version.new(::MiniTest::Unit::VERSION)
+        requirement.satisfied_by?(minitest_version)
       end
 
     end
