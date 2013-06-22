@@ -10,11 +10,7 @@ task :test do
   $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/spec'))
   $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__)))
 
-  if ::MiniTest::Unit::VERSION =~ /^5/
-    Minitest.autorun
-  else
-    MiniTest::Unit.autorun
-  end
+  require 'minitest/autorun'
 
   test_files = Dir['spec/**/*_spec.rb']
   test_files.each { |f| require f }
