@@ -5,7 +5,7 @@ describe Guard::MinitestVersion do
 
   describe 'VERSION' do
     it 'is the current version' do
-      Guard::MinitestVersion::VERSION.must_equal '1.0.0.rc.2'
+      Guard::MinitestVersion::VERSION.must_equal '1.0.0.rc.3'
     end
   end
 

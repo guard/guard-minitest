@@ -13,6 +13,6 @@ module Minitest
   end
 
   def self.plugin_guard_minitest_init(options) # :nodoc:
-    self.reporter << ::Guard::Minitest::Reporter.new(File.open('/dev/null', 'w'))
+    self.reporter << ::Guard::Minitest::Reporter.new
   end
 end
