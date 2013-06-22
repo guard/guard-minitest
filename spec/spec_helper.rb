@@ -1,12 +1,6 @@
-require 'simplecov'
+require 'rubygems'
 require 'coveralls'
-
-SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-SimpleCov.command_name 'Unit Tests'
-SimpleCov.start do
-  add_filter '/bundle/'
-  add_filter '/spec/'
-end
+Coveralls.wear!
 
 ENV['GUARD_ENV'] = 'test'
 require 'guard/minitest'
