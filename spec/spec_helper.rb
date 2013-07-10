@@ -1,7 +1,10 @@
 require 'rubygems'
-require 'coveralls'
-Coveralls.wear! do
-  add_filter '/spec/'
+
+if ENV['CI']
+  require 'coveralls'
+  Coveralls.wear! do
+    add_filter 'spec'
+  end
 end
 
 ENV['GUARD_ENV'] = 'test'
