@@ -1,6 +1,12 @@
 ## Unreleased Changes
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.3...master)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0...master)
+
+## 1.0.0 - Jul 10, 2013
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.3...v1.0.0)
+
+No significant changes compared to RC 3.
 
 ## 1.0.0.rc.3 - Jun 22, 2013
 
