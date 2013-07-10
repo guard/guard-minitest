@@ -1,6 +1,8 @@
 require 'rubygems'
 require 'coveralls'
-Coveralls.wear!
+Coveralls.wear! do
+  add_filter '/spec/'
+end
 
 ENV['GUARD_ENV'] = 'test'
 require 'guard/minitest'
