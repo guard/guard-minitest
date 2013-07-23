@@ -2,6 +2,10 @@
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0...master)
 
+### Bug fix
+
+* [#72][] Don't require `test` with `-Itest` when using DRb. ([@rafmagana][] & [@rymai][])
+
 ## 1.0.0 - Jul 10, 2013
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0.rc.3...v1.0.0)
@@ -163,6 +167,7 @@ First stable release.
 [#68]: https://github.com/guard/guard-minitest/issues/68
 [#69]: https://github.com/guard/guard-minitest/issues/69
 [#70]: https://github.com/guard/guard-minitest/issues/70
+[#72]: https://github.com/guard/guard-minitest/issues/72
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
@@ -172,6 +177,7 @@ First stable release.
 [@kejadlen]: https://github.com/kejadlen
 [@leemhenson]: https://github.com/leemhenson
 [@manewitz]: https://github.com/manewitz
+[@rafmagana]: https://github.com/rafmagana
 [@rymai]: https://github.com/rymai
 [@sbl]: https://github.com/sbl
 [@sbleon]: https://github.com/sbleon

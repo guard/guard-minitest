@@ -86,7 +86,7 @@ module Guard
       end
 
       def drb_command(paths)
-        %w[testdrb -Itest] + relative_paths(paths)
+        %w[testdrb] + relative_paths(paths)
       end
 
       def zeus_command(paths)
