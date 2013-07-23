@@ -51,7 +51,7 @@ module Guard
 
       rescue LoadError, NameError
         require 'minitest/unit'
-        ::MiniTest::Unit::VERSION
+        ::Minitest::Unit::VERSION
       end
     end
 
