@@ -1,8 +1,12 @@
 ## Unreleased Changes
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0...master)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.1...master)
 
-### Bug fix
+## 1.0.1 - Jul 23, 2013
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.0...v1.0.1)
+
+### Bug fixes
 
 * [#73][] Don't unecessary require 'minitest/autorun'. ([@jakebellacera][], [@rafmagana][] & [@rymai][])
 * [#72][] Don't require `test` with `-Itest` when using DRb. ([@rafmagana][] & [@rymai][])
