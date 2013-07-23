@@ -8,7 +8,6 @@ module Guard
     require 'guard/minitest/inspector'
     require 'guard/minitest/runner'
     require 'guard/minitest/version'
-    require 'minitest/autorun'
 
     def initialize(watchers = [], options = {})
       super

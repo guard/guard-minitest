@@ -4,6 +4,7 @@
 
 ### Bug fix
 
+* [#73][] Don't unecessary require 'minitest/autorun'. ([@jakebellacera][], [@rafmagana][] & [@rymai][])
 * [#72][] Don't require `test` with `-Itest` when using DRb. ([@rafmagana][] & [@rymai][])
 
 ## 1.0.0 - Jul 10, 2013
@@ -168,11 +169,13 @@ First stable release.
 [#69]: https://github.com/guard/guard-minitest/issues/69
 [#70]: https://github.com/guard/guard-minitest/issues/70
 [#72]: https://github.com/guard/guard-minitest/issues/72
+[#73]: https://github.com/guard/guard-minitest/issues/73
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
 [@chadoh]: https://github.com/chadoh
 [@itzki]: https://github.com/itzki
+[@jakebellacera]: https://github.com/jakebellacera
 [@japgolly]: https://github.com/japgolly
 [@kejadlen]: https://github.com/kejadlen
 [@leemhenson]: https://github.com/leemhenson
