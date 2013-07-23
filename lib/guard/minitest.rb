@@ -49,7 +49,7 @@ module Guard
         require 'minitest'
         ::Minitest::VERSION
 
-      rescue NameError
+      rescue LoadError, NameError
         require 'minitest/unit'
         ::MiniTest::Unit::VERSION
       end
