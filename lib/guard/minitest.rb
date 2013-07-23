@@ -20,7 +20,7 @@ module Guard
     end
 
     def start
-      UI.info "Guard::Minitest #{MinitestVersion::VERSION} is running, with Minitest::Unit #{::MiniTest::Unit::VERSION}!"
+      UI.info "Guard::Minitest #{MinitestVersion::VERSION} is running, with Minitest::Unit #{_minitest_version}!"
       run_all if @options[:all_on_start]
     end
 
@@ -40,6 +40,19 @@ module Guard
     def run_on_changes(paths = [])
       paths = @inspector.clean(paths)
       @runner.run(paths)
+    end
+
+    private
+
+    def _minitest_version
+      @_minitest_version ||= begin
+        require 'minitest'
+        ::Minitest::VERSION
+
+      rescue NameError
+        require 'minitest/unit'
+        ::MiniTest::Unit::VERSION
+      end
     end
 
   end
