@@ -6,6 +6,7 @@ Gem::Specification.new do |s|
   s.name        = 'guard-minitest'
   s.version     = Guard::MinitestVersion::VERSION
   s.platform    = Gem::Platform::RUBY
+  s.license     = 'MIT'
   s.summary     = 'Guard gem for the Minitest framework'
   s.description = 'Guard::Minitest automatically run your tests with Minitest framework (much like autotest)'
   s.authors     = ['Yann Lugrin', 'Rémy Coutable']
