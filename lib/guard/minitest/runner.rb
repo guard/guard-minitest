@@ -16,6 +16,7 @@ module Guard
           :drb                => false,
           :zeus               => false,
           :spring             => false,
+          :include            => [],
           :test_folders       => %w[test spec],
           :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
           :cli                => nil
@@ -62,6 +63,10 @@ module Guard
         @options[:test_folders]
       end
 
+      def include_folders
+        @options[:include]
+      end
+
       def test_file_patterns
         @options[:test_file_patterns]
       end
@@ -104,7 +109,7 @@ module Guard
 
       def ruby_command(paths)
         cmd_parts  = ['ruby']
-        cmd_parts.concat(test_folders.map {|f| %[-I"#{f}"] })
+        cmd_parts.concat(generate_includes)
         cmd_parts << '-r rubygems' if rubygems?
         cmd_parts << '-r bundler/setup' if bundler?
         cmd_parts << '-r minitest/autorun'
@@ -122,6 +127,10 @@ module Guard
 
         cmd_parts << '--'
         cmd_parts += cli_options
+      end
+
+      def generate_includes
+        (test_folders + include_folders).map {|f| %[-I"#{f}"] }
       end
 
       def relative_paths(paths)
