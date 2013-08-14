@@ -70,6 +70,7 @@ end
 :all_on_start => false      # run all tests in group on startup, default: true
 :cli => '--test'            # pass arbitrary Minitest CLI arguments, default: ''
 :test_folders => ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
+:include => ['lib']         # specify an array of include paths to the command that runs the tests
 :test_file_patterns => true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
 :spring => true             # enable spring support, default: false
 :zeus => true               # enable zeus support; default: false
