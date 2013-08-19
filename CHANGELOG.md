@@ -1,6 +1,14 @@
 ## Unreleased Changes
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.1...master)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.1.0...master)
+
+## 1.1.0 - Aug 19, 2013
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.1...v1.1.0)
+
+###  New feature
+
+* [#77][] Allow specifying arbitrary include paths. ([@psyho][])
 
 ## 1.0.1 - Jul 23, 2013
 
@@ -174,6 +182,7 @@ First stable release.
 [#70]: https://github.com/guard/guard-minitest/issues/70
 [#72]: https://github.com/guard/guard-minitest/issues/72
 [#73]: https://github.com/guard/guard-minitest/issues/73
+[#77]: https://github.com/guard/guard-minitest/issues/77
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
@@ -184,6 +193,7 @@ First stable release.
 [@kejadlen]: https://github.com/kejadlen
 [@leemhenson]: https://github.com/leemhenson
 [@manewitz]: https://github.com/manewitz
+[@psyho]: https://github.com/psyho
 [@rafmagana]: https://github.com/rafmagana
 [@rymai]: https://github.com/rymai
 [@sbl]: https://github.com/sbl
