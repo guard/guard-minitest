@@ -136,6 +136,15 @@ describe Guard::Minitest::Runner do
       runner.run(['test/test_minitest.rb'])
     end
 
+    it 'should run with specified directories included' do
+      runner = subject.new(:test_folders => %w[test], :include => %w[lib app])
+      runner.expects(:system).with(
+        "ruby -I\"test\" -I\"lib\" -I\"app\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+      )
+
+      runner.run(['test/test_minitest.rb'])
+    end
+
     it 'should run in verbose mode' do
       runner = subject.new(:test_folders => %w[test], :cli => '--verbose')
       runner.expects(:system).with(
