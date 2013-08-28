@@ -110,6 +110,12 @@ Please note that notification are currently disabled when using Zeus, if
 you're interested in adding notification support for Zeus, please
 [open a new issue](https://github.com/guard/guard-minitest/issues/new).
 
+If your test helper matches the test_file_patterns, it can lead to problems
+as guard-minitest will submit the test helper itself to the zeus test
+command when running all tests. For example, if the test helper is
+called ``test/test_helper.rb`` it will match ``test_*.rb``. In this case you can
+either change the test_file_patterns or rename the test helper.
+
 ```ruby
 guard :minitest, :zeus => true do
   # ...
