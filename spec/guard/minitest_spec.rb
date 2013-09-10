@@ -77,4 +77,27 @@ describe Guard::Minitest do
       subject.new.run_on_changes(['test/guard/minitest/test_inspector.rb']).must_equal true
     end
   end
+
+  describe 'run_on_additions' do
+    it 'clears the test file cache and runs minitest for the new path' do
+      inspector.stubs(:clean).with(['test/guard/minitest/test_new.rb']).returns(['test/guard/minitest/test_new.rb'])
+
+      inspector.expects(:clear_memoized_test_files)
+      runner.expects(:run).with(['test/guard/minitest/test_new.rb']).returns(true)
+
+      subject.new.run_on_additions(['test/guard/minitest/test_new.rb']).must_equal true
+    end
+  end
+
+  describe 'run_on_removals' do
+    it 'clears the test file cache and does not run minitest' do
+      inspector.stubs(:clean).with(['test/guard/minitest/test_deleted.rb']).returns(['test/guard/minitest/test_deleted.rb'])
+
+      inspector.expects(:clear_memoized_test_files)
+      runner.expects(:run).never
+
+      subject.new.run_on_removals(['test/guard/minitest/test_deleted.rb'])
+    end
+
+  end
 end
