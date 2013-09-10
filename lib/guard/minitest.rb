@@ -42,6 +42,15 @@ module Guard
       @runner.run(paths)
     end
 
+    def run_on_additions(paths)
+      @inspector.clear_memoized_test_files
+      @runner.run(paths)
+    end
+
+    def run_on_removals(paths)
+      @inspector.clear_memoized_test_files
+    end
+
     private
 
     def _minitest_version

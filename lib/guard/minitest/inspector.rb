@@ -25,6 +25,10 @@ module Guard
         end.uniq
       end
 
+      def clear_memoized_test_files
+        @_all_test_files = nil
+      end
+
       private
 
       def _test_files_for_paths(paths = test_folders)
