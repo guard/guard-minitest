@@ -1,6 +1,14 @@
 ## Unreleased Changes
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.1.0...master)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.2.0...master)
+
+## 1.2.0 - Sept 10, 2013
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.1.0...v1.2.0)
+
+### Improvements
+
+* [#81][] Clears memoized test files on additions and removals. ([@pschyska][])
 
 ## 1.1.0 - Aug 19, 2013
 
@@ -183,6 +191,7 @@ First stable release.
 [#72]: https://github.com/guard/guard-minitest/issues/72
 [#73]: https://github.com/guard/guard-minitest/issues/73
 [#77]: https://github.com/guard/guard-minitest/issues/77
+[#81]: https://github.com/guard/guard-minitest/issues/81
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
@@ -193,6 +202,7 @@ First stable release.
 [@kejadlen]: https://github.com/kejadlen
 [@leemhenson]: https://github.com/leemhenson
 [@manewitz]: https://github.com/manewitz
+[@pschyska]: https://github.com/pschyska
 [@psyho]: https://github.com/psyho
 [@rafmagana]: https://github.com/rafmagana
 [@rymai]: https://github.com/rymai
