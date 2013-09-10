@@ -6,7 +6,7 @@
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.1.0...v1.2.0)
 
-### Improvements
+### Improvement
 
 * [#81][] Clears memoized test files on additions and removals. ([@pschyska][])
 
