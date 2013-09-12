@@ -1,6 +1,14 @@
-## Unreleased Changes
+## Master
 
-[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.2.0...master)
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.3.0...master)
+
+## 1.3.0 - Sept 12, 2013
+
+[Full Changelog](https://github.com/guard/guard-minitest/compare/v1.2.0...v1.3.0)
+
+### New feature
+
+* [#82][] Adds simple notifications support in zeus mode. ([@pschyska][])
 
 ## 1.2.0 - Sept 10, 2013
 
@@ -14,7 +22,7 @@
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.0.1...v1.1.0)
 
-###  New feature
+### New feature
 
 * [#77][] Allow specifying arbitrary include paths. ([@psyho][])
 
@@ -192,6 +200,7 @@ First stable release.
 [#73]: https://github.com/guard/guard-minitest/issues/73
 [#77]: https://github.com/guard/guard-minitest/issues/77
 [#81]: https://github.com/guard/guard-minitest/issues/81
+[#82]: https://github.com/guard/guard-minitest/issues/82
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
