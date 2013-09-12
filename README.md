@@ -106,8 +106,10 @@ end
 ```
 
 [Zeus](https://github.com/burke/zeus) is supported, but you must enable it.
-Please note that notification are currently disabled when using Zeus, if
-you're interested in adding notification support for Zeus, please
+Please note that notifications support is very basic when when using Zeus. The zeus client exit status is eavluated, and
+a Guard :success or :failed notification is triggered. It does not include the test results though.
+ 
+If you're interested in improving it, please
 [open a new issue](https://github.com/guard/guard-minitest/issues/new).
 
 If your test helper matches the test_file_patterns, it can lead to problems
