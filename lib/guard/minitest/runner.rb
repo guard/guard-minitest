@@ -32,7 +32,13 @@ module Guard
       def run(paths, options = {})
         message = options[:message] || "Running: #{paths.join(' ')}"
         UI.info message, :reset => true
-        system(minitest_command(paths))
+        status = system(minitest_command(paths))
+        # When using zeus, the Guard::Minitest::Reporter can't be used because the minitests run in the zeus process.
+        # We can use the exit status of the zeus client process though to distinguish between :success and :failed
+        if zeus?
+          ::Guard::Notifier.notify(message, :title => 'Minitest results', :image => status ? :success : :failed)
+        end
+        status
       end
 
       def cli_options
