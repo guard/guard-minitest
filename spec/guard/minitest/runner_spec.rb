@@ -235,6 +235,30 @@ describe Guard::Minitest::Runner do
 
         runner.run(['test/test_minitest.rb'], :zeus => 'abcxyz')
       end
+
+      describe 'notifications' do
+        it 'should provide success notification when the zeus exit status is 0' do
+          runner = subject.new(:test_folders => %w[test], :zeus => true)
+
+          runner.expects(:system).with('zeus test ./test/test_minitest.rb').returns(0)
+          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
+          runner.run(['test/test_minitest.rb'], :zeus => true)
+        end
+
+        it 'should provide failed notification when the zeus exit status is non-zero' do
+          runner = subject.new(:test_folders => %w[test], :zeus => true)
+
+          runner.expects(:system).with('zeus test ./test/test_minitest.rb').returns(1)
+          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
+          runner.run(['test/test_minitest.rb'], :zeus => true)
+
+          runner = subject.new(:test_folders => %w[test], :zeus => true)
+
+          runner.expects(:system).with('zeus test ./test/test_minitest.rb').returns(333)
+          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
+          runner.run(['test/test_minitest.rb'], :zeus => true)
+        end
+      end
     end
 
     describe 'spring' do
