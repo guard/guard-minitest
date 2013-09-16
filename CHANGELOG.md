@@ -2,6 +2,10 @@
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.3.0...master)
 
+### Improvement
+
+* #83 Add note for Rails projects using profile/benchmark tests in README. ([@rymai][])
+
 ## 1.3.0 - Sept 12, 2013
 
 [Full Changelog](https://github.com/guard/guard-minitest/compare/v1.2.0...v1.3.0)
