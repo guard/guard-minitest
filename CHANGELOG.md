@@ -4,6 +4,7 @@
 
 ### Improvement
 
+* [#84][] Fix bug with spring (and maybe zeus) where it had to be included in an app's Gemfile. ([@brandonweiss][])
 * #83 Add note for Rails projects using profile/benchmark tests in README. ([@rymai][])
 
 ## 1.3.0 - Sept 12, 2013

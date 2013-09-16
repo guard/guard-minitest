@@ -258,6 +258,28 @@ describe Guard::Minitest::Runner do
           Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', :title => 'Minitest results', :image => :failed)
           runner.run(['test/test_minitest.rb'], :zeus => true)
         end
+
+        it 'should provide success notification when the spring exit status is 0' do
+          runner = subject.new(:test_folders => %w[test], :spring => true)
+
+          runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb").returns(true)
+          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', :title => 'Minitest results', :image => :success)
+          runner.run(['test/test_minitest.rb'], :spring => true)
+        end
+
+        it 'should provide failed notification when the spring exit status is non-zero or the command failed' do
+          runner = subject.new(:test_folders => %w[test], :spring => true)
+
+          runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb").returns(false)
+          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', :title => 'Minitest results', :image => :failed)
+          runner.run(['test/test_minitest.rb'], :spring => true)
+
+          runner = subject.new(:test_folders => %w[test], :spring => true)
+
+          runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb").returns(false)
+          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', :title => 'Minitest results', :image => :failed)
+          runner.run(['test/test_minitest.rb'], :spring => true)
+        end
       end
     end
 
@@ -265,6 +287,15 @@ describe Guard::Minitest::Runner do
       it 'should run with default spring command' do
         runner = subject.new(:test_folders => %w[test], :spring => true)
         Guard::UI.expects(:info)
+        runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb")
+
+        runner.run(['test/test_minitest.rb'], :spring => true)
+      end
+
+      it "should run with a clean environment" do
+        runner = subject.new(:test_folders => %w[test], :spring => true)
+        Guard::UI.expects(:info)
+        Bundler.expects(:with_clean_env).yields
         runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb")
 
         runner.run(['test/test_minitest.rb'], :spring => true)
