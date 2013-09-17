@@ -156,10 +156,6 @@ guard :minitest, :drb => true do
 end
 ```
 
-## Roadmap
-
-* Add notification support when using `zeus`.
-
 ## Development
 
 * Documentation hosted at [RubyDoc](http://rubydoc.info/github/guard/guard-minitest/master/frames).
@@ -177,8 +173,12 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 
 ## Maintainer
 
-[Rémy Coutable](https://github.com/rymai) ([@rymai](http://twitter.com/rymai), [rymai.me](http://rymai.me))
+[Rémy Coutable](https://github.com/rymai) ([@rymai](http://twitter.com/rymai), [rym.ai](http://rym.ai))
 
 ## Author
 
 [Yann Lugrin](https://github.com/yannlugrin)
+
+## Contributors
+
+[https://github.com/guard/guard-minitest/contributors](https://github.com/guard/guard-minitest/contributors)
