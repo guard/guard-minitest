@@ -3,13 +3,13 @@ require 'guard'
 require 'guard/guard'
 
 module Guard
-  class Minitest < Guard
+  class Minitest < Plugin
 
     require 'guard/minitest/inspector'
     require 'guard/minitest/runner'
     require 'guard/minitest/version'
 
-    def initialize(watchers = [], options = {})
+    def initialize(options = {})
       super
       @options = {
         all_on_start: true
