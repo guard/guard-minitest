@@ -5,7 +5,7 @@
 ### Improvement
 
 * [#84][] Fix bug with spring (and maybe zeus) where it had to be included in an app's Gemfile. ([@brandonweiss][])
-* #83 Add note for Rails projects using profile/benchmark tests in README. ([@rymai][])
+* [#83][] Add note for Rails projects using profile/benchmark tests in README. ([@rymai][])
 
 ## 1.3.0 - Sept 12, 2013
 
@@ -206,9 +206,12 @@ First stable release.
 [#77]: https://github.com/guard/guard-minitest/issues/77
 [#81]: https://github.com/guard/guard-minitest/issues/81
 [#82]: https://github.com/guard/guard-minitest/issues/82
+[#83]: https://github.com/guard/guard-minitest/issues/83
+[#84]: https://github.com/guard/guard-minitest/issues/84
 [@aflock]: https://github.com/aflock
 [@arronmabrey]: https://github.com/arronmabrey
 [@aspiers]: https://github.com/aspiers
+[@brandonweiss]: https://github.com/brandonweiss
 [@chadoh]: https://github.com/chadoh
 [@itzki]: https://github.com/itzki
 [@jakebellacera]: https://github.com/jakebellacera
