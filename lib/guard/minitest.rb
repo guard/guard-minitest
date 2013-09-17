@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'guard'
-require 'guard/guard'
+require 'guard/plugin'
 
 module Guard
   class Minitest < Plugin
