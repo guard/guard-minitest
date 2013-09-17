@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Guard::Minitest do
   subject { Guard::Minitest }
 
-  let(:runner) { stub('runner', :test_folders => [], :test_file_patterns => []) }
+  let(:runner) { stub('runner', test_folders: [], test_file_patterns: []) }
   let(:inspector) { stub('inspector') }
   let(:guard) { subject.new }
 
@@ -21,7 +21,7 @@ describe Guard::Minitest do
   describe 'initialization' do
 
     it 'initializes runner with options' do
-      Guard::Minitest::Runner.expects(:new).with({ :all_on_start => true }).returns(runner)
+      Guard::Minitest::Runner.expects(:new).with({ all_on_start: true }).returns(runner)
       subject.new
     end
 
@@ -40,10 +40,10 @@ describe Guard::Minitest do
       subject.new.start
     end
 
-    it 'do not run all tests if you pass :run_all_on_start => false' do
+    it 'do not run all tests if you pass run_all_on_start: false' do
       subject.any_instance.expects(:run_all).never
 
-      subject.new([], { :all_on_start => false })
+      subject.new([], { all_on_start: false })
     end
 
   end
@@ -63,7 +63,7 @@ describe Guard::Minitest do
   describe 'run_all' do
     it 'runs all tests' do
       inspector.stubs(:clean_all).returns(['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'])
-      runner.expects(:run).with(['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'], {:message => 'Running all tests'}).returns(true)
+      runner.expects(:run).with(['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'], {message: 'Running all tests'}).returns(true)
 
       subject.new.run_all.must_equal true
     end

@@ -14,5 +14,5 @@ end
 #
 group :test do
   gem 'mocha'
-  gem 'coveralls', :require => false
+  gem 'coveralls', require: false
 end

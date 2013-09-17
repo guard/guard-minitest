@@ -12,7 +12,7 @@ module Guard
     def initialize(watchers = [], options = {})
       super
       @options = {
-        :all_on_start => true
+        all_on_start: true
       }.merge(options)
 
       @runner    = Runner.new(@options)
@@ -34,7 +34,7 @@ module Guard
 
     def run_all
       paths = @inspector.clean_all
-      @runner.run(paths, :message => 'Running all tests')
+      @runner.run(paths, message: 'Running all tests')
     end
 
     def run_on_changes(paths = [])

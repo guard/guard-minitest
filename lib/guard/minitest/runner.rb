@@ -11,15 +11,15 @@ module Guard
 
       def initialize(options = {})
         @options = {
-          :bundler            => File.exist?("#{Dir.pwd}/Gemfile"),
-          :rubygems           => false,
-          :drb                => false,
-          :zeus               => false,
-          :spring             => false,
-          :include            => [],
-          :test_folders       => %w[test spec],
-          :test_file_patterns => %w[*_test.rb test_*.rb *_spec.rb],
-          :cli                => nil
+          bundler:            File.exist?("#{Dir.pwd}/Gemfile"),
+          rubygems:           false,
+          drb:                false,
+          zeus:               false,
+          spring:             false,
+          include:            [],
+          test_folders:       %w[test spec],
+          test_file_patterns: %w[*_test.rb test_*.rb *_spec.rb],
+          cli:                nil
         }.merge(options)
 
         parse_deprecated_options
@@ -31,7 +31,7 @@ module Guard
 
       def run(paths, options = {})
         message = options[:message] || "Running: #{paths.join(' ')}"
-        UI.info message, :reset => true
+        UI.info message, reset: true
 
         status = if bundler?
           system(minitest_command(paths))
@@ -44,7 +44,7 @@ module Guard
         # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
         # process, but we can use the exit status of the client process to distinguish between :success and :failed.
         if zeus? || spring?
-          ::Guard::Notifier.notify(message, :title => 'Minitest results', :image => status ? :success : :failed)
+          ::Guard::Notifier.notify(message, title: 'Minitest results', image: status ? :success : :failed)
         end
 
         status
