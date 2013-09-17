@@ -6,7 +6,6 @@ gem 'rake'
 
 group :development do
   gem 'ruby_gntp'
-  gem 'pimpmychangelog'
 end
 
 # The test group will be

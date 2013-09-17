@@ -43,7 +43,7 @@ describe Guard::Minitest do
     it 'do not run all tests if you pass run_all_on_start: false' do
       subject.any_instance.expects(:run_all).never
 
-      subject.new([], { all_on_start: false })
+      subject.new(all_on_start: false)
     end
 
   end
