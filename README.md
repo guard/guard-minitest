@@ -181,4 +181,4 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 
 ## Contributors
 
-[https://github.com/guard/guard-minitest/contributors](https://github.com/guard/guard-minitest/contributors)
+[https://github.com/guard/guard-minitest/graphs/contributors](https://github.com/guard/guard-minitest/graphs/contributors)
