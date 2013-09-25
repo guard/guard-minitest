@@ -9,3 +9,6 @@ gemfile:
   - gemfiles/Gemfile.minitest-3
   - gemfiles/Gemfile.minitest-4
   - gemfiles/Gemfile.minitest-5
+notifications:
+  recipients:
+    - remy@rymai.me
