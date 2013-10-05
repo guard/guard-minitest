@@ -4,7 +4,7 @@
 Guard::Minitest allows to automatically & intelligently launch tests with the
 [minitest framework](https://github.com/seattlerb/minitest) when files are modified.
 
-* Compatible with minitest >= 2.1 (optimal support for 5.x).
+* Compatible with minitest >= 3.0 (optimal support for 5.x).
 * Tested against Ruby 1.9.3, 2.0.0, JRuby and Rubinius (1.9 mode).
 
 ## Install
