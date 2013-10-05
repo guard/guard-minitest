@@ -6,7 +6,6 @@ gem 'rake'
 
 group :development do
   gem 'ruby_gntp'
-  gem 'pimpmychangelog'
 end
 
 # The test group will be
@@ -14,5 +13,5 @@ end
 #
 group :test do
   gem 'mocha'
-  gem 'coveralls', :require => false
+  gem 'coveralls', require: false
 end

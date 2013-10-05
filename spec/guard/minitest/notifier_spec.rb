@@ -34,8 +34,8 @@ describe Guard::Minitest::Notifier do
     it 'should call Guard::Notifier' do
       ::Guard::Notifier.expects(:notify).with(
         "1 tests\n2 assertions, 0 failures, 0 errors\n\n0.10 tests/s, 0.20 assertions/s\n\nFinished in 10.0000 seconds",
-        :title => 'Minitest results',
-        :image => :success
+        title: 'Minitest results',
+        image: :success
       )
 
       subject.notify(1, 2, 0, 0, 0, 10.0)

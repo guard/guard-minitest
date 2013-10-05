@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
-gemspec :path => '../'
+gemspec path: '../'
 
 group :test do
   gem 'rake'
   gem 'minitest', '~> 5.0'
   gem 'mocha'
-  gem 'coveralls', :require => false
+  gem 'coveralls', require: false
 end
