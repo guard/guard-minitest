@@ -9,4 +9,4 @@ task :spec do
   Dir['spec/**/*_spec.rb'].each { |f| require f }
 end
 
-task :default => :spec
+task default: :spec

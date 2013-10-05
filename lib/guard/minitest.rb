@@ -1,18 +1,18 @@
 # encoding: utf-8
 require 'guard'
-require 'guard/guard'
+require 'guard/plugin'
 
 module Guard
-  class Minitest < Guard
+  class Minitest < Plugin
 
     require 'guard/minitest/inspector'
     require 'guard/minitest/runner'
     require 'guard/minitest/version'
 
-    def initialize(watchers = [], options = {})
+    def initialize(options = {})
       super
       @options = {
-        :all_on_start => true
+        all_on_start: true
       }.merge(options)
 
       @runner    = Runner.new(@options)
@@ -34,7 +34,7 @@ module Guard
 
     def run_all
       paths = @inspector.clean_all
-      @runner.run(paths, :message => 'Running all tests')
+      @runner.run(paths, message: 'Running all tests')
     end
 
     def run_on_changes(paths = [])

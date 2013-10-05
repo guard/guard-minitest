@@ -5,7 +5,7 @@ Guard::Minitest allows to automatically & intelligently launch tests with the
 [minitest framework](https://github.com/seattlerb/minitest) when files are modified.
 
 * Compatible with minitest >= 2.1 (optimal support for 5.x).
-* Tested against Ruby 1.8.7, 1.9.3, 2.0.0, JRuby (1.8 mode & 1.9 mode) & Rubinius (1.8 mode & 1.9 mode).
+* Tested against Ruby 1.9.3, 2.0.0, JRuby and Rubinius (1.9 mode).
 
 ## Install
 
@@ -91,16 +91,16 @@ end
 ### List of available options
 
 ```ruby
-:all_on_start => false      # run all tests in group on startup, default: true
-:cli => '--test'            # pass arbitrary Minitest CLI arguments, default: ''
-:test_folders => ['tests']  # specify an array of paths that contain test files, default: %w[test spec]
-:include => ['lib']         # specify an array of include paths to the command that runs the tests
-:test_file_patterns => true # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
-:spring => true             # enable spring support, default: false
-:zeus => true               # enable zeus support; default: false
-:drb => true                # enable DRb support, default: false
-:bundler => false           # don't use "bundle exec" to run the minitest command, default: true
-:rubygems => true           # require rubygems when run the minitest command (only if bundler is disabled), default: false
+all_on_start: false               # run all tests in group on startup, default: true
+cli: '--test'                     # pass arbitrary Minitest CLI arguments, default: ''
+test_folders: ['tests']           # specify an array of paths that contain test files, default: %w[test spec]
+include: ['lib']                  # specify an array of include paths to the command that runs the tests
+test_file_patterns: %w[test_*.rb] # specify an array of patterns that test files must match in order to be run, default: %w[*_test.rb test_*.rb *_spec.rb]
+spring: true                      # enable spring support, default: false
+zeus: true                        # enable zeus support; default: false
+drb: true                         # enable DRb support, default: false
+bundler: false                    # don't use "bundle exec" to run the minitest command, default: true
+rubygems: true                    # require rubygems when run the minitest command (only if bundler is disabled), default: false
 ```
 
 ### Options usage examples
@@ -108,7 +108,7 @@ end
 You can change the default location of test files using the `:test_folders` option and pattern of test files using the `:test_file_patterns` option:
 
 ```ruby
-guard :minitest, :test_folders => 'test/unit', :test_file_patterns => '*_test.rb' do
+guard :minitest, test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
   # ...
 end
 ```
@@ -116,7 +116,7 @@ end
 You can pass any of the standard MiniTest CLI options using the `:cli` option:
 
 ```ruby
-guard :minitest, :cli => '--seed 123456 --verbose' do
+guard :minitest, cli: '--seed 123456 --verbose' do
   # ...
 end
 ```
@@ -124,7 +124,7 @@ end
 [Spring](https://github.com/jonleighton/spring) is supported (Ruby 1.9.X / Rails 3.2+ only), but you must enable it:
 
 ```ruby
-guard :minitest, :spring => true do
+guard :minitest, spring: true do
   # ...
 end
 ```
@@ -143,7 +143,7 @@ called ``test/test_helper.rb`` it will match ``test_*.rb``. In this case you can
 either change the test_file_patterns or rename the test helper.
 
 ```ruby
-guard :minitest, :zeus => true do
+guard :minitest, zeus: true do
   # ...
 end
 ```
@@ -151,7 +151,7 @@ end
 [Spork / spork-testunit](https://github.com/sporkrb/spork-testunit) is supported, but you must enable it:
 
 ```ruby
-guard :minitest, :drb => true do
+guard :minitest, drb: true do
   # ...
 end
 ```
@@ -181,4 +181,4 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 
 ## Contributors
 
-[https://github.com/guard/guard-minitest/contributors](https://github.com/guard/guard-minitest/contributors)
+[https://github.com/guard/guard-minitest/graphs/contributors](https://github.com/guard/guard-minitest/graphs/contributors)
