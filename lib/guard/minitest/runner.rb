@@ -36,7 +36,11 @@ module Guard
         status = if bundler?
           system(minitest_command(paths))
         else
-          Bundler.with_clean_env do
+          if defined?(::Bundler)
+            ::Bundler.with_clean_env do
+              system(minitest_command(paths))
+            end
+          else
             system(minitest_command(paths))
           end
         end
