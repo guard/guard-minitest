@@ -5,7 +5,12 @@ gemspec
 gem 'rake'
 
 group :development do
-  gem 'ruby_gntp'
+  gem 'ruby_gntp', require: false
+
+  # Used for release
+  gem 'gems', require: false
+  gem 'netrc', require: false
+  gem 'octokit', require: false
 end
 
 # The test group will be
