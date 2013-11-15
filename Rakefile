@@ -70,6 +70,7 @@ class Releaser
       exit if input == 'n'
 
       if gh_client.update_release(gh_release.rels[:self].href, draft: false)
+        gh_release = gh_releases.find { |r| r.tag_name == tag_name && r.draft == false }
         puts "GitHub release #{tag_name} has been published!"
         puts "\nPlease enjoy and spread the word!"
         puts "Lack of inspiration? Here's a tweet you could improve:\n\n"
