@@ -299,8 +299,7 @@ describe Guard::Minitest::Runner do
       it 'runs with custom spring command' do
         runner = subject.new(spring: 'rake test')
         Guard::UI.expects(:info)
-        runner.expects(:system).with('spring rake test ./test/test_minitest.rb')
-
+        runner.expects(:system).with("spring rake test#{@old_runner} ./test/test_minitest.rb")
         runner.run(['test/test_minitest.rb'], spring: 'rake test')
       end
     end
