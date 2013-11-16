@@ -119,6 +119,10 @@ describe Guard::Minitest::Runner do
       it 'is settable using a boolean' do
         subject.new(spring: true).spring?.must_equal true
       end
+
+      it 'is settable using a string which represents the command to send to spring' do
+        subject.new(spring: 'rake test').spring?.must_equal true
+      end
     end
   end
 
@@ -290,6 +294,14 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb")
 
         runner.run(['test/test_minitest.rb'], spring: true)
+      end
+
+      it 'runs with custom spring command' do
+        runner = subject.new(spring: 'rake test')
+        Guard::UI.expects(:info)
+        runner.expects(:system).with('spring rake test ./test/test_minitest.rb')
+
+        runner.run(['test/test_minitest.rb'], spring: 'rake test')
       end
     end
 
