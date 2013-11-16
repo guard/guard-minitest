@@ -302,6 +302,20 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with("spring rake test#{@old_runner} ./test/test_minitest.rb")
         runner.run(['test/test_minitest.rb'], spring: 'rake test')
       end
+
+      it 'runs default spring command with cli' do
+        runner = subject.new(spring: true, cli: '--seed 12345 --verbose')
+        Guard::UI.expects(:info)
+        runner.expects(:system).with("spring testunit#{@old_runner} ./test/test_minitest.rb -- --seed 12345 --verbose")
+        runner.run(['test/test_minitest.rb'], spring: true, cli: '--seed 12345 --verbose')
+      end
+
+      it 'runs custom spring command with cli' do
+        runner = subject.new(spring: 'rake test', cli: '--seed 12345 --verbose')
+        Guard::UI.expects(:info)
+        runner.expects(:system).with("spring rake test#{@old_runner} ./test/test_minitest.rb -- --seed 12345 --verbose")
+        runner.run(['test/test_minitest.rb'], spring: 'rake test', cli: '--seed 12345 --verbose')
+      end
     end
 
     describe 'drb' do
