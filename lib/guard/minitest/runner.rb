@@ -71,7 +71,7 @@ module Guard
       end
 
       def spring?
-        @options[:spring]
+        @options[:spring].is_a?(String) || @options[:spring]
       end
 
       def test_folders
@@ -111,15 +111,19 @@ module Guard
 
       def zeus_command(paths)
         command = @options[:zeus].is_a?(String) ? @options[:zeus] : 'test'
-
         ['zeus', command] + relative_paths(paths)
       end
 
       def spring_command(paths)
-        cmd_parts = ['spring testunit']
+        command = @options[:spring].is_a?(String) ? @options[:spring] : 'testunit'
+        cmd_parts = ['spring', command]
         cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless minitest_version_gte_5?
 
-        cmd_parts + relative_paths(paths)
+        if cli_options.length > 0
+          cmd_parts + relative_paths(paths) + ['--'] + cli_options
+        else
+          cmd_parts + relative_paths(paths)
+        end
       end
 
       def ruby_command(paths)

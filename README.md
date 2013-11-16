@@ -129,6 +129,15 @@ guard :minitest, spring: true do
 end
 ```
 
+From `spring 0.9.1`, `spring testunit` command haved removed to [spring-commands-testunit](https://github.com/jonleighton/spring-commands-testunit), if you are using 
+rails >=4.0 and spring >=0.9.1
+
+```ruby
+guard :minitest, spring: 'rake test' do
+  # ...
+end
+```
+
 [Zeus](https://github.com/burke/zeus) is supported, but you must enable it.
 Please note that notifications support is very basic when using Zeus. The zeus client exit status is evaluated, and
 a Guard `:success` or `:failed` notification is triggered. It does not include the test results though.
