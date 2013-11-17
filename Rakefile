@@ -92,8 +92,6 @@ def releaser
 end
 
 namespace :release do
-  require 'guard/minitest/version'
-
   desc "Push #{PROJECT_NAME} #{CURRENT_VERSION} to RubyGems and publish its GitHub release"
   task full: ['release:gem', 'release:github']
 
