@@ -118,11 +118,10 @@ module Guard
         command = @options[:spring].is_a?(String) ? @options[:spring] : 'testunit'
         cmd_parts = ['spring', command]
         cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless minitest_version_gte_5?
-
         if cli_options.length > 0
-          cmd_parts + relative_paths(paths) + ['--'] + cli_options
+          cmd_parts + paths + ['--'] + cli_options
         else
-          cmd_parts + relative_paths(paths)
+          cmd_parts + paths
         end
       end
 
