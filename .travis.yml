@@ -8,6 +8,6 @@ rvm:
 gemfile:
   - gemfiles/Gemfile.minitest-4
   - gemfiles/Gemfile.minitest-5
-notifications:
-  recipients:
-    - remy@rymai.me
+matrix:
+  allow_failures:
+    - rvm: rbx-19mode
