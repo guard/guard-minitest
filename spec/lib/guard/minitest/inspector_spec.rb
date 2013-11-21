@@ -7,7 +7,7 @@ describe Guard::Minitest::Inspector do
   describe 'clean' do
 
     before do
-      @files_on_disk = Dir['spec/**/*_spec.rb'].sort#'spec/guard/minitest/inspector_spec.rb', 'spec/guard/minitest_spec.rb', 'spec/guard/minitest_spec.rb'].sort
+      @files_on_disk = Dir['spec/**/*_spec.rb'].sort
     end
 
     it "should add all test files under the given dir" do
@@ -31,7 +31,7 @@ describe Guard::Minitest::Inspector do
     end
 
     it 'should remove duplication' do
-      inspector.clean(['spec/guard/minitest_spec.rb', 'spec/guard/minitest_spec.rb']).must_equal ['spec/guard/minitest_spec.rb']
+      inspector.clean(['spec/lib/guard/minitest_spec.rb', 'spec/lib/guard/minitest_spec.rb']).must_equal ['spec/lib/guard/minitest_spec.rb']
     end
 
     it 'should remove duplication (2)' do

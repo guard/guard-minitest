@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'guard/notifier'
 
 module Guard
