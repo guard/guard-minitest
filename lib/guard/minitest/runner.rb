@@ -1,11 +1,9 @@
-require 'rubygems/requirement'
-
 module Guard
   class Minitest
     class Runner
 
       def self.run(paths = [], options = {})
-        Runner.new(options).run(paths, options)
+        new(options).run(paths, options)
       end
 
       def initialize(options = {})
@@ -54,7 +52,7 @@ module Guard
       end
 
       def bundler?
-        @options[:bundler] && ! @options[:spring]
+        @options[:bundler] && !@options[:spring]
       end
 
       def rubygems?
@@ -116,7 +114,7 @@ module Guard
       def spring_command(paths)
         command = @options[:spring].is_a?(String) ? @options[:spring] : 'testunit'
         cmd_parts = ['spring', command]
-        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (minitest_version_gte_5? || command != 'testunit')
+        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'testunit')
         if cli_options.length > 0
           cmd_parts + paths + ['--'] + cli_options
         else
@@ -132,7 +130,7 @@ module Guard
         cmd_parts << '-r minitest/autorun'
         cmd_parts.concat(paths.map { |path| "-r ./#{path}" })
 
-        unless minitest_version_gte_5?
+        unless Utils.minitest_version_gte_5?
           cmd_parts << "-r #{File.expand_path('../runners/old_runner.rb', __FILE__)}"
         end
 
@@ -168,12 +166,6 @@ module Guard
             UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.}
           end
         end
-      end
-
-      def minitest_version_gte_5?
-        requirement = Gem::Requirement.new('>= 5')
-        minitest_version = Gem::Version.new(::MiniTest::Unit::VERSION)
-        requirement.satisfied_by?(minitest_version)
       end
 
     end

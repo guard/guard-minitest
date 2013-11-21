@@ -1,8 +1,6 @@
-require 'rubygems/requirement'
+require 'guard/minitest/utils'
 
-requirement = Gem::Requirement.new('>= 5.0.4')
-minitest_version = Gem::Version.new(::MiniTest::Unit::VERSION)
-if requirement.satisfied_by?(minitest_version)
+if ::Guard::Minitest::Utils.minitest_version_gte_5_0_4?
   require 'guard/minitest/reporter'
 else
   require 'guard/minitest/reporters/old_reporter'

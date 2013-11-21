@@ -1,12 +1,11 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe Guard::Minitest::Runner do
   subject { Guard::Minitest::Runner }
 
   before do
-    @old_runner = ::MiniTest::Unit::VERSION =~ /^5/ ? '' : " #{File.expand_path('../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)}"
-    @require_old_runner = ::MiniTest::Unit::VERSION =~ /^5/ ? '' : " -r#{@old_runner}"
+    @old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " #{File.expand_path('../../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)}"
+    @require_old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " -r#{@old_runner}"
   end
 
   describe 'options' do
@@ -133,6 +132,7 @@ describe Guard::Minitest::Runner do
 
     it 'passes :cli arguments' do
       runner = subject.new(cli: '--seed 12345 --verbose')
+
       runner.expects(:system).with(
         "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --seed 12345 --verbose"
       )
@@ -142,6 +142,7 @@ describe Guard::Minitest::Runner do
 
     it 'runs with specified directories included' do
       runner = subject.new(include: %w[lib app])
+
       runner.expects(:system).with(
         "ruby -I\"test\" -I\"spec\" -I\"lib\" -I\"app\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
       )
@@ -150,13 +151,13 @@ describe Guard::Minitest::Runner do
     end
 
     describe 'in empty folder' do
-
       before do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
       end
 
       it 'runs without bundler and rubygems' do
         runner = subject.new
+
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
@@ -167,6 +168,7 @@ describe Guard::Minitest::Runner do
 
       it 'runs without bundler but rubygems' do
         runner = subject.new(rubygems: true)
+
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
@@ -184,6 +186,7 @@ describe Guard::Minitest::Runner do
 
       it 'should run with bundler but not rubygems' do
         runner = subject.new(bundler: true, rubygems: false)
+
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "bundle exec ruby -I\"test\" -I\"spec\" -r bundler/setup -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
@@ -194,22 +197,24 @@ describe Guard::Minitest::Runner do
 
       it 'runs without bundler but rubygems' do
         runner = subject.new(bundler: false, rubygems: true)
+
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         )
 
-        runner.run(['test/test_minitest.rb'], bundler: false, rubygems: true)
+        runner.run(['test/test_minitest.rb'])
       end
 
       it 'runs without bundler and rubygems' do
         runner = subject.new(bundler: false, rubygems: false)
+
         Guard::UI.expects(:info)
         runner.expects(:system).with(
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         )
 
-        runner.run(['test/test_minitest.rb'], bundler: false, rubygems: false)
+        runner.run(['test/test_minitest.rb'])
       end
 
     end
@@ -217,18 +222,20 @@ describe Guard::Minitest::Runner do
     describe 'zeus' do
       it 'runs with default zeus command' do
         runner = subject.new(zeus: true)
+
         Guard::UI.expects(:info)
         runner.expects(:system).with('zeus test ./test/test_minitest.rb')
 
-        runner.run(['test/test_minitest.rb'], zeus: true)
+        runner.run(['test/test_minitest.rb'])
       end
 
       it 'runs with custom zeus command' do
         runner = subject.new(zeus: 'abcxyz')
+
         Guard::UI.expects(:info)
         runner.expects(:system).with('zeus abcxyz ./test/test_minitest.rb')
 
-        runner.run(['test/test_minitest.rb'], zeus: 'abcxyz')
+        runner.run(['test/test_minitest.rb'])
       end
 
       describe 'notifications' do
@@ -237,7 +244,8 @@ describe Guard::Minitest::Runner do
 
           runner.expects(:system).with('zeus test ./test/test_minitest.rb').returns(true)
           Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
-          runner.run(['test/test_minitest.rb'], zeus: true)
+
+          runner.run(['test/test_minitest.rb'])
         end
 
         it 'provides failed notification when the zeus exit status is non-zero or the command failed' do
@@ -245,35 +253,8 @@ describe Guard::Minitest::Runner do
 
           runner.expects(:system).with('zeus test ./test/test_minitest.rb').returns(false)
           Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
-          runner.run(['test/test_minitest.rb'], zeus: true)
 
-          runner = subject.new(test_folders: %w[test], zeus: true)
-
-          runner.expects(:system).with('zeus test ./test/test_minitest.rb').returns(false)
-          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
-          runner.run(['test/test_minitest.rb'], zeus: true)
-        end
-
-        it 'provides success notification when the spring exit status is 0' do
-          runner = subject.new(spring: true)
-
-          runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb").returns(true)
-          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
-          runner.run(['test/test_minitest.rb'], spring: true)
-        end
-
-        it 'provides failed notification when the spring exit status is non-zero or the command failed' do
-          runner = subject.new(spring: true)
-
-          runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb").returns(false)
-          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
-          runner.run(['test/test_minitest.rb'], spring: true)
-
-          runner = subject.new(spring: true)
-
-          runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb").returns(false)
-          Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
-          runner.run(['test/test_minitest.rb'], spring: true)
+          runner.run(['test/test_minitest.rb'])
         end
       end
     end
@@ -281,50 +262,77 @@ describe Guard::Minitest::Runner do
     describe 'spring' do
       it 'runs with default spring command' do
         runner = subject.new(spring: true)
+
         Guard::UI.expects(:info)
         runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb")
 
-        runner.run(['test/test_minitest.rb'], spring: true)
+        runner.run(['test/test_minitest.rb'])
       end
 
       it 'runs with a clean environment' do
         runner = subject.new(spring: true)
+
         Guard::UI.expects(:info)
         Bundler.expects(:with_clean_env).yields
         runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb")
 
-        runner.run(['test/test_minitest.rb'], spring: true)
+        runner.run(['test/test_minitest.rb'])
       end
 
       it 'runs with custom spring command' do
         runner = subject.new(spring: 'rake test')
+
         Guard::UI.expects(:info)
         runner.expects(:system).with("spring rake test test/test_minitest.rb")
-        runner.run(['test/test_minitest.rb'], spring: 'rake test')
+
+        runner.run(['test/test_minitest.rb'])
       end
 
       it 'runs default spring command with cli' do
         runner = subject.new(spring: true, cli: '--seed 12345 --verbose')
+
         Guard::UI.expects(:info)
         runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb -- --seed 12345 --verbose")
-        runner.run(['test/test_minitest.rb'], spring: true, cli: '--seed 12345 --verbose')
+
+        runner.run(['test/test_minitest.rb'])
       end
 
       it 'runs custom spring command with cli' do
         runner = subject.new(spring: 'rake test', cli: '--seed 12345 --verbose')
+
         Guard::UI.expects(:info)
         runner.expects(:system).with("spring rake test test/test_minitest.rb -- --seed 12345 --verbose")
-        runner.run(['test/test_minitest.rb'], spring: 'rake test', cli: '--seed 12345 --verbose')
+
+        runner.run(['test/test_minitest.rb'])
+      end
+
+      it 'provides success notification when the spring exit status is 0' do
+        runner = subject.new(spring: true)
+
+        runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb").returns(true)
+        Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
+
+        runner.run(['test/test_minitest.rb'])
+      end
+
+      it 'provides failed notification when the spring exit status is non-zero or the command failed' do
+        runner = subject.new(spring: true)
+
+        runner.expects(:system).with("spring testunit#{@old_runner} test/test_minitest.rb").returns(false)
+        Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
+
+        runner.run(['test/test_minitest.rb'])
       end
     end
 
     describe 'drb' do
       it 'should run with drb' do
         runner = subject.new(drb: true)
+
         Guard::UI.expects(:info)
         runner.expects(:system).with('testdrb ./test/test_minitest.rb')
 
-        runner.run(['test/test_minitest.rb'], drb: true)
+        runner.run(['test/test_minitest.rb'])
       end
     end
   end

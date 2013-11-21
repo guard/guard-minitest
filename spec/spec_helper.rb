@@ -14,7 +14,7 @@ require 'minitest/autorun'
 require 'minitest/pride'
 require 'mocha/setup'
 
-superclass = if ::MiniTest::Unit::VERSION =~ /^5/
+superclass = if Guard::Minitest::Utils.minitest_version_gte_5?
   ::Minitest::Test
 else
   ::MiniTest::Unit::TestCase
