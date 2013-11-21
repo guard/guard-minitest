@@ -2,9 +2,13 @@ source 'https://rubygems.org'
 
 gemspec path: '../'
 
-group :test do
-  gem 'rake'
-  gem 'minitest', '~> 4.0'
-  gem 'mocha'
-  gem 'coveralls', require: false
+gem 'rake'
+gem 'minitest', '~> 4.0'
+gem 'mocha'
+gem 'coveralls', require: false
+
+platforms :rbx do
+  gem 'racc'
+  gem 'rubinius-coverage', github: 'rubinius/rubinius-coverage' # assuming this is for simplecov/coveralls
+  gem 'rubysl'
 end
