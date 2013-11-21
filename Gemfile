@@ -13,6 +13,12 @@ group :development do
   gem 'octokit', require: false
 end
 
+platforms :rbx do
+  gem 'racc'
+  gem 'rubinius-coverage', github: 'rubinius/rubinius-coverage' # assuming this is for simplecov/coveralls
+  gem 'rubysl'
+end
+
 # The test group will be
 # installed on Travis CI
 #

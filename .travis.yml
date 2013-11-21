@@ -4,10 +4,7 @@ rvm:
   - 1.9.3
   - 2.0.0
   - jruby-19mode
-  - rbx-19mode
+  - rbx-2
 gemfile:
   - gemfiles/Gemfile.minitest-4
   - gemfiles/Gemfile.minitest-5
-matrix:
-  allow_failures:
-    - rvm: rbx-19mode
