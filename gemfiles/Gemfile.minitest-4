@@ -9,6 +9,6 @@ gem 'coveralls', require: false
 
 platforms :rbx do
   gem 'racc'
-  gem 'rubinius-coverage', github: 'rubinius/rubinius-coverage' # assuming this is for simplecov/coveralls
+  gem 'rubinius-coverage'
   gem 'rubysl'
 end
