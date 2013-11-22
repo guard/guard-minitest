@@ -8,6 +8,3 @@ rvm:
 gemfile:
   - gemfiles/Gemfile.minitest-4
   - gemfiles/Gemfile.minitest-5
-matrix:
-  allow_failures:
-    - rvm: rbx

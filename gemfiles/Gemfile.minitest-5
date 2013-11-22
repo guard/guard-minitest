@@ -7,8 +7,8 @@ gem 'minitest', '~> 5.0'
 gem 'mocha'
 gem 'coveralls', require: false
 
-# platforms :rbx do
-#   gem 'racc'
-#   gem 'rubinius-coverage'
-#   gem 'rubysl' # rubysl-test-unit depends on minitest ~> 4.7
-# end
+platforms :rbx do
+  gem 'racc'
+  gem 'rubinius-coverage'
+  gem 'rubysl'
+end
