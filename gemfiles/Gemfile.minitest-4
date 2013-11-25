@@ -8,7 +8,6 @@ gem 'mocha'
 gem 'coveralls', require: false
 
 platforms :rbx do
-  gem 'racc'
   gem 'rubinius-coverage'
   gem 'rubysl'
   gem 'rubysl-json'
