@@ -129,7 +129,7 @@ guard :minitest, spring: true do
 end
 ```
 
-From `spring 0.9.1`, `spring testunit` command haved removed to [spring-commands-testunit](https://github.com/jonleighton/spring-commands-testunit), if you are using 
+From `spring 0.9.1`, `spring testunit` command has been moved to [spring-commands-testunit](https://github.com/jonleighton/spring-commands-testunit). If you are using 
 rails >=4.0 and spring >=0.9.1
 
 ```ruby
