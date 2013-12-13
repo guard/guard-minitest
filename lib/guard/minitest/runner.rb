@@ -30,13 +30,17 @@ module Guard
         message = options[:message] || "Running: #{paths.join(' ')}"
         UI.info message, reset: true
 
-        status = if defined?(::Bundler)
-                   ::Bundler.with_clean_env do
-                     system(minitest_command(paths))
-                   end
-                 else
-                   system(minitest_command(paths))
-                 end
+        status = if bundler?
+          system(minitest_command(paths))
+        else
+          if defined?(::Bundler)
+            ::Bundler.with_clean_env do
+              system(minitest_command(paths))
+            end
+          else
+            system(minitest_command(paths))
+          end
+        end
 
         # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
         # process, but we can use the exit status of the client process to distinguish between :success and :failed.
