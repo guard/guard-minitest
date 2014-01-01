@@ -68,12 +68,12 @@ describe Guard::Minitest do
     end
   end
 
-  describe 'run_on_changes' do
+  describe 'run_on_modifications' do
     it 'runs minitest in paths' do
       inspector.stubs(:clean).with(['test/guard/minitest/test_inspector.rb']).returns(['test/guard/minitest/test_inspector.rb'])
       runner.expects(:run).with(['test/guard/minitest/test_inspector.rb']).returns(true)
 
-      subject.new.run_on_changes(['test/guard/minitest/test_inspector.rb']).must_equal true
+      subject.new.run_on_modifications(['test/guard/minitest/test_inspector.rb']).must_equal true
     end
   end
 

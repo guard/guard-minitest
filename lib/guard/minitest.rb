@@ -37,7 +37,7 @@ module Guard
       @runner.run(paths, message: 'Running all tests')
     end
 
-    def run_on_changes(paths = [])
+    def run_on_modifications(paths = [])
       paths = @inspector.clean(paths)
       @runner.run(paths)
     end
