@@ -82,7 +82,6 @@ describe Guard::Minitest do
       inspector.stubs(:clean).with(['test/guard/minitest/test_new.rb']).returns(['test/guard/minitest/test_new.rb'])
 
       inspector.expects(:clear_memoized_test_files)
-      runner.expects(:run).with(['test/guard/minitest/test_new.rb']).returns(true)
 
       subject.new.run_on_additions(['test/guard/minitest/test_new.rb']).must_equal true
     end

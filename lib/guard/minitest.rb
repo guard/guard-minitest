@@ -44,7 +44,7 @@ module Guard
 
     def run_on_additions(paths)
       @inspector.clear_memoized_test_files
-      @runner.run(paths)
+      true
     end
 
     def run_on_removals(paths)
