@@ -29,7 +29,7 @@ module Guard
       end
 
       def run(paths, options = {})
-        message = options[:message] || "Running: #{paths.join(' ')}"
+        message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         UI.info message, reset: true
 
         status = if defined?(::Bundler)
@@ -46,7 +46,11 @@ module Guard
           ::Guard::Notifier.notify(message, title: 'Minitest results', image: status ? :success : :failed)
         end
 
-        status
+        if @options[:all_after_pass] && status && !options[:all]
+           run_all
+        else
+          status
+        end
       end
 
       def run_all
@@ -90,6 +94,10 @@ module Guard
 
       def spring?
         @options[:spring].is_a?(String) || @options[:spring]
+      end
+
+      def all_after_pass?
+        @options[:all_after_pass]
       end
 
       def test_folders

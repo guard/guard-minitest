@@ -123,6 +123,16 @@ describe Guard::Minitest::Runner do
         subject.new(spring: 'rake test').spring?.must_equal true
       end
     end
+
+    describe 'all_after_pass' do
+      it 'defaults to false' do
+        subject.new.all_after_pass?.must_equal false
+      end
+
+      it 'is settable using a boolean' do
+        subject.new(all_after_pass: true).all_after_pass?.must_equal true
+      end
+    end
   end
 
   describe 'run' do
@@ -216,7 +226,36 @@ describe Guard::Minitest::Runner do
 
         runner.run(['test/test_minitest.rb'])
       end
+    end
 
+    describe 'all_after_pass' do
+      describe 'when set' do
+        it 'runs all tests after success' do
+          runner = subject.new(all_after_pass: true)
+          runner.stubs(:system).returns(true)
+          runner.expects(:run_all)
+
+          runner.run(['test/test_minitest.rb'])
+        end
+
+        it 'does not run all tests after failure' do
+          runner = subject.new(all_after_pass: true)
+          runner.stubs(:system).returns(false)
+          runner.expects(:run_all).never
+
+          runner.run(['test/test_minitest.rb'])
+        end
+      end
+
+      describe 'when unset' do
+        it 'does not run all tests again after success' do
+          runner = subject.new(all_after_pass: false)
+          runner.stubs(:system).returns(true)
+          runner.expects(:run_all).never
+
+          runner.run(['test/test_minitest.rb'])
+        end
+      end
     end
 
     describe 'zeus' do
