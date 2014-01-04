@@ -60,7 +60,7 @@ module Guard
 
       def run_on_changes(paths = [])
         paths = inspector.clean(paths)
-        run(paths)
+        run(paths, all: all_paths?(paths))
       end
 
       def run_on_additions(paths)
@@ -179,6 +179,10 @@ module Guard
 
       def relative_paths(paths)
         paths.map { |p| "./#{p}" }
+      end
+
+      def all_paths?(paths)
+        paths == inspector.all_test_files
       end
 
       def parse_deprecated_options

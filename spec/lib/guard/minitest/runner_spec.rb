@@ -378,21 +378,62 @@ describe Guard::Minitest::Runner do
 
   describe 'run_all' do
     it 'runs all tests' do
+      paths = %w[test/test_minitest_1.rb test/test_minitest_2.rb]
       runner = subject.new
-      runner.inspector.stubs(:clean_all).returns(['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'])
-      runner.expects(:run).with(['test/guard/minitest/test_inspector.rb', 'test/guard/test_minitest.rb'], {all: true}).returns(true)
+      runner.inspector.stubs(:clean_all).returns(paths)
+      runner.expects(:run).with(paths, { all: true }).returns(true)
 
       runner.run_all.must_equal true
     end
   end
 
   describe 'run_on_changes' do
-    it 'runs minitest in paths' do
-      runner = subject.new
-      runner.inspector.stubs(:clean).with(['test/guard/minitest/test_inspector.rb']).returns(['test/guard/minitest/test_inspector.rb'])
-      runner.expects(:run).with(['test/guard/minitest/test_inspector.rb']).returns(true)
+    let(:runner) { subject.new }
 
-      runner.run_on_changes(['test/guard/minitest/test_inspector.rb']).must_equal true
+    before do
+      @paths = %w[test/test_minitest_1.rb test/test_minitest_2.rb]
+      Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
+      Dir.stubs(:[]).returns(@paths)
+    end
+
+    describe 'when all paths are passed' do
+      before do
+        runner.inspector.stubs(:clean).returns(@paths)
+      end
+
+      it 'runs minitest in all paths' do
+        runner.expects(:run).with(@paths, all: true).returns(true)
+
+        runner.run_on_changes(@paths).must_equal true
+      end
+
+      it 'does not run all tests again after success even when all_after_pass is enabled' do
+        new_runner = subject.new(all_after_pass: true)
+        new_runner.stubs(:system).returns(true)
+        new_runner.expects(:run_all).never
+
+        new_runner.run_on_changes(@paths).must_equal true
+      end
+    end
+
+    describe 'when not all paths are passed' do
+      before do
+        runner.inspector.stubs(:clean).returns(['test/test_minitest_1.rb'])
+      end
+
+      it 'runs minitest in paths' do
+        runner.expects(:run).with(['test/test_minitest_1.rb'], all: false).returns(true)
+
+        runner.run_on_changes(@paths).must_equal true
+      end
+
+      it 'runs all tests again after success if all_after_pass enabled' do
+        new_runner = subject.new(all_after_pass: true)
+        new_runner.stubs(:system).returns(true)
+        new_runner.expects(:run).with(@paths, all: true).returns(true)
+
+        new_runner.run_on_changes(@paths).must_equal true
+      end
     end
   end
 
