@@ -37,14 +37,14 @@ module Guard
       @runner.run(paths, message: 'Running all tests')
     end
 
-    def run_on_changes(paths = [])
+    def run_on_modifications(paths = [])
       paths = @inspector.clean(paths)
       @runner.run(paths)
     end
 
     def run_on_additions(paths)
       @inspector.clear_memoized_test_files
-      @runner.run(paths)
+      true
     end
 
     def run_on_removals(paths)
