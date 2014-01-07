@@ -35,8 +35,8 @@ module Guard
       runner.run_all
     end
 
-    def run_on_changes(paths = [])
-      runner.run_on_changes(paths)
+    def run_on_modifications(paths = [])
+      runner.run_on_modifications(paths)
     end
 
     def run_on_additions(paths)

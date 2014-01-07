@@ -387,7 +387,7 @@ describe Guard::Minitest::Runner do
     end
   end
 
-  describe 'run_on_changes' do
+  describe 'run_on_modifications' do
     let(:runner) { subject.new }
 
     before do
@@ -404,7 +404,7 @@ describe Guard::Minitest::Runner do
       it 'runs minitest in all paths' do
         runner.expects(:run).with(@paths, all: true).returns(true)
 
-        runner.run_on_changes(@paths).must_equal true
+        runner.run_on_modifications(@paths).must_equal true
       end
 
       it 'does not run all tests again after success even when all_after_pass is enabled' do
@@ -412,7 +412,7 @@ describe Guard::Minitest::Runner do
         new_runner.stubs(:system).returns(true)
         new_runner.expects(:run_all).never
 
-        new_runner.run_on_changes(@paths).must_equal true
+        new_runner.run_on_modifications(@paths).must_equal true
       end
     end
 
@@ -424,7 +424,7 @@ describe Guard::Minitest::Runner do
       it 'runs minitest in paths' do
         runner.expects(:run).with(['test/test_minitest_1.rb'], all: false).returns(true)
 
-        runner.run_on_changes(@paths).must_equal true
+        runner.run_on_modifications(@paths).must_equal true
       end
 
       it 'runs all tests again after success if all_after_pass enabled' do
@@ -432,7 +432,7 @@ describe Guard::Minitest::Runner do
         new_runner.stubs(:system).returns(true)
         new_runner.expects(:run).with(@paths, all: true).returns(true)
 
-        new_runner.run_on_changes(@paths).must_equal true
+        new_runner.run_on_modifications(@paths).must_equal true
       end
     end
   end
@@ -442,7 +442,6 @@ describe Guard::Minitest::Runner do
       runner = subject.new
       runner.inspector.stubs(:clean).with(['test/guard/minitest/test_new.rb']).returns(['test/guard/minitest/test_new.rb'])
       runner.inspector.expects(:clear_memoized_test_files)
-      runner.expects(:run).with(['test/guard/minitest/test_new.rb']).returns(true)
 
       runner.run_on_additions(['test/guard/minitest/test_new.rb']).must_equal true
     end

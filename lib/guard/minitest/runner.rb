@@ -62,14 +62,14 @@ module Guard
         run(paths, all: true)
       end
 
-      def run_on_changes(paths = [])
+      def run_on_modifications(paths = [])
         paths = inspector.clean(paths)
         run(paths, all: all_paths?(paths))
       end
 
       def run_on_additions(paths)
         inspector.clear_memoized_test_files
-        run(paths)
+        true
       end
 
       def run_on_removals(paths)

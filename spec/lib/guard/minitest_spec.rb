@@ -40,18 +40,18 @@ describe Guard::Minitest do
     end
   end
 
-  describe 'run_on_changes' do
-    it 'runs run_on_changes via runner' do
-      runner.any_instance.expects(:run_on_changes)
+  describe 'run_on_modifications' do
+    it 'is run through runner' do
+      runner.any_instance.expects(:run_on_modifications)
 
-      guard.run_on_changes
+      guard.run_on_modifications
     end
   end
 
   describe 'run_on_additions' do
     let(:paths) { %w[path1 path2] }
 
-    it 'runs run_on_additions via runner' do
+    it 'is run through runner' do
       runner.any_instance.expects(:run_on_additions).with(paths)
 
       guard.run_on_additions(paths)
