@@ -9,6 +9,4 @@ gem 'coveralls', require: false
 
 platforms :rbx do
   gem 'rubinius-coverage'
-  gem 'rubysl'
-  gem 'rubysl-json'
 end
