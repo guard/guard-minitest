@@ -92,6 +92,7 @@ end
 
 ```ruby
 all_on_start: false               # run all tests in group on startup, default: true
+all_after_pass: true              # run all tests in group after changed specs pass, default: false
 cli: '--test'                     # pass arbitrary Minitest CLI arguments, default: ''
 test_folders: ['tests']           # specify an array of paths that contain test files, default: %w[test spec]
 include: ['lib']                  # specify an array of include paths to the command that runs the tests

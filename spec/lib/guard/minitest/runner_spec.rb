@@ -123,6 +123,16 @@ describe Guard::Minitest::Runner do
         subject.new(spring: 'rake test').spring?.must_equal true
       end
     end
+
+    describe 'all_after_pass' do
+      it 'defaults to false' do
+        subject.new.all_after_pass?.must_equal false
+      end
+
+      it 'is settable using a boolean' do
+        subject.new(all_after_pass: true).all_after_pass?.must_equal true
+      end
+    end
   end
 
   describe 'run' do
@@ -216,7 +226,36 @@ describe Guard::Minitest::Runner do
 
         runner.run(['test/test_minitest.rb'])
       end
+    end
 
+    describe 'all_after_pass' do
+      describe 'when set' do
+        it 'runs all tests after success' do
+          runner = subject.new(all_after_pass: true)
+          runner.stubs(:system).returns(true)
+          runner.expects(:run_all)
+
+          runner.run(['test/test_minitest.rb'])
+        end
+
+        it 'does not run all tests after failure' do
+          runner = subject.new(all_after_pass: true)
+          runner.stubs(:system).returns(false)
+          runner.expects(:run_all).never
+
+          runner.run(['test/test_minitest.rb'])
+        end
+      end
+
+      describe 'when unset' do
+        it 'does not run all tests again after success' do
+          runner = subject.new(all_after_pass: false)
+          runner.stubs(:system).returns(true)
+          runner.expects(:run_all).never
+
+          runner.run(['test/test_minitest.rb'])
+        end
+      end
     end
 
     describe 'zeus' do
@@ -334,6 +373,88 @@ describe Guard::Minitest::Runner do
 
         runner.run(['test/test_minitest.rb'])
       end
+    end
+  end
+
+  describe 'run_all' do
+    it 'runs all tests' do
+      paths = %w[test/test_minitest_1.rb test/test_minitest_2.rb]
+      runner = subject.new
+      runner.inspector.stubs(:clean_all).returns(paths)
+      runner.expects(:run).with(paths, { all: true }).returns(true)
+
+      runner.run_all.must_equal true
+    end
+  end
+
+  describe 'run_on_modifications' do
+    let(:runner) { subject.new }
+
+    before do
+      @paths = %w[test/test_minitest_1.rb test/test_minitest_2.rb]
+      Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
+      Dir.stubs(:[]).returns(@paths)
+    end
+
+    describe 'when all paths are passed' do
+      before do
+        runner.inspector.stubs(:clean).returns(@paths)
+      end
+
+      it 'runs minitest in all paths' do
+        runner.expects(:run).with(@paths, all: true).returns(true)
+
+        runner.run_on_modifications(@paths).must_equal true
+      end
+
+      it 'does not run all tests again after success even when all_after_pass is enabled' do
+        new_runner = subject.new(all_after_pass: true)
+        new_runner.stubs(:system).returns(true)
+        new_runner.expects(:run_all).never
+
+        new_runner.run_on_modifications(@paths).must_equal true
+      end
+    end
+
+    describe 'when not all paths are passed' do
+      before do
+        runner.inspector.stubs(:clean).returns(['test/test_minitest_1.rb'])
+      end
+
+      it 'runs minitest in paths' do
+        runner.expects(:run).with(['test/test_minitest_1.rb'], all: false).returns(true)
+
+        runner.run_on_modifications(@paths).must_equal true
+      end
+
+      it 'runs all tests again after success if all_after_pass enabled' do
+        new_runner = subject.new(all_after_pass: true)
+        new_runner.stubs(:system).returns(true)
+        new_runner.expects(:run).with(@paths, all: true).returns(true)
+
+        new_runner.run_on_modifications(@paths).must_equal true
+      end
+    end
+  end
+
+  describe 'run_on_additions' do
+    it 'clears the test file cache and runs minitest for the new path' do
+      runner = subject.new
+      runner.inspector.stubs(:clean).with(['test/guard/minitest/test_new.rb']).returns(['test/guard/minitest/test_new.rb'])
+      runner.inspector.expects(:clear_memoized_test_files)
+
+      runner.run_on_additions(['test/guard/minitest/test_new.rb']).must_equal true
+    end
+  end
+
+  describe 'run_on_removals' do
+    it 'clears the test file cache and does not run minitest' do
+      runner = subject.new
+      runner.inspector.stubs(:clean).with(['test/guard/minitest/test_deleted.rb']).returns(['test/guard/minitest/test_deleted.rb'])
+      runner.inspector.expects(:clear_memoized_test_files)
+      runner.expects(:run).never
+
+      runner.run_on_removals(['test/guard/minitest/test_deleted.rb'])
     end
   end
 end

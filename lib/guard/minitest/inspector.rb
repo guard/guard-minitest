@@ -25,7 +25,11 @@ module Guard
       end
 
       def clear_memoized_test_files
-        @_all_test_files = nil
+        @all_test_files = nil
+      end
+
+      def all_test_files
+        @all_test_files ||= _test_files_for_paths
       end
 
       private
@@ -37,12 +41,8 @@ module Guard
         Dir["#{paths}/**/#{files}"]
       end
 
-      def _all_test_files
-        @_all_test_files ||= _test_files_for_paths
-      end
-
       def _test_file?(path)
-        _all_test_files.include?(path)
+        _test_files_for_paths.include?(path)
       end
 
       def _join_for_glob(fragments)

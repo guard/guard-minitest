@@ -1,13 +1,13 @@
+require 'guard/minitest/inspector'
+
 module Guard
   class Minitest
     class Runner
-
-      def self.run(paths = [], options = {})
-        new(options).run(paths, options)
-      end
+      attr_accessor :inspector
 
       def initialize(options = {})
         @options = {
+          all_after_pass:     false,
           bundler:            File.exist?("#{Dir.pwd}/Gemfile"),
           rubygems:           false,
           drb:                false,
@@ -24,10 +24,12 @@ module Guard
         [:test_folders, :test_file_patterns].each do |k|
           @options[k] = Array(@options[k]).uniq.compact
         end
+
+        @inspector = Inspector.new(test_folders, test_file_patterns)
       end
 
       def run(paths, options = {})
-        message = options[:message] || "Running: #{paths.join(' ')}"
+        message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         UI.info message, reset: true
 
         status = if bundler?
@@ -48,7 +50,30 @@ module Guard
           ::Guard::Notifier.notify(message, title: 'Minitest results', image: status ? :success : :failed)
         end
 
-        status
+        if @options[:all_after_pass] && status && !options[:all]
+           run_all
+        else
+          status
+        end
+      end
+
+      def run_all
+        paths = inspector.clean_all
+        run(paths, all: true)
+      end
+
+      def run_on_modifications(paths = [])
+        paths = inspector.clean(paths)
+        run(paths, all: all_paths?(paths))
+      end
+
+      def run_on_additions(paths)
+        inspector.clear_memoized_test_files
+        true
+      end
+
+      def run_on_removals(paths)
+        inspector.clear_memoized_test_files
       end
 
       def cli_options
@@ -73,6 +98,10 @@ module Guard
 
       def spring?
         @options[:spring].is_a?(String) || @options[:spring]
+      end
+
+      def all_after_pass?
+        @options[:all_after_pass]
       end
 
       def test_folders
@@ -154,6 +183,10 @@ module Guard
 
       def relative_paths(paths)
         paths.map { |p| "./#{p}" }
+      end
+
+      def all_paths?(paths)
+        paths == inspector.all_test_files
       end
 
       def parse_deprecated_options

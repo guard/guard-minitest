@@ -4,19 +4,18 @@ require 'guard/plugin'
 module Guard
   class Minitest < Plugin
 
-    require 'guard/minitest/inspector'
     require 'guard/minitest/runner'
     require 'guard/minitest/utils'
     require 'guard/minitest/version'
+
+    attr_accessor :runner
 
     def initialize(options = {})
       super
       @options = {
         all_on_start: true
       }.merge(options)
-
-      @runner    = Runner.new(@options)
-      @inspector = Inspector.new(@runner.test_folders, @runner.test_file_patterns)
+      @runner  = Runner.new(@options)
     end
 
     def start
@@ -33,22 +32,19 @@ module Guard
     end
 
     def run_all
-      paths = @inspector.clean_all
-      @runner.run(paths, message: 'Running all tests')
+      runner.run_all
     end
 
     def run_on_modifications(paths = [])
-      paths = @inspector.clean(paths)
-      @runner.run(paths)
+      runner.run_on_modifications(paths)
     end
 
     def run_on_additions(paths)
-      @inspector.clear_memoized_test_files
-      true
+      runner.run_on_additions(paths)
     end
 
     def run_on_removals(paths)
-      @inspector.clear_memoized_test_files
+      runner.run_on_removals(paths)
     end
 
   end
