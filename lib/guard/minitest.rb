@@ -32,11 +32,11 @@ module Guard
     end
 
     def run_all
-      runner.run_all
+      throw_on_failed_tests { runner.run_all }
     end
 
     def run_on_modifications(paths = [])
-      runner.run_on_modifications(paths)
+      throw_on_failed_tests { runner.run_on_modifications(paths) }
     end
 
     def run_on_additions(paths)
@@ -45,6 +45,12 @@ module Guard
 
     def run_on_removals(paths)
       runner.run_on_removals(paths)
+    end
+
+    private
+
+    def throw_on_failed_tests
+      throw :task_has_failed unless yield
     end
 
   end
