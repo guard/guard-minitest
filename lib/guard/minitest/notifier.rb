@@ -18,7 +18,7 @@ module Guard
 
       # failed | pending (skip) | success
       def self.guard_image(failure_count, skip_count)
-        icon = if failure_count > 0
+        if failure_count > 0
           :failed
         elsif skip_count > 0
           :pending
