@@ -197,10 +197,8 @@ module Guard
       def all_env
         if @options[:all_env].kind_of? Hash
           Hash[@options[:all_env].map{|key, value| [key.to_s, value.to_s]}]
-        elsif @options[:all_env]
-          {@options[:all_env].to_s => "true"}
         else
-          {}
+          {@options[:all_env].to_s => "true"}
         end
       end
 
