@@ -13,6 +13,8 @@ module Guard
           drb:                false,
           zeus:               false,
           spring:             false,
+          all_env:            {},
+          env:                {},
           include:            [],
           test_folders:       %w[test spec],
           test_file_patterns: %w[*_test.rb test_*.rb *_spec.rb],
@@ -33,14 +35,14 @@ module Guard
         UI.info message, reset: true
 
         status = if bundler?
-          system(minitest_command(paths))
+          system(*minitest_command(paths, options[:all]))
         else
           if defined?(::Bundler)
             ::Bundler.with_clean_env do
-              system(minitest_command(paths))
+              system(*minitest_command(paths, options[:all]))
             end
           else
-            system(minitest_command(paths))
+            system(*minitest_command(paths, options[:all]))
           end
         end
 
@@ -118,7 +120,7 @@ module Guard
 
       private
 
-      def minitest_command(paths)
+      def minitest_command(paths, all)
         cmd_parts = []
 
         cmd_parts << 'bundle exec' if bundler?
@@ -132,7 +134,10 @@ module Guard
           ruby_command(paths)
         end
 
-        cmd_parts.compact.join(' ')
+        [cmd_parts.compact.join(' ')].tap do |args|
+          env = generate_env(all)
+          args.unshift(env) if env.length > 0
+        end
       end
 
       def drb_command(paths)
@@ -179,6 +184,24 @@ module Guard
 
       def generate_includes
         (test_folders + include_folders).map {|f| %[-I"#{f}"] }
+      end
+
+      def generate_env(all=false)
+        base_env.merge(all ? all_env : {})
+      end
+
+      def base_env
+        @options[:env] || {}
+      end
+
+      def all_env
+        if @options[:all_env].kind_of? Hash
+          @options[:all_env]
+        elsif @options[:all_env]
+          {@options[:all_env] => true}
+        else
+          {}
+        end
       end
 
       def relative_paths(paths)
