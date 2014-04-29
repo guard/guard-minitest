@@ -133,6 +133,16 @@ describe Guard::Minitest::Runner do
         subject.new(all_after_pass: true).all_after_pass?.must_equal true
       end
     end
+
+    describe 'autorun' do
+      it 'defaults to true' do
+        subject.new.autorun?.must_equal true
+      end
+
+      it 'is settable using a boolean' do
+        subject.new(autorun: false).autorun?.must_equal false
+      end
+    end
   end
 
   describe 'run' do
@@ -158,6 +168,18 @@ describe Guard::Minitest::Runner do
       )
 
       runner.run(['test/test_minitest.rb'])
+    end
+
+    describe 'autorun disabled' do
+      it 'does not require minitest/autorun' do
+        runner = subject.new(autorun: false)
+
+        runner.expects(:system).with(
+          "ruby -I\"test\" -I\"spec\" -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+        )
+
+        runner.run(['test/test_minitest.rb'])
+      end
     end
 
     it 'sets env via all_env if running the full suite' do
