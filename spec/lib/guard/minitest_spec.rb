@@ -42,8 +42,7 @@ describe Guard::Minitest do
 
   describe 'run_on_modifications' do
     it 'is run through runner' do
-      runner.any_instance.expects(:run_on_modifications)
-
+      runner.any_instance.expects(:run_on_modifications => true)
       guard.run_on_modifications
     end
   end
@@ -68,4 +67,17 @@ describe Guard::Minitest do
     end
   end
 
+  describe 'halting and throwing on test failure' do
+    it 'throws on failed test run' do
+      stubbed_runner = stub
+      stubbed_runner.stubs(:run).returns(false)
+      stubbed_runner.expects(:run_all)
+      stubbed_runner.expects(:run_on_modifications)
+
+      guard.runner = stubbed_runner
+
+      proc { guard.run_all }.must_throw :task_has_failed
+      proc { guard.run_on_modifications }.must_throw :task_has_failed
+    end
+  end
 end
