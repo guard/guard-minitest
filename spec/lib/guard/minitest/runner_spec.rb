@@ -160,6 +160,50 @@ describe Guard::Minitest::Runner do
       runner.run(['test/test_minitest.rb'])
     end
 
+    it 'sets env via all_env if running the full suite' do
+      runner = subject.new(all_env: {"TESTS_ALL" => true})
+
+      runner.expects(:system).with(
+        {"TESTS_ALL" => "true"},
+        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+      )
+
+      runner.run(['test/test_minitest.rb'], all: true)
+    end
+
+    it 'allows string setting of all_env' do
+      runner = subject.new(all_env: "TESTS_ALL")
+
+      runner.expects(:system).with(
+        {"TESTS_ALL" => "true"},
+        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+      )
+
+      runner.run(['test/test_minitest.rb'], all: true)
+    end
+
+    it 'runs with the specified environment' do
+      runner = subject.new(env: {MINITEST_TEST: "test"})
+
+      runner.expects(:system).with(
+        {"MINITEST_TEST" => "test"},
+        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+      )
+
+      runner.run(['test/test_minitest.rb'])
+    end
+
+    it 'merges the specified environment with the all environment' do
+      runner = subject.new(env: {MINITEST_TEST: 'test', MINITEST: true}, all_env: {MINITEST_TEST: "all"})
+
+      runner.expects(:system).with(
+        {"MINITEST_TEST" => "all", "MINITEST" => "true"},
+        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+      )
+
+      runner.run(['test/test_minitest.rb'], all: true)
+    end
+
     describe 'in empty folder' do
       before do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
