@@ -104,6 +104,7 @@ bundler: false                    # don't use "bundle exec" to run the minitest 
 rubygems: true                    # require rubygems when run the minitest command (only if bundler is disabled), default: false
 env: {}                           # specify some environment variables to be set when the test command is invoked, default: {}
 all_env: {}                       # specify additional environment variables to be set when all tests are being run, default: false
+autorun: false                    # require 'minitest/autorun' automatically, default: true
 ```
 
 ### Options usage examples

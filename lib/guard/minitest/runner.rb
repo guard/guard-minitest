@@ -18,7 +18,8 @@ module Guard
           include:            [],
           test_folders:       %w[test spec],
           test_file_patterns: %w[*_test.rb test_*.rb *_spec.rb],
-          cli:                nil
+          cli:                nil,
+          autorun:            true
         }.merge(options)
 
         parse_deprecated_options
@@ -118,6 +119,10 @@ module Guard
         @options[:test_file_patterns]
       end
 
+      def autorun?
+        @options[:autorun]
+      end
+
       private
 
       def minitest_command(paths, all)
@@ -165,7 +170,7 @@ module Guard
         cmd_parts.concat(generate_includes)
         cmd_parts << '-r rubygems' if rubygems?
         cmd_parts << '-r bundler/setup' if bundler?
-        cmd_parts << '-r minitest/autorun'
+        cmd_parts << '-r minitest/autorun' if autorun?
         cmd_parts.concat(paths.map { |path| "-r ./#{path}" })
 
         unless Utils.minitest_version_gte_5?
