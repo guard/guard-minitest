@@ -35,12 +35,12 @@ module Guard
         message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         UI.info message, reset: true
 
-        status = _run_command(paths, options[:all])
+        # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another process.
+        # So we at least capture the output of that process and send it to the notifier.
+        output,status = _run_command(paths, options[:all])
 
-        # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
-        # process, but we can use the exit status of the client process to distinguish between :success and :failed.
         if zeus? || spring?
-          ::Guard::Notifier.notify(message, title: 'Minitest results', image: status ? :success : :failed)
+          ::Guard::Notifier.notify(message + "\n" + output, title: 'Minitest results', image: status ? :success : :failed)
         end
 
         if @options[:all_after_pass] && status && !options[:all]
@@ -116,17 +116,18 @@ module Guard
       end
 
       def _run_command(paths, all)
-        if bundler?
-          system(*minitest_command(paths, all))
+        output = if bundler?
+          %x(#{minitest_command(paths, all).join(" ")})
         else
           if defined?(::Bundler)
             ::Bundler.with_clean_env do
-              system(*minitest_command(paths, all))
+              %x(#{minitest_command(paths, all).join(" ")})
             end
           else
-            system(*minitest_command(paths, all))
+            %x(#{minitest_command(paths, all).join(" ")})
           end
         end
+        [output, $?]
       end
 
       def _commander(paths)
