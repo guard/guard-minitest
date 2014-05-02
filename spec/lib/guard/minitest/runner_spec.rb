@@ -369,7 +369,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(spring: true)
 
         Guard::UI.expects(:info)
-        runner.expects(:system).with("bin/rake test#{@old_runner} test/test_minitest.rb")
+        runner.expects(:system).with("bin/rake test test/test_minitest.rb")
 
         runner.run(['test/test_minitest.rb'])
       end
@@ -379,7 +379,7 @@ describe Guard::Minitest::Runner do
 
         Guard::UI.expects(:info)
         Bundler.expects(:with_clean_env).yields
-        runner.expects(:system).with("bin/rake test#{@old_runner} test/test_minitest.rb")
+        runner.expects(:system).with("bin/rake test test/test_minitest.rb")
 
         runner.run(['test/test_minitest.rb'])
       end
@@ -397,7 +397,7 @@ describe Guard::Minitest::Runner do
         runner = subject.new(spring: true, cli: '--seed 12345 --verbose')
 
         Guard::UI.expects(:info)
-        runner.expects(:system).with("bin/rake test#{@old_runner} test/test_minitest.rb -- --seed 12345 --verbose")
+        runner.expects(:system).with("bin/rake test test/test_minitest.rb -- --seed 12345 --verbose")
 
         runner.run(['test/test_minitest.rb'])
       end
@@ -414,7 +414,7 @@ describe Guard::Minitest::Runner do
       it 'provides success notification when the spring exit status is 0' do
         runner = subject.new(spring: true)
 
-        runner.expects(:system).with("bin/rake test#{@old_runner} test/test_minitest.rb").returns(true)
+        runner.expects(:system).with("bin/rake test test/test_minitest.rb").returns(true)
         Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
 
         runner.run(['test/test_minitest.rb'])
@@ -423,7 +423,7 @@ describe Guard::Minitest::Runner do
       it 'provides failed notification when the spring exit status is non-zero or the command failed' do
         runner = subject.new(spring: true)
 
-        runner.expects(:system).with("bin/rake test#{@old_runner} test/test_minitest.rb").returns(false)
+        runner.expects(:system).with("bin/rake test test/test_minitest.rb").returns(false)
         Guard::Notifier.expects(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
 
         runner.run(['test/test_minitest.rb'])
