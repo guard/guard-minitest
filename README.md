@@ -197,9 +197,7 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 
 ## Maintainer
 
-**I'm currently looking for new maintainers, don't hesitate!**
-
-[Rémy Coutable](https://github.com/rymai)
+[Eric Steele](https://github.com/genericsteele)
 
 ## Author
 
