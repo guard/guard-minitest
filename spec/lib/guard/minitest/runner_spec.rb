@@ -12,11 +12,11 @@ describe Guard::Minitest::Runner do
 
     describe 'cli_options' do
       it 'defaults to empty string' do
-        subject.new.cli_options.must_equal []
+        subject.new.send(:cli_options).must_equal []
       end
 
       it 'is set with \'cli\'' do
-        subject.new(cli: '--test').cli_options.must_equal ['--test']
+        subject.new(cli: '--test').send(:cli_options).must_equal ['--test']
       end
     end
 
@@ -25,7 +25,7 @@ describe Guard::Minitest::Runner do
         it 'sets cli options' do
           Guard::UI.expects(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to Minitest with the :cli option.')
 
-          subject.new(seed: 123456789).cli_options.must_equal ['--seed 123456789']
+          subject.new(seed: 123456789).send(:cli_options).must_equal ['--seed 123456789']
         end
       end
 
@@ -33,7 +33,7 @@ describe Guard::Minitest::Runner do
         it 'sets cli options' do
           Guard::UI.expects(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to Minitest with the :cli option.')
 
-          subject.new(verbose: true).cli_options.must_equal ['--verbose']
+          subject.new(verbose: true).send(:cli_options).must_equal ['--verbose']
         end
       end
     end
@@ -42,25 +42,25 @@ describe Guard::Minitest::Runner do
       it 'defaults to true if Gemfile exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
 
-        subject.new.bundler?.must_equal true
+        subject.new.send(:bundler?).must_equal true
       end
 
       it 'defaults to false if Gemfile don\'t exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
 
-        subject.new.bundler?.must_equal false
+        subject.new.send(:bundler?).must_equal false
       end
 
       it 'is forced to false' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
 
-        subject.new(bundler: false).bundler?.must_equal false
+        subject.new(bundler: false).send(:bundler?).must_equal false
       end
 
       it 'is forced to false if spring is enabled' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
 
-        subject.new(spring: true).bundler?.must_equal false
+        subject.new(spring: true).send(:bundler?).must_equal false
       end
     end
 
@@ -68,79 +68,79 @@ describe Guard::Minitest::Runner do
       it 'defaults to false if Gemfile exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('bundler'))
 
-        subject.new.rubygems?.must_equal false
+        subject.new.send(:rubygems?).must_equal false
       end
 
       it 'defaults to false if Gemfile don\'t exist' do
         Dir.stubs(:pwd).returns(fixtures_path.join('empty'))
 
-        subject.new.rubygems?.must_equal false
+        subject.new.send(:rubygems?).must_equal false
       end
 
       it 'is true if bundler is disabled' do
-        subject.new(bundler: false, rubygems: true).rubygems?.must_equal true
+        subject.new(bundler: false, rubygems: true).send(:rubygems?).must_equal true
       end
 
       it 'is false if bundler is enabled' do
-        subject.new(bundler: true, rubygems: true).rubygems?.must_equal false
+        subject.new(bundler: true, rubygems: true).send(:rubygems?).must_equal false
       end
     end
 
     describe 'drb' do
       it 'defaults to false' do
-        subject.new.drb?.must_equal false
+        subject.new.send(:drb?).must_equal false
       end
 
       it 'is settable using a boolean' do
-        subject.new(drb: true).drb?.must_equal true
+        subject.new(drb: true).send(:drb?).must_equal true
       end
     end
 
     describe 'zeus' do
       it 'defaults to false' do
-        subject.new.zeus?.must_equal false
+        subject.new.send(:zeus?).must_equal false
       end
 
       it 'is settable using a boolean' do
-        subject.new(zeus: true).zeus?.must_equal true
+        subject.new(zeus: true).send(:zeus?).must_equal true
       end
 
       it 'is settable using a string which represents the command to send to zeus' do
-        subject.new(zeus: 'blah').zeus?.must_equal true
+        subject.new(zeus: 'blah').send(:zeus?).must_equal true
       end
     end
 
     describe 'spring' do
       it 'defaults to false' do
-        subject.new.spring?.must_equal false
+        subject.new.send(:spring?).must_equal false
       end
 
       it 'is settable using a boolean' do
-        subject.new(spring: true).spring?.must_equal true
+        subject.new(spring: true).send(:spring?).must_equal true
       end
 
       it 'is settable using a string which represents the command to send to spring' do
-        subject.new(spring: 'rake test').spring?.must_equal true
+        subject.new(spring: 'rake test').send(:spring?).must_equal true
       end
     end
 
     describe 'all_after_pass' do
       it 'defaults to false' do
-        subject.new.all_after_pass?.must_equal false
+        subject.new.send(:all_after_pass?).must_equal false
       end
 
       it 'is settable using a boolean' do
-        subject.new(all_after_pass: true).all_after_pass?.must_equal true
+        subject.new(all_after_pass: true).send(:all_after_pass?).must_equal true
       end
     end
 
     describe 'autorun' do
       it 'defaults to true' do
-        subject.new.autorun?.must_equal true
+        subject.new.send(:autorun?).must_equal true
       end
 
       it 'is settable using a boolean' do
-        subject.new(autorun: false).autorun?.must_equal false
+        subject.new(autorun: false).send(:autorun?).must_equal false
       end
     end
   end

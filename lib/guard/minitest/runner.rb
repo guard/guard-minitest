@@ -35,17 +35,7 @@ module Guard
         message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         UI.info message, reset: true
 
-        status = if bundler?
-          system(*minitest_command(paths, options[:all]))
-        else
-          if defined?(::Bundler)
-            ::Bundler.with_clean_env do
-              system(*minitest_command(paths, options[:all]))
-            end
-          else
-            system(*minitest_command(paths, options[:all]))
-          end
-        end
+        status = _run_command(paths, options[:all])
 
         # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
         # process, but we can use the exit status of the client process to distinguish between :success and :failed.
@@ -78,6 +68,8 @@ module Guard
       def run_on_removals(paths)
         inspector.clear_memoized_test_files
       end
+
+      private
 
       def cli_options
         @cli_options ||= Array(@options[:cli])
@@ -123,13 +115,22 @@ module Guard
         @options[:autorun]
       end
 
-      private
+      def _run_command(paths, all)
+        if bundler?
+          system(*minitest_command(paths, all))
+        else
+          if defined?(::Bundler)
+            ::Bundler.with_clean_env do
+              system(*minitest_command(paths, all))
+            end
+          else
+            system(*minitest_command(paths, all))
+          end
+        end
+      end
 
-      def minitest_command(paths, all)
-        cmd_parts = []
-
-        cmd_parts << 'bundle exec' if bundler?
-        cmd_parts << if drb?
+      def _commander(paths)
+        if drb?
           drb_command(paths)
         elsif zeus?
           zeus_command(paths)
@@ -138,6 +139,13 @@ module Guard
         else
           ruby_command(paths)
         end
+      end
+
+      def minitest_command(paths, all)
+        cmd_parts = []
+
+        cmd_parts << 'bundle exec' if bundler?
+        cmd_parts << _commander(paths)
 
         [cmd_parts.compact.join(' ')].tap do |args|
           env = generate_env(all)
@@ -157,7 +165,7 @@ module Guard
       def spring_command(paths)
         command = @options[:spring].is_a?(String) ? @options[:spring] : 'bin/rake test'
         cmd_parts = [command]
-        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'testunit')
+        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'spring testunit')
         if cli_options.length > 0
           cmd_parts + paths + ['--'] + cli_options
         else
