@@ -163,7 +163,7 @@ module Guard
       end
 
       def spring_command(paths)
-        command = @options[:spring].is_a?(String) ? @options[:spring] : 'bin/rake test'
+        command = @options[:spring].is_a?(String) ? @options[:spring] : 'bundle exec spring rake test' #Add time to see why this is significantly faster than `bin/rake test`
         cmd_parts = [command]
         cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'spring testunit')
         if cli_options.length > 0
