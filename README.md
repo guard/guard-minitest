@@ -109,6 +109,8 @@ autorun: false                    # require 'minitest/autorun' automatically, de
 
 ### Options usage examples
 
+#### `:test_folders` and `:test_file_patterns`
+
 You can change the default location of test files using the `:test_folders` option and pattern of test files using the `:test_file_patterns` option:
 
 ```ruby
@@ -116,6 +118,8 @@ guard :minitest, test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
   # ...
 end
 ```
+
+#### `:cli`
 
 You can pass any of the standard MiniTest CLI options using the `:cli` option:
 
@@ -125,6 +129,8 @@ guard :minitest, cli: '--seed 123456 --verbose' do
 end
 ```
 
+#### `:spring`
+
 [Spring](https://github.com/jonleighton/spring) is supported (Ruby 1.9.X / Rails 3.2+ only), but you must enable it:
 
 ```ruby
@@ -133,14 +139,17 @@ guard :minitest, spring: true do
 end
 ```
 
-From `spring 0.9.1`, `spring testunit` command has been moved to [spring-commands-testunit](https://github.com/jonleighton/spring-commands-testunit). If you are using
-rails >=4.0 and spring >=0.9.1
+Since version 2.3.0, the default Spring command works is `bin/rake test` making the integration with your Rails >= 4.1 app effortless.
+
+If you're using an older version of Rails (or no Rails at all), you might want to customize the Spring command, e.g.:
 
 ```ruby
-guard :minitest, spring: 'rake test' do
+guard :minitest, spring: 'spring rake test' do
   # ...
 end
 ```
+
+#### `:zeus`
 
 [Zeus](https://github.com/burke/zeus) is supported, but you must enable it.
 Please note that notifications support is very basic when using Zeus. The zeus client exit status is evaluated, and
@@ -160,6 +169,8 @@ guard :minitest, zeus: true do
   # ...
 end
 ```
+
+#### `:drb`
 
 [Spork / spork-testunit](https://github.com/sporkrb/spork-testunit) is supported, but you must enable it:
 
@@ -185,6 +196,8 @@ For questions please join us in our [Google group](http://groups.google.com/grou
 `#guard` (irc.freenode.net).
 
 ## Maintainer
+
+**I'm currently looking for new maintainers, don't hesitate!**
 
 [Rémy Coutable](https://github.com/rymai)
 

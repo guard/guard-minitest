@@ -155,8 +155,8 @@ module Guard
       end
 
       def spring_command(paths)
-        command = @options[:spring].is_a?(String) ? @options[:spring] : 'testunit'
-        cmd_parts = ['spring', command]
+        command = @options[:spring].is_a?(String) ? @options[:spring] : 'bin/rake test'
+        cmd_parts = [command]
         cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'testunit')
         if cli_options.length > 0
           cmd_parts + paths + ['--'] + cli_options
