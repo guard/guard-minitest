@@ -179,6 +179,9 @@ guard :minitest, drb: true do
   # ...
 end
 ```
+The drb test runner honors the :include option, but does not (unlike the
+default runner) automatically include :test_folders.  If you want to
+include the test paths, you must explicitly add them to :include.
 
 ## Development
 
