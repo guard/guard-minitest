@@ -9,7 +9,7 @@ Guard::Minitest allows to automatically & intelligently launch tests with the
 
 ## Install
 
-Please be sure to have [Guard](http://github.com/guard/guard) installed before continue.
+Please be sure to have [Guard](http://github.com/guard/guard) installed before you continue.
 
 The simplest way to install Guard::Minitest is to use [Bundler](http://gembundler.com/).
 
@@ -55,7 +55,7 @@ group :test do
 end
 ```
 
-Or remove the test (or even the `test/performance` directory if it isn't necessary.
+Or remove the test (or even the `test/performance` directory if it isn't necessary).
 
 ## Usage
 
@@ -63,8 +63,8 @@ Please read [Guard usage doc](http://github.com/guard/guard#readme)
 
 ## Guardfile
 
-Guard::Minitest can be really adapated to all kind of projects.
-Please read [guard doc](http://github.com/guard/guard#readme) for more info about Guardfile DSL.
+Guard::Minitest can be adapated to all kind of projects.
+Please read [guard doc](http://github.com/guard/guard#readme) for more info about the Guardfile DSL.
 
 ### Standard Guardfile when using Minitest::Unit
 
@@ -101,7 +101,7 @@ spring: true                      # enable spring support, default: false
 zeus: true                        # enable zeus support; default: false
 drb: true                         # enable DRb support, default: false
 bundler: false                    # don't use "bundle exec" to run the minitest command, default: true
-rubygems: true                    # require rubygems when run the minitest command (only if bundler is disabled), default: false
+rubygems: true                    # require rubygems when running the minitest command (only if bundler is disabled), default: false
 env: {}                           # specify some environment variables to be set when the test command is invoked, default: {}
 all_env: {}                       # specify additional environment variables to be set when all tests are being run, default: false
 autorun: false                    # require 'minitest/autorun' automatically, default: true
@@ -111,7 +111,7 @@ autorun: false                    # require 'minitest/autorun' automatically, de
 
 #### `:test_folders` and `:test_file_patterns`
 
-You can change the default location of test files using the `:test_folders` option and pattern of test files using the `:test_file_patterns` option:
+You can change the default location of test files using the `:test_folders` option and change the pattern of test files using the `:test_file_patterns` option:
 
 ```ruby
 guard :minitest, test_folders: 'test/unit', test_file_patterns: '*_test.rb' do
