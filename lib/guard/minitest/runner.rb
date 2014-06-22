@@ -154,7 +154,7 @@ module Guard
       end
 
       def drb_command(paths)
-        %w[testdrb] + relative_paths(paths)
+        %w[testdrb] + generate_includes(false) + relative_paths(paths)
       end
 
       def zeus_command(paths)
@@ -195,8 +195,14 @@ module Guard
         cmd_parts += cli_options
       end
 
-      def generate_includes
-        (test_folders + include_folders).map {|f| %[-I"#{f}"] }
+      def generate_includes(include_test_folders = true)
+        if include_test_folders
+          folders = test_folders + include_folders
+        else
+          folders = include_folders
+        end
+        
+        folders.map {|f| %[-I"#{f}"] }
       end
 
       def generate_env(all=false)

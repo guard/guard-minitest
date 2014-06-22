@@ -439,6 +439,16 @@ describe Guard::Minitest::Runner do
 
         runner.run(['test/test_minitest.rb'])
       end
+
+      it 'runs with specified directories included' do
+        runner = subject.new(drb: true, include: %w[lib app])
+
+        runner.expects(:system).with(
+                                     "testdrb -I\"lib\" -I\"app\" ./test/test_minitest.rb"
+                                     )
+        
+        runner.run(['test/test_minitest.rb'])
+      end
     end
   end
 
