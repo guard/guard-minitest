@@ -35,12 +35,12 @@ module Guard
         message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         UI.info message, reset: true
 
-        status = _run_command(paths, options[:all])
+        # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another process.
+        # So we at least capture the output of that process and send it to the notifier.
+        output,status = _run_command(paths, options[:all])
 
-        # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
-        # process, but we can use the exit status of the client process to distinguish between :success and :failed.
         if zeus? || spring?
-          ::Guard::Notifier.notify(message, title: 'Minitest results', image: status ? :success : :failed)
+          ::Guard::Notifier.notify(message + "\n" + output, title: 'Minitest results', image: status ? :success : :failed)
         end
 
         if @options[:all_after_pass] && status && !options[:all]
@@ -116,17 +116,18 @@ module Guard
       end
 
       def _run_command(paths, all)
-        if bundler?
-          system(*minitest_command(paths, all))
+        output = if bundler?
+          %x(#{minitest_command(paths, all).join(" ")})
         else
           if defined?(::Bundler)
             ::Bundler.with_clean_env do
-              system(*minitest_command(paths, all))
+              %x(#{minitest_command(paths, all).join(" ")})
             end
           else
-            system(*minitest_command(paths, all))
+            %x(#{minitest_command(paths, all).join(" ")})
           end
         end
+        [output, $?]
       end
 
       def _commander(paths)
@@ -163,7 +164,7 @@ module Guard
       end
 
       def spring_command(paths)
-        command = @options[:spring].is_a?(String) ? @options[:spring] : 'bin/rake test'
+        command = @options[:spring].is_a?(String) ? @options[:spring] : 'bundle exec spring rake test' #Add time to see why this is significantly faster than `bin/rake test`
         cmd_parts = [command]
         cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'spring testunit')
         if cli_options.length > 0
