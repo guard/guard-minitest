@@ -32,6 +32,8 @@ module Guard
       end
 
       def run(paths, options = {})
+        return unless options[:all] || !paths.empty?
+
         message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         UI.info message, reset: true
 
