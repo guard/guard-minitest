@@ -46,7 +46,7 @@ module Guard
         end
 
         if @options[:all_after_pass] && status && !options[:all]
-           run_all
+          run_all
         else
           status
         end
@@ -203,7 +203,7 @@ module Guard
         else
           folders = include_folders
         end
-        
+
         folders.map {|f| %[-I"#{f}"] }
       end
 
