@@ -446,8 +446,24 @@ describe Guard::Minitest::Runner do
         runner.expects(:system).with(
                                      "testdrb -I\"lib\" -I\"app\" ./test/test_minitest.rb"
                                      )
-        
+
         runner.run(['test/test_minitest.rb'])
+      end
+    end
+
+    describe 'when no paths are passed' do
+      let(:runner) { subject.new }
+
+      it 'does not run a command' do
+        runner.expects(:_run_command).never
+
+        runner.run([])
+      end
+
+      it 'still runs all if requested' do
+        runner.expects(:_run_command).once.with([], true).returns(true)
+
+        runner.run([], all: true).must_equal true
       end
     end
   end
