@@ -43,7 +43,8 @@ module Guard
       end
 
       def _test_file?(path)
-        _test_files_for_paths.include?(path)
+        _test_files_for_paths.map {|path| File.expand_path(path) }
+                             .include?(File.expand_path(path))
       end
 
       def _join_for_glob(fragments)
