@@ -14,5 +14,5 @@ group :development do
 end
 
 group :test do
-  gem 'mocha'
+  gem 'rspec', '>= 3.1.0', require: false
 end

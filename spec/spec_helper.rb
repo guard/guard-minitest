@@ -1,4 +1,4 @@
-require 'rubygems'
+require "rspec"
 
 if ENV['CI']
   require 'coveralls'
@@ -7,55 +7,41 @@ if ENV['CI']
   end
 end
 
-ENV['GUARD_ENV'] = 'test'
+require 'guard/notifier'
+require 'guard/compat/test/helper'
 require 'guard/minitest'
 
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'mocha/setup'
-
-superclass = if Guard::Minitest::Utils.minitest_version_gte_5?
-  ::Minitest::Test
-else
-  ::MiniTest::Unit::TestCase
-end
-
-class MiniTest::Spec < superclass
-
-  before(:each) do
-    @real_minitest_version = MiniTest::Unit::VERSION.dup
-
-    # Stub all UI methods, so no visible output appears for the UI class
-    ::Guard::UI.stubs(:info)
-    ::Guard::UI.stubs(:warning)
-    ::Guard::UI.stubs(:error)
-    ::Guard::UI.stubs(:debug)
-    ::Guard::UI.stubs(:deprecation)
+RSpec.configure do |config|
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
 
-  after(:each) do
-    @_memoized = nil
-
-    if MiniTest::Unit.const_defined?(:VERSION)
-      MiniTest::Unit::VERSION.replace(@real_minitest_version)
-    else
-      MiniTest::Unit.send(:const_set, :VERSION, @real_minitest_version)
-    end
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
   end
 
-  def self.let(name, &block)
-    define_method name do
-      @_memoized ||= {}
-      @_memoized.fetch(name) { |k| @_memoized[k] = instance_eval(&block) }
-    end
+  config.filter_run :focus
+  config.run_all_when_everything_filtered = true
+
+  config.disable_monkey_patching!
+
+  # config.warnings = true
+
+  if config.files_to_run.one?
+    config.default_formatter = 'doc'
   end
 
-  def self.subject(&block)
-    let :subject, &block
-  end
+  # config.profile_examples = 10
+
+  config.order = :random
+
+  Kernel.srand config.seed
 
   def fixtures_path
     @fixtures_path ||= Pathname.new(File.expand_path('../fixtures/', __FILE__))
   end
 
+  config.before do
+    allow(Guard::UI).to receive(:info)
+  end
 end
