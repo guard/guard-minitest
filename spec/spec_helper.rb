@@ -8,6 +8,8 @@ if ENV['CI']
 end
 
 ENV['GUARD_ENV'] = 'test'
+require 'guard/notifier'
+require 'guard/compat/test/helper'
 require 'guard/minitest'
 
 require 'minitest/autorun'
