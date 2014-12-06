@@ -11,9 +11,8 @@ group :development do
   gem 'gems', require: false
   gem 'netrc', require: false
   gem 'octokit', require: false
-  gem 'rspec', '>= 3.1.0', require: false
 end
 
 group :test do
-  gem 'mocha'
+  gem 'rspec', '>= 3.1.0', require: false
 end
