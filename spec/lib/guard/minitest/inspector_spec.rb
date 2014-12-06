@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Guard::Minitest::Inspector do
+RSpec.describe Guard::Minitest::Inspector do
   let(:inspector) { Guard::Minitest::Inspector.new(%w[test spec], %w[*_test.rb test_*.rb *_spec.rb]) }
 
   describe 'clean' do

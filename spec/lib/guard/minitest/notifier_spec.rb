@@ -1,7 +1,6 @@
-require 'spec_helper'
 require 'guard/minitest/notifier'
 
-describe Guard::Minitest::Notifier do
+RSpec.describe Guard::Minitest::Notifier do
   subject { Guard::Minitest::Notifier }
 
   describe '.guard_message' do

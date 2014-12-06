@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Guard::Minitest do
+RSpec.describe Guard::Minitest do
   subject { Guard::Minitest }
 
   let(:runner) { Guard::Minitest::Runner }
