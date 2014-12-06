@@ -36,7 +36,12 @@ RSpec.configure do |config|
   config.order = :random
 
   Kernel.srand config.seed
+
   def fixtures_path
     @fixtures_path ||= Pathname.new(File.expand_path('../fixtures/', __FILE__))
+  end
+
+  config.before do
+    allow(Guard::UI).to receive(:info)
   end
 end
