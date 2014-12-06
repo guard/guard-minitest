@@ -69,7 +69,7 @@ describe Guard::Minitest do
 
   describe 'halting and throwing on test failure' do
     it 'throws on failed test run' do
-      stubbed_runner = stub
+      stubbed_runner = double
       stubbed_runner.stubs(:run).returns(false)
       stubbed_runner.expects(:run_all)
       stubbed_runner.expects(:run_on_modifications)
