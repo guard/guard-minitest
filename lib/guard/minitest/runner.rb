@@ -1,7 +1,7 @@
 require 'guard/minitest/inspector'
 
 module Guard
-  class Minitest
+  class Minitest < Plugin
     class Runner
       attr_accessor :inspector
 

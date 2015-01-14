@@ -1,5 +1,5 @@
 module Guard
-  class Minitest
+  class Minitest < Plugin
     class Inspector
 
       attr_reader :test_folders, :test_file_patterns

@@ -1,5 +1,5 @@
 module Guard
-  class Minitest
+  class Minitest < Plugin
     class Notifier
 
       def self.guard_message(test_count, assertion_count, failure_count, error_count, skip_count, duration)
