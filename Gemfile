@@ -7,6 +7,7 @@ group :gem_build_deps do
 end
 
 group :development do
+  gem 'guard-rspec', require: false
   gem 'ruby_gntp', require: false
 
   # Used for release
