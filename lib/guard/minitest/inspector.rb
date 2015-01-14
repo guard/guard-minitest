@@ -1,3 +1,5 @@
+require 'guard/minitest'
+
 module Guard
   class Minitest < Plugin
     class Inspector
