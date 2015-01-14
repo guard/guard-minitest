@@ -12,3 +12,6 @@ matrix:
 gemfile:
   - gemfiles/Gemfile.minitest-4
   - gemfiles/Gemfile.minitest-5
+
+# use Travis AUFS containers
+sudo: false
