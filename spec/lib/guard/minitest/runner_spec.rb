@@ -170,6 +170,24 @@ RSpec.describe Guard::Minitest::Runner do
       end
     end
 
+    context "when binary is not found" do
+      before do
+        allow(Kernel).to receive(:system) { nil }
+        allow(Guard::Compat::UI).to receive(:error)
+      end
+
+      it "shows an error" do
+        runner = subject.new
+        expect(Guard::Compat::UI).to receive(:error).with("No such file or directory - ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --")
+        catch(:task_has_failed) { runner.run(['test/test_minitest.rb']) }
+      end
+
+      it "throw a task_has_failed symbol" do
+        runner = subject.new
+        expect { runner.run(['test/test_minitest.rb']) }.to throw_symbol(:task_has_failed)
+      end
+    end
+
     it 'passes :cli arguments' do
       runner = subject.new(cli: '--seed 12345 --verbose')
 

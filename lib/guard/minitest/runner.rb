@@ -37,19 +37,23 @@ module Guard
         message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         Compat::UI.info message, reset: true
 
-        status = _run_command(paths, options[:all])
+        begin
+          status = _run_possibly_bundled_command(paths, options[:all])
+        rescue Errno::ENOENT => e
+          Compat::UI.error e.message
+          throw :task_has_failed
+        end
+
+        success = status.zero?
 
         # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
         # process, but we can use the exit status of the client process to distinguish between :success and :failed.
         if zeus? || spring?
-          Compat::UI.notify(message, title: 'Minitest results', image: status ? :success : :failed)
+          Compat::UI.notify(message, title: 'Minitest results', image: success ? :success : :failed)
         end
 
-        if @options[:all_after_pass] && status && !options[:all]
-          run_all
-        else
-          status
-        end
+        run_all_coz_ok = @options[:all_after_pass] && success && !options[:all]
+        run_all_coz_ok ?  run_all : success
       end
 
       def run_all
@@ -117,19 +121,17 @@ module Guard
         @options[:autorun]
       end
 
-      def _run_command(paths, all)
-        Compat::UI.debug "Running: #{minitest_command(paths, all).join(" ")}"
-        if bundler?
-          system(*minitest_command(paths, all))
-        else
-          if defined?(::Bundler)
-            ::Bundler.with_clean_env do
-              system(*minitest_command(paths, all))
-            end
-          else
-            system(*minitest_command(paths, all))
-          end
-        end
+      def _run(*args)
+        Compat::UI.debug "Running: #{args.join(" ")}"
+        return $?.exitstatus unless Kernel.system(*args).nil?
+
+        fail Errno::ENOENT, args.join(" ")
+      end
+
+      def _run_possibly_bundled_command(paths, all)
+        args = minitest_command(paths, all)
+        bundler_env = !bundler? && defined?(::Bundler)
+        bundler_env ? ::Bundler.with_clean_env { _run(*args) } : _run(*args)
       end
 
       def _commander(paths)
