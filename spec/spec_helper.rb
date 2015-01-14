@@ -7,9 +7,7 @@ if ENV['CI']
   end
 end
 
-require 'guard/notifier'
 require 'guard/compat/test/helper'
-require 'guard/minitest'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

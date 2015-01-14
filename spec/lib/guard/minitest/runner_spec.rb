@@ -1,4 +1,5 @@
-require 'spec_helper'
+require 'guard/minitest/runner'
+require 'guard/minitest/utils'
 
 RSpec.describe Guard::Minitest::Runner do
   subject { Guard::Minitest::Runner }
