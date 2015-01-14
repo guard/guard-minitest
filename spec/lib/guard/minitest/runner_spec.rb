@@ -557,6 +557,10 @@ RSpec.describe Guard::Minitest::Runner do
   end
 
   context "when guard is not included" do
+    before do
+      allow(Kernel).to receive(:system).and_call_original
+    end
+
     it "loads correctly as minitest plugin" do
       code =<<-EOS
         require 'guard/minitest/runner'
