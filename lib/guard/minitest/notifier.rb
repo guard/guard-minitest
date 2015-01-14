@@ -1,5 +1,3 @@
-require 'guard/notifier'
-
 module Guard
   class Minitest
     class Notifier
@@ -31,7 +29,7 @@ module Guard
         message = guard_message(test_count, assertion_count, failure_count, error_count, skip_count, duration)
         image   = guard_image(failure_count + error_count, skip_count)
 
-        ::Guard::Notifier.notify(message, title: 'Minitest results', image: image)
+        Compat::UI.notify(message, title: 'Minitest results', image: image)
       end
 
     end

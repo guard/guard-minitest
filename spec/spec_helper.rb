@@ -42,6 +42,6 @@ RSpec.configure do |config|
   end
 
   config.before do
-    allow(Guard::UI).to receive(:info)
+    allow(Guard::Compat::UI).to receive(:info)
   end
 end

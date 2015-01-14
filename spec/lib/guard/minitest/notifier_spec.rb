@@ -30,7 +30,7 @@ RSpec.describe Guard::Minitest::Notifier do
 
   describe '.notify' do
     it 'should call Guard::Notifier' do
-      allow(::Guard::Notifier).to receive(:notify).with(
+      allow(Guard::Compat::UI).to receive(:notify).with(
         "1 tests\n2 assertions, 0 failures, 0 errors\n\n0.10 tests/s, 0.20 assertions/s\n\nFinished in 10.0000 seconds",
         title: 'Minitest results',
         image: :success

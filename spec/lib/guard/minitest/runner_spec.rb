@@ -6,6 +6,7 @@ RSpec.describe Guard::Minitest::Runner do
   before do
     @old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " #{File.expand_path('../../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)}"
     @require_old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " -r#{@old_runner}"
+    allow(Guard::Compat::UI).to receive(:notify)
   end
 
   describe 'options' do
@@ -23,7 +24,7 @@ RSpec.describe Guard::Minitest::Runner do
     describe 'deprecated options' do
       describe 'seed' do
         it 'sets cli options' do
-          expect(Guard::UI).to receive(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to Minitest with the :cli option.')
+          expect(Guard::Compat::UI).to receive(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to Minitest with the :cli option.')
 
           expect(subject.new(seed: 123456789).send(:cli_options)).to eq ['--seed 123456789']
         end
@@ -31,7 +32,7 @@ RSpec.describe Guard::Minitest::Runner do
 
       describe 'verbose' do
         it 'sets cli options' do
-          expect(Guard::UI).to receive(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to Minitest with the :cli option.')
+          expect(Guard::Compat::UI).to receive(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to Minitest with the :cli option.')
 
           expect(subject.new(verbose: true).send(:cli_options)).to eq ['--verbose']
         end
@@ -234,7 +235,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs without bundler and rubygems' do
         runner = subject.new
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with(
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         )
@@ -245,7 +246,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs without bundler but rubygems' do
         runner = subject.new(rubygems: true)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with(
           "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         )
@@ -263,7 +264,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'should run with bundler but not rubygems' do
         runner = subject.new(bundler: true, rubygems: false)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with(
           "bundle exec ruby -I\"test\" -I\"spec\" -r bundler/setup -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         )
@@ -274,7 +275,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs without bundler but rubygems' do
         runner = subject.new(bundler: false, rubygems: true)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with(
           "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         )
@@ -285,7 +286,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs without bundler and rubygems' do
         runner = subject.new(bundler: false, rubygems: false)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with(
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         )
@@ -328,7 +329,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs with default zeus command' do
         runner = subject.new(zeus: true)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with('zeus test ./test/test_minitest.rb')
 
         runner.run(['test/test_minitest.rb'])
@@ -337,7 +338,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs with custom zeus command' do
         runner = subject.new(zeus: 'abcxyz')
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with('zeus abcxyz ./test/test_minitest.rb')
 
         runner.run(['test/test_minitest.rb'])
@@ -348,7 +349,7 @@ RSpec.describe Guard::Minitest::Runner do
           runner = subject.new(zeus: true)
 
           expect(runner).to receive(:system).with('zeus test ./test/test_minitest.rb').and_return(true)
-          expect(Guard::Notifier).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
+          expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
 
           runner.run(['test/test_minitest.rb'])
         end
@@ -357,7 +358,7 @@ RSpec.describe Guard::Minitest::Runner do
           runner = subject.new(zeus: true)
 
           expect(runner).to receive(:system).with('zeus test ./test/test_minitest.rb').and_return(false)
-          expect(Guard::Notifier).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
+          expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
 
           runner.run(['test/test_minitest.rb'])
         end
@@ -368,7 +369,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs with default spring command' do
         runner = subject.new(spring: true)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with("bin/rake test test/test_minitest.rb")
 
         runner.run(['test/test_minitest.rb'])
@@ -377,7 +378,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs with a clean environment' do
         runner = subject.new(spring: true)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(Bundler).to receive(:with_clean_env).and_yield
         expect(runner).to receive(:system).with("bin/rake test test/test_minitest.rb")
 
@@ -387,7 +388,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs with custom spring command' do
         runner = subject.new(spring: 'spring rake test')
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with("spring rake test test/test_minitest.rb")
 
         runner.run(['test/test_minitest.rb'])
@@ -396,7 +397,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs default spring command with cli' do
         runner = subject.new(spring: true, cli: '--seed 12345 --verbose')
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with("bin/rake test test/test_minitest.rb -- --seed 12345 --verbose")
 
         runner.run(['test/test_minitest.rb'])
@@ -405,7 +406,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs custom spring command with cli' do
         runner = subject.new(spring: 'spring rake test', cli: '--seed 12345 --verbose')
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with("spring rake test test/test_minitest.rb -- --seed 12345 --verbose")
 
         runner.run(['test/test_minitest.rb'])
@@ -415,7 +416,7 @@ RSpec.describe Guard::Minitest::Runner do
         runner = subject.new(spring: true)
 
         expect(runner).to receive(:system).with("bin/rake test test/test_minitest.rb").and_return(true)
-        expect(Guard::Notifier).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
+        expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
 
         runner.run(['test/test_minitest.rb'])
       end
@@ -424,7 +425,7 @@ RSpec.describe Guard::Minitest::Runner do
         runner = subject.new(spring: true)
 
         expect(runner).to receive(:system).with("bin/rake test test/test_minitest.rb").and_return(false)
-        expect(Guard::Notifier).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
+        expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
 
         runner.run(['test/test_minitest.rb'])
       end
@@ -434,7 +435,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'should run with drb' do
         runner = subject.new(drb: true)
 
-        expect(Guard::UI).to receive(:info)
+        expect(Guard::Compat::UI).to receive(:info)
         expect(runner).to receive(:system).with('testdrb ./test/test_minitest.rb')
 
         runner.run(['test/test_minitest.rb'])
