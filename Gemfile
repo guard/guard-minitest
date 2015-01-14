@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 
-gemspec
+gemspec development_group: :gem_build_deps
 
-gem 'rake'
+group :gem_build_deps do
+  gem 'rake'
+end
 
 group :development do
   gem 'ruby_gntp', require: false

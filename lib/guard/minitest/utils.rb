@@ -1,7 +1,7 @@
 require 'rubygems/requirement'
 
 module Guard
-  class Minitest
+  class Minitest < Plugin
     class Utils
 
       def self.minitest_version

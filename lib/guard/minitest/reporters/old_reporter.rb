@@ -2,7 +2,7 @@ require 'minitest'
 require 'guard/minitest/notifier'
 
 module Guard
-  class Minitest
+  class Minitest < Plugin
     class Reporter < ::Minitest::Reporter
 
       def report

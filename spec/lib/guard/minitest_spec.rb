@@ -1,3 +1,5 @@
+require 'guard/minitest'
+
 RSpec.describe Guard::Minitest do
   subject { Guard::Minitest }
 

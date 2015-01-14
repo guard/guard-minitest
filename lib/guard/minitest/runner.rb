@@ -1,7 +1,7 @@
 require 'guard/minitest/inspector'
 
 module Guard
-  class Minitest
+  class Minitest < Plugin
     class Runner
       attr_accessor :inspector
 
@@ -35,14 +35,14 @@ module Guard
         return unless options[:all] || !paths.empty?
 
         message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
-        UI.info message, reset: true
+        Compat::UI.info message, reset: true
 
         status = _run_command(paths, options[:all])
 
         # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
         # process, but we can use the exit status of the client process to distinguish between :success and :failed.
         if zeus? || spring?
-          ::Guard::Notifier.notify(message, title: 'Minitest results', image: status ? :success : :failed)
+          Compat::UI.notify(message, title: 'Minitest results', image: status ? :success : :failed)
         end
 
         if @options[:all_after_pass] && status && !options[:all]
@@ -242,7 +242,7 @@ module Guard
             final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
             cli_options << final_value
 
-            UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.}
+            Compat::UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.}
           end
         end
       end
