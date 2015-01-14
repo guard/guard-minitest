@@ -1,5 +1,7 @@
 require 'rubygems/requirement'
 
+require 'guard/minitest'
+
 module Guard
   class Minitest < Plugin
     class Utils

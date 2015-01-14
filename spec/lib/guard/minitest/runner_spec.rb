@@ -551,4 +551,14 @@ RSpec.describe Guard::Minitest::Runner do
       runner.run_on_removals(['test/guard/minitest/test_deleted.rb'])
     end
   end
+
+  context "when guard is not included" do
+    it "loads correctly as minitest plugin" do
+      code =<<-EOS
+        require 'guard/minitest/runner'
+      EOS
+
+      system(*%w(bundle exec ruby -e) + [code])
+    end
+  end
 end
