@@ -233,7 +233,8 @@ module Guard
 
       def parse_deprecated_options
         if @options.key?(:notify)
-          UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
+          # TODO: no coverage
+          Compat::UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
         end
 
         [:seed, :verbose].each do |key|
