@@ -136,15 +136,10 @@ module Guard
       end
 
       def _commander(paths)
-        if drb?
-          drb_command(paths)
-        elsif zeus?
-          zeus_command(paths)
-        elsif spring?
-          spring_command(paths)
-        else
-          ruby_command(paths)
-        end
+        return drb_command(paths) if drb?
+        return zeus_command(paths) if zeus?
+        return spring_command(paths) if spring?
+        ruby_command(paths)
       end
 
       def minitest_command(paths, all)
@@ -199,6 +194,7 @@ module Guard
 
         cmd_parts << '--'
         cmd_parts += cli_options
+        cmd_parts
       end
 
       def generate_includes(include_test_folders = true)
@@ -220,11 +216,8 @@ module Guard
       end
 
       def all_env
-        if @options[:all_env].is_a? Hash
-          Hash[@options[:all_env].map { |key, value| [key.to_s, value.to_s] }]
-        else
-          { @options[:all_env].to_s => 'true' }
-        end
+        return { @options[:all_env].to_s => 'true' } unless @options[:all_env].is_a? Hash
+        Hash[@options[:all_env].map { |key, value| [key.to_s, value.to_s] }]
       end
 
       def relative_paths(paths)
@@ -242,13 +235,13 @@ module Guard
         end
 
         [:seed, :verbose].each do |key|
-          if value = @options.delete(key)
-            final_value = "--#{key}"
-            final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
-            cli_options << final_value
+          next unless (value = @options.delete(key))
 
-            Compat::UI.info %(DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.)
-          end
+          final_value = "--#{key}"
+          final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
+          cli_options << final_value
+
+          Compat::UI.info %(DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.)
         end
       end
     end
