@@ -14,6 +14,8 @@ group :development do
   gem 'gems', require: false
   gem 'netrc', require: false
   gem 'octokit', require: false
+
+  gem 'guard-rubocop', require: false
 end
 
 group :test do
