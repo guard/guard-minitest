@@ -21,6 +21,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bundler'
 
-  s.files        = Dir.glob('{lib}/**/*') + %w[CHANGELOG.md LICENSE README.md]
+  s.files        = `git ls-files -z lib`.split("\x0") + %w[CHANGELOG.md LICENSE README.md]
   s.require_path = 'lib'
 end
