@@ -17,7 +17,6 @@ RSpec.describe Guard::Minitest::Runner do
   end
 
   describe 'options' do
-
     describe 'cli_options' do
       it 'defaults to empty string' do
         expect(subject.send(:cli_options)).to eq []
@@ -189,9 +188,8 @@ RSpec.describe Guard::Minitest::Runner do
       end
 
       it "outputs command" do
-        runner = described_class.new
         expect(Guard::Compat::UI).to receive(:debug).with("Running: ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --")
-        runner.run(['test/test_minitest.rb'])
+        subject.run(['test/test_minitest.rb'])
       end
     end
 
@@ -202,91 +200,102 @@ RSpec.describe Guard::Minitest::Runner do
       end
 
       it "shows an error" do
-        runner = described_class.new
         expect(Guard::Compat::UI).to receive(:error).with("No such file or directory - ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --")
-        catch(:task_has_failed) { runner.run(['test/test_minitest.rb']) }
+        catch(:task_has_failed) {subject.run(['test/test_minitest.rb']) }
       end
 
       it "throw a task_has_failed symbol" do
-        runner = described_class.new
-        expect { runner.run(['test/test_minitest.rb']) }.to throw_symbol(:task_has_failed)
+        expect { subject.run(['test/test_minitest.rb']) }.to throw_symbol(:task_has_failed)
       end
     end
 
-    it 'passes :cli arguments' do
-      runner = described_class.new(cli: '--seed 12345 --verbose')
+    context "with cli arguments" do
+      let(:options) { { cli: '--seed 12345 --verbose' } }
 
-      expect(Kernel).to receive(:system).with(
-        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --seed 12345 --verbose"
-      ) { system("true") }
+      it 'passes :cli arguments' do
+        expect(Kernel).to receive(:system).with(
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --seed 12345 --verbose"
+        ) { system("true") }
 
-      runner.run(['test/test_minitest.rb'])
+        subject.run(['test/test_minitest.rb'])
+      end
     end
 
-    it 'runs with specified directories included' do
-      runner = described_class.new(include: %w[lib app])
+    context 'runs with specified directories included' do
+      let(:options) { {include: %w[lib app]} }
+      it 'runs with specified directories included' do
 
-      expect(Kernel).to receive(:system).with(
-        "ruby -I\"test\" -I\"spec\" -I\"lib\" -I\"app\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-      ) { system("true") }
+        expect(Kernel).to receive(:system).with(
+          "ruby -I\"test\" -I\"spec\" -I\"lib\" -I\"app\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+        ) { system("true") }
 
-      runner.run(['test/test_minitest.rb'])
+        subject.run(['test/test_minitest.rb'])
+      end
     end
 
     describe 'autorun disabled' do
-      it 'does not require minitest/autorun' do
-        runner = described_class.new(autorun: false)
+      let(:options) { {autorun: false} }
 
+      it 'does not require minitest/autorun' do
         expect(Kernel).to receive(:system).with(
           "ruby -I\"test\" -I\"spec\" -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         ) { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+        subject.run(['test/test_minitest.rb'])
       end
     end
 
-    it 'sets env via all_env if running the full suite' do
-      runner = described_class.new(all_env: {"TESTS_ALL" => true})
 
-      expect(Kernel).to receive(:system).with(
-        {"TESTS_ALL" => "true"},
-        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-      ) { system("true") }
+    context 'when running the full suite' do
+      let(:options) { {all_env: {"TESTS_ALL" => true}} }
+      it 'sets env via all_env if running the full suite' do
 
-      runner.run(['test/test_minitest.rb'], all: true)
+        expect(Kernel).to receive(:system).with(
+          {"TESTS_ALL" => "true"},
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+        ) { system("true") }
+
+        subject.run(['test/test_minitest.rb'], all: true)
+      end
     end
 
-    it 'allows string setting of all_env' do
-      runner = described_class.new(all_env: "TESTS_ALL")
+    context 'allows string setting of all_env' do
+      let(:options) { {all_env: "TESTS_ALL"} }
+      it 'allows string setting of all_env' do
 
-      expect(Kernel).to receive(:system).with(
-        {"TESTS_ALL" => "true"},
-        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-      ) { system("true") }
+        expect(Kernel).to receive(:system).with(
+          {"TESTS_ALL" => "true"},
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+        ) { system("true") }
 
-      runner.run(['test/test_minitest.rb'], all: true)
+        subject.run(['test/test_minitest.rb'], all: true)
+      end
     end
 
-    it 'runs with the specified environment' do
-      runner = described_class.new(env: {MINITEST_TEST: "test"})
+    context 'runs with the specified environment' do
+      let(:options) { {env: {MINITEST_TEST: "test"}} }
+      it 'runs with the specified environment' do
 
-      expect(Kernel).to receive(:system).with(
-        {"MINITEST_TEST" => "test"},
-        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-      ) { system("true") }
+        expect(Kernel).to receive(:system).with(
+          {"MINITEST_TEST" => "test"},
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+        ) { system("true") }
 
-      runner.run(['test/test_minitest.rb'])
+        subject.run(['test/test_minitest.rb'])
+      end
     end
 
-    it 'merges the specified environment with the all environment' do
-      runner = described_class.new(env: {MINITEST_TEST: 'test', MINITEST: true}, all_env: {MINITEST_TEST: "all"})
+    context 'with the all environment' do
+      let(:options) { {env: {MINITEST_TEST: 'test', MINITEST: true}, all_env: {MINITEST_TEST: "all"}} }
+      it 'merges the specified environment' do
 
-      expect(Kernel).to receive(:system).with(
-        {"MINITEST_TEST" => "all", "MINITEST" => "true"},
-        "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-      ) { system("true") }
+        expect(Kernel).to receive(:system).with(
+          {"MINITEST_TEST" => "all", "MINITEST" => "true"},
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+        ) { system("true") }
 
-      runner.run(['test/test_minitest.rb'], all: true)
+        subject.run(['test/test_minitest.rb'], all: true)
+      end
     end
 
     describe 'in empty folder' do
@@ -295,27 +304,26 @@ RSpec.describe Guard::Minitest::Runner do
       end
 
       it 'runs without bundler and rubygems' do
-        runner = described_class.new
-
         expect(Guard::Compat::UI).to receive(:info)
         expect(Kernel).to receive(:system).with(
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
         ) { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+        subject.run(['test/test_minitest.rb'])
       end
 
-      it 'runs without bundler but rubygems' do
-        runner = described_class.new(rubygems: true)
+      context 'without bundler but rubygems' do
+        let(:options) { {rubygems: true} }
+        it 'runs without bundler but rubygems' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with(
-          "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-        ) { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with(
+            "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          ) { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
-
     end
 
     describe 'in bundler folder' do
@@ -323,210 +331,223 @@ RSpec.describe Guard::Minitest::Runner do
         allow(Dir).to receive(:pwd).and_return(fixtures_path.join('bundler'))
       end
 
-      it 'should run with bundler but not rubygems' do
-        runner = described_class.new(bundler: true, rubygems: false)
+      context 'with bundler but not rubygems' do
+        let(:options) { {bundler: true, rubygems: false} }
+        it 'runs with bundler' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with(
-          "bundle exec ruby -I\"test\" -I\"spec\" -r bundler/setup -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-        ) { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with(
+            "bundle exec ruby -I\"test\" -I\"spec\" -r bundler/setup -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          ) { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs without bundler but rubygems' do
-        runner = described_class.new(bundler: false, rubygems: true)
+      context 'without bundler but rubygems' do
+        let(:options) { {bundler: false, rubygems: true} }
+        it 'runs without bundler' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with(
-          "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-        ) { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with(
+            "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          ) { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs without bundler and rubygems' do
-        runner = described_class.new(bundler: false, rubygems: false)
+      context 'without bundler and rubygems' do
+        let(:options) { {bundler: false, rubygems: false} }
+        it 'runs without bundler' do
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with(
+            "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          ) { system("true") }
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with(
-          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
-        ) { system("true") }
-
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
     end
 
     describe 'all_after_pass' do
       describe 'when set' do
-        it 'runs all tests after success' do
-          runner = described_class.new(all_after_pass: true)
-          allow(Kernel).to receive(:system) { system("true") }
-          expect(runner).to receive(:run_all)
+        let(:options) { {all_after_pass: true} }
 
-          runner.run(['test/test_minitest.rb'])
+        it 'runs all tests after success' do
+          allow(Kernel).to receive(:system) { system("true") }
+          expect(subject).to receive(:run_all)
+
+          subject.run(['test/test_minitest.rb'])
         end
 
         it 'does not run all tests after failure' do
-          runner = described_class.new(all_after_pass: true)
           allow(Kernel).to receive(:system) { system("false") }
-          expect(runner).to receive(:run_all).never
+          expect(subject).to receive(:run_all).never
 
-          runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
         end
       end
 
       describe 'when unset' do
-        it 'does not run all tests again after success' do
-          runner = described_class.new(all_after_pass: false)
-          allow(Kernel).to receive(:system) { system("true") }
-          expect(runner).to receive(:run_all).never
+        let(:options) { {all_after_pass: false} }
 
-          runner.run(['test/test_minitest.rb'])
+        it 'does not run all tests again after success' do
+          allow(Kernel).to receive(:system) { system("true") }
+          expect(subject).to receive(:run_all).never
+
+          subject.run(['test/test_minitest.rb'])
         end
       end
     end
 
     describe 'zeus' do
-      it 'runs with default zeus command' do
-        runner = described_class.new(zeus: true)
+      context 'with default zeus command' do
+        let(:options) { {zeus: true} }
+        it 'runs with default zeus command' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with('zeus test ./test/test_minitest.rb')  { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with('zeus test ./test/test_minitest.rb')  { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs with custom zeus command' do
-        runner = described_class.new(zeus: 'abcxyz')
+      context 'with custom zeus command' do
+        let(:options) { {zeus: 'abcxyz'} }
+        it 'runs with custom zeus command' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with('zeus abcxyz ./test/test_minitest.rb') { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with('zeus abcxyz ./test/test_minitest.rb') { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
       describe 'notifications' do
-        it 'provides success notification when the zeus exit status is 0' do
-          runner = described_class.new(zeus: true)
+        let(:options) { {zeus: true} }
 
+        it 'provides success notification when the zeus exit status is 0' do
           expect(Kernel).to receive(:system).with('zeus test ./test/test_minitest.rb') { system("true") }
           expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
 
-          runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
         end
 
         it 'provides failed notification when the zeus exit status is non-zero or the command failed' do
-          runner = described_class.new(zeus: true)
 
           expect(Kernel).to receive(:system).with('zeus test ./test/test_minitest.rb') { system("false") }
           expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
 
-          runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
         end
       end
     end
 
     describe 'spring' do
-      it 'runs with default spring command' do
-        runner = described_class.new(spring: true)
+      context 'when true' do
+        let(:options) { {spring: true} }
+        it 'runs with default spring command' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
+
+        it 'runs with a clean environment' do
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Bundler).to receive(:with_clean_env).and_yield
+          expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("true") }
+
+          subject.run(['test/test_minitest.rb'])
+        end
+        it 'provides success notification when the spring exit status is 0' do
+          expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("true") }
+          expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
+
+          subject.run(['test/test_minitest.rb'])
+        end
+
+        it 'provides failed notification when the spring exit status is non-zero or the command failed' do
+          expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("false") }
+          expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
+
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs with a clean environment' do
-        runner = described_class.new(spring: true)
+      context "with custom spring command" do
+        let(:options) { {spring: 'spring rake test'} }
+        it 'runs with custom spring command' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Bundler).to receive(:with_clean_env).and_yield
-        expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with("spring rake test test/test_minitest.rb") { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs with custom spring command' do
-        runner = described_class.new(spring: 'spring rake test')
+      context "with true and cli options" do
+        let(:options) { {spring: true, cli: '--seed 12345 --verbose'} }
+        it 'runs default spring command with cli' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with("spring rake test test/test_minitest.rb") { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb -- --seed 12345 --verbose") { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs default spring command with cli' do
-        runner = described_class.new(spring: true, cli: '--seed 12345 --verbose')
+      context "with custom command and cli options" do
+        let(:options) { {spring: 'spring rake test', cli: '--seed 12345 --verbose'} }
+        it 'runs custom spring command with cli' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb -- --seed 12345 --verbose") { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with("spring rake test test/test_minitest.rb -- --seed 12345 --verbose") { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs custom spring command with cli' do
-        runner = described_class.new(spring: 'spring rake test', cli: '--seed 12345 --verbose')
-
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with("spring rake test test/test_minitest.rb -- --seed 12345 --verbose") { system("true") }
-
-        runner.run(['test/test_minitest.rb'])
-      end
-
-      it 'provides success notification when the spring exit status is 0' do
-        runner = described_class.new(spring: true)
-
-        expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("true") }
-        expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
-
-        runner.run(['test/test_minitest.rb'])
-      end
-
-      it 'provides failed notification when the spring exit status is non-zero or the command failed' do
-        runner = described_class.new(spring: true)
-
-        expect(Kernel).to receive(:system).with("bin/rake test test/test_minitest.rb") { system("false") }
-        expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
-
-        runner.run(['test/test_minitest.rb'])
-      end
     end
 
     describe 'drb' do
-      it 'should run with drb' do
-        runner = described_class.new(drb: true)
+      context "with drb" do
+        let(:options) { {drb: true} }
+        it 'should run with drb' do
 
-        expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with('testdrb ./test/test_minitest.rb') { system("true") }
+          expect(Guard::Compat::UI).to receive(:info)
+          expect(Kernel).to receive(:system).with('testdrb ./test/test_minitest.rb') { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
 
-      it 'runs with specified directories included' do
-        runner = described_class.new(drb: true, include: %w[lib app])
+      context "with specific directories" do
+        let(:options) { {drb: true, include: %w[lib app]} }
+        it 'runs with specified directories included' do
 
-        expect(Kernel).to receive(:system).
-          with( "testdrb -I\"lib\" -I\"app\" ./test/test_minitest.rb") { system("true") }
+          expect(Kernel).to receive(:system).
+            with( "testdrb -I\"lib\" -I\"app\" ./test/test_minitest.rb") { system("true") }
 
-        runner.run(['test/test_minitest.rb'])
+          subject.run(['test/test_minitest.rb'])
+        end
       end
     end
 
     describe 'when no paths are passed' do
-      let(:runner) { described_class.new }
-
       it 'does not run a command' do
         expect(Kernel).to_not receive(:system)
 
-        runner.run([])
+        subject.run([])
       end
 
       it 'still runs all if requested' do
         expect(Kernel).to receive(:system).
           with( "ruby -I\"test\" -I\"spec\" -r minitest/autorun#{@require_old_runner} -e \"\" --") { system("true") }
 
-        expect(runner.run([], all: true)).to eq true
+        expect(subject.run([], all: true)).to eq true
       end
     end
   end
@@ -534,17 +555,14 @@ RSpec.describe Guard::Minitest::Runner do
   describe 'run_all' do
     it 'runs all tests' do
       paths = %w[test/test_minitest_1.rb test/test_minitest_2.rb]
-      runner = described_class.new
-      allow(runner.inspector).to receive(:clean_all).and_return(paths)
-      expect(runner).to receive(:run).with(paths, { all: true }).and_return(true)
+      allow(subject.inspector).to receive(:clean_all).and_return(paths)
+      expect(subject).to receive(:run).with(paths, { all: true }).and_return(true)
 
-      expect(runner.run_all).to eq true
+      expect(subject.run_all).to eq true
     end
   end
 
   describe 'run_on_modifications' do
-    let(:runner) { described_class.new }
-
     before do
       @paths = %w[test/test_minitest_1.rb test/test_minitest_2.rb]
       allow(Dir).to receive(:pwd).and_return(fixtures_path.join('empty'))
@@ -553,63 +571,74 @@ RSpec.describe Guard::Minitest::Runner do
 
     describe 'when all paths are passed' do
       before do
-        allow(runner.inspector).to receive(:clean).and_return(@paths)
+        allow(subject.inspector).to receive(:clean).and_return(@paths)
       end
 
       it 'runs minitest in all paths' do
-        expect(runner).to receive(:run).with(@paths, all: true).and_return(true)
+        expect(subject).to receive(:run).with(@paths, all: true).and_return(true)
 
-        expect(runner.run_on_modifications(@paths)).to eq true
+        expect(subject.run_on_modifications(@paths)).to eq true
       end
 
-      it 'does not run all tests again after success even when all_after_pass is enabled' do
-        new_runner = described_class.new(all_after_pass: true)
-        allow(Kernel).to receive(:system) { system("true") }
-        expect(new_runner).to receive(:run_all).never
+      context 'even when all_after_pass is enabled' do
+        let(:options) { {all_after_pass: true} }
+        it 'does not run all tests again after success' do
+          allow(Kernel).to receive(:system) { system("true") }
+          expect(subject).to receive(:run_all).never
 
-        expect(new_runner.run_on_modifications(@paths)).to eq true
+          expect(subject.run_on_modifications(@paths)).to eq true
+        end
       end
     end
 
     describe 'when not all paths are passed' do
       before do
-        allow(runner.inspector).to receive(:clean).and_return(['test/test_minitest_1.rb'])
+        allow(subject.inspector).to receive(:clean).and_return(['test/test_minitest_1.rb'])
       end
 
       it 'runs minitest in paths' do
-        expect(runner).to receive(:run).with(['test/test_minitest_1.rb'], all: false).and_return(true)
+        expect(subject).to receive(:run).with(['test/test_minitest_1.rb'], all: false).and_return(true)
 
-        expect(runner.run_on_modifications(@paths)).to eq true
+        expect(subject.run_on_modifications(@paths)).to eq true
       end
 
-      it 'runs all tests again after success if all_after_pass enabled' do
-        new_runner = described_class.new(all_after_pass: true)
-        allow(Kernel).to receive(:system).and_return(true)
-        expect(new_runner).to receive(:run).with(@paths, all: true).and_return(true)
+      context 'with all_after_pass enabled' do
+        let(:options) { {all_after_pass: true} }
 
-        expect(new_runner.run_on_modifications(@paths)).to eq true
+        before do
+          allow(subject.inspector).to receive(:clean_all).and_return(
+            ['test/test_minitest_1.rb', 'test/test_minitest_2.rb'],
+          )
+        end
+
+        it 'runs all tests again after success if all_after_pass enabled' do
+          subject
+          allow(Kernel).to receive(:system) { system("true") }
+          allow(subject).to receive(:run).with(['test/test_minitest_1.rb'], all: false).and_call_original
+          expect(subject).to receive(:run).with(@paths, all: true).and_return(true)
+
+          expect(subject.run_on_modifications(@paths)).to eq true
+        end
       end
     end
   end
 
   describe 'run_on_additions' do
     it 'clears the test file cache and runs minitest for the new path' do
-      runner = described_class.new
-      allow(runner.inspector).to receive(:clean).with(['test/guard/minitest/test_new.rb']).and_return(['test/guard/minitest/test_new.rb'])
-      expect(runner.inspector).to receive(:clear_memoized_test_files)
+      allow(subject.inspector).to receive(:clean).with(['test/guard/minitest/test_new.rb']).and_return(['test/guard/minitest/test_new.rb'])
+      expect(subject.inspector).to receive(:clear_memoized_test_files)
 
-      expect(runner.run_on_additions(['test/guard/minitest/test_new.rb'])).to eq true
+      expect(subject.run_on_additions(['test/guard/minitest/test_new.rb'])).to eq true
     end
   end
 
   describe 'run_on_removals' do
     it 'clears the test file cache and does not run minitest' do
-      runner = described_class.new
-      allow(runner.inspector).to receive(:clean).with(['test/guard/minitest/test_deleted.rb']).and_return(['test/guard/minitest/test_deleted.rb'])
-      expect(runner.inspector).to receive(:clear_memoized_test_files)
-      expect(runner).to receive(:run).never
+      allow(subject.inspector).to receive(:clean).with(['test/guard/minitest/test_deleted.rb']).and_return(['test/guard/minitest/test_deleted.rb'])
+      expect(subject.inspector).to receive(:clear_memoized_test_files)
+      expect(subject).to receive(:run).never
 
-      runner.run_on_removals(['test/guard/minitest/test_deleted.rb'])
+      subject.run_on_removals(['test/guard/minitest/test_deleted.rb'])
     end
   end
 
