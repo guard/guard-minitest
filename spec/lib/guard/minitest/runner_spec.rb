@@ -165,7 +165,7 @@ RSpec.describe Guard::Minitest::Runner do
 
       it "outputs command" do
         runner = subject.new
-        expect(Guard::Compat::UI).to receive(:debug).with("Running: ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --")
+        expect(Guard::Compat::UI).to receive(:debug).with("Running: ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --")
         runner.run(['test/test_minitest.rb'])
       end
     end
@@ -178,7 +178,7 @@ RSpec.describe Guard::Minitest::Runner do
 
       it "shows an error" do
         runner = subject.new
-        expect(Guard::Compat::UI).to receive(:error).with("No such file or directory - ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --")
+        expect(Guard::Compat::UI).to receive(:error).with("No such file or directory - ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --")
         catch(:task_has_failed) { runner.run(['test/test_minitest.rb']) }
       end
 
@@ -499,7 +499,7 @@ RSpec.describe Guard::Minitest::Runner do
 
       it 'still runs all if requested' do
         expect(Kernel).to receive(:system).
-          with( "ruby -I\"test\" -I\"spec\" -r minitest/autorun -e \"\" --") { system("true") }
+          with( "ruby -I\"test\" -I\"spec\" -r minitest/autorun#{@require_old_runner} -e \"\" --") { system("true") }
 
         expect(runner.run([], all: true)).to eq true
       end
