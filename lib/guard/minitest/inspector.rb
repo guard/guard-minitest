@@ -3,7 +3,6 @@ require 'guard/minitest'
 module Guard
   class Minitest < Plugin
     class Inspector
-
       attr_reader :test_folders, :test_file_patterns
 
       def initialize(test_folders, test_file_patterns)
@@ -50,7 +49,6 @@ module Guard
       def _join_for_glob(fragments)
         "{#{fragments.join(',')}}"
       end
-
     end
   end
 end

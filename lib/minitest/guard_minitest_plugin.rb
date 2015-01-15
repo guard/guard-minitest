@@ -7,10 +7,10 @@ else
 end
 
 module Minitest
-  def self.plugin_guard_minitest_options(opts, options) # :nodoc:
+  def self.plugin_guard_minitest_options(_opts, _options) # :nodoc:
   end
 
-  def self.plugin_guard_minitest_init(options) # :nodoc:
-    self.reporter << ::Guard::Minitest::Reporter.new
+  def self.plugin_guard_minitest_init(_options) # :nodoc:
+    reporter << ::Guard::Minitest::Reporter.new
   end
 end

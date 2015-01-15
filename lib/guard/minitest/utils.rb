@@ -5,7 +5,6 @@ require 'guard/minitest'
 module Guard
   class Minitest < Plugin
     class Utils
-
       def self.minitest_version
         @@minitest_version ||= begin
           require 'minitest'
@@ -24,7 +23,6 @@ module Guard
       def self.minitest_version_gte_5_0_4?
         @@minitest_version_gte_5_0_4 ||= Gem::Requirement.new('>= 5.0.4').satisfied_by?(Gem::Version.new(minitest_version))
       end
-
     end
   end
 end

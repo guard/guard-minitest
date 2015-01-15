@@ -1,4 +1,5 @@
 require 'guard/minitest/inspector'
+require 'English'
 
 module Guard
   class Minitest < Plugin
@@ -16,8 +17,8 @@ module Guard
           all_env:            {},
           env:                {},
           include:            [],
-          test_folders:       %w[test spec],
-          test_file_patterns: %w[*_test.rb test_*.rb *_spec.rb],
+          test_folders:       %w(test spec),
+          test_file_patterns: %w(*_test.rb test_*.rb *_spec.rb),
           cli:                nil,
           autorun:            true
         }.merge(options)
@@ -37,19 +38,23 @@ module Guard
         message = "Running: #{options[:all] ? 'all tests' : paths.join(' ')}"
         Compat::UI.info message, reset: true
 
-        status = _run_command(paths, options[:all])
+        begin
+          status = _run_possibly_bundled_command(paths, options[:all])
+        rescue Errno::ENOENT => e
+          Compat::UI.error e.message
+          throw :task_has_failed
+        end
+
+        success = status.zero?
 
         # When using zeus or spring, the Guard::Minitest::Reporter can't be used because the minitests run in another
         # process, but we can use the exit status of the client process to distinguish between :success and :failed.
         if zeus? || spring?
-          Compat::UI.notify(message, title: 'Minitest results', image: status ? :success : :failed)
+          Compat::UI.notify(message, title: 'Minitest results', image: success ? :success : :failed)
         end
 
-        if @options[:all_after_pass] && status && !options[:all]
-          run_all
-        else
-          status
-        end
+        run_all_coz_ok = @options[:all_after_pass] && success && !options[:all]
+        run_all_coz_ok ?  run_all : success
       end
 
       def run_all
@@ -62,12 +67,12 @@ module Guard
         run(paths, all: all_paths?(paths))
       end
 
-      def run_on_additions(paths)
+      def run_on_additions(_paths)
         inspector.clear_memoized_test_files
         true
       end
 
-      def run_on_removals(paths)
+      def run_on_removals(_paths)
         inspector.clear_memoized_test_files
       end
 
@@ -117,30 +122,24 @@ module Guard
         @options[:autorun]
       end
 
-      def _run_command(paths, all)
-        if bundler?
-          system(*minitest_command(paths, all))
-        else
-          if defined?(::Bundler)
-            ::Bundler.with_clean_env do
-              system(*minitest_command(paths, all))
-            end
-          else
-            system(*minitest_command(paths, all))
-          end
-        end
+      def _run(*args)
+        Compat::UI.debug "Running: #{args.join(' ')}"
+        return $CHILD_STATUS.exitstatus unless Kernel.system(*args).nil?
+
+        fail Errno::ENOENT, args.join(' ')
+      end
+
+      def _run_possibly_bundled_command(paths, all)
+        args = minitest_command(paths, all)
+        bundler_env = !bundler? && defined?(::Bundler)
+        bundler_env ? ::Bundler.with_clean_env { _run(*args) } : _run(*args)
       end
 
       def _commander(paths)
-        if drb?
-          drb_command(paths)
-        elsif zeus?
-          zeus_command(paths)
-        elsif spring?
-          spring_command(paths)
-        else
-          ruby_command(paths)
-        end
+        return drb_command(paths) if drb?
+        return zeus_command(paths) if zeus?
+        return spring_command(paths) if spring?
+        ruby_command(paths)
       end
 
       def minitest_command(paths, all)
@@ -156,7 +155,7 @@ module Guard
       end
 
       def drb_command(paths)
-        %w[testdrb] + generate_includes(false) + relative_paths(paths)
+        %w(testdrb) + generate_includes(false) + relative_paths(paths)
       end
 
       def zeus_command(paths)
@@ -167,7 +166,7 @@ module Guard
       def spring_command(paths)
         command = @options[:spring].is_a?(String) ? @options[:spring] : 'bin/rake test'
         cmd_parts = [command]
-        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'spring testunit')
+        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless Utils.minitest_version_gte_5? || command != 'spring testunit'
         if cli_options.length > 0
           cmd_parts + paths + ['--'] + cli_options
         else
@@ -195,6 +194,7 @@ module Guard
 
         cmd_parts << '--'
         cmd_parts += cli_options
+        cmd_parts
       end
 
       def generate_includes(include_test_folders = true)
@@ -204,23 +204,20 @@ module Guard
           folders = include_folders
         end
 
-        folders.map {|f| %[-I"#{f}"] }
+        folders.map { |f| %(-I"#{f}") }
       end
 
-      def generate_env(all=false)
+      def generate_env(all = false)
         base_env.merge(all ? all_env : {})
       end
 
       def base_env
-        Hash[(@options[:env] || {}).map{|key, value| [key.to_s, value.to_s]}]
+        Hash[(@options[:env] || {}).map { |key, value| [key.to_s, value.to_s] }]
       end
 
       def all_env
-        if @options[:all_env].kind_of? Hash
-          Hash[@options[:all_env].map{|key, value| [key.to_s, value.to_s]}]
-        else
-          {@options[:all_env].to_s => "true"}
-        end
+        return { @options[:all_env].to_s => 'true' } unless @options[:all_env].is_a? Hash
+        Hash[@options[:all_env].map { |key, value| [key.to_s, value.to_s] }]
       end
 
       def relative_paths(paths)
@@ -233,20 +230,20 @@ module Guard
 
       def parse_deprecated_options
         if @options.key?(:notify)
-          UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
+          # TODO: no coverage
+          Compat::UI.info %(DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.)
         end
 
         [:seed, :verbose].each do |key|
-          if value = @options.delete(key)
-            final_value = "--#{key}"
-            final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
-            cli_options << final_value
+          next unless (value = @options.delete(key))
 
-            Compat::UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.}
-          end
+          final_value = "--#{key}"
+          final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
+          cli_options << final_value
+
+          Compat::UI.info %(DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.)
         end
       end
-
     end
   end
 end
