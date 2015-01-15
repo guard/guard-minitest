@@ -8,6 +8,7 @@ RSpec.describe Guard::Minitest::Runner do
     @old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " #{File.expand_path('../../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)}"
     @require_old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " -r#{@old_runner}"
     allow(Guard::Compat::UI).to receive(:notify)
+    allow(Guard::Compat::UI).to receive(:debug)
 
     allow(Kernel).to receive(:system) do |*args|
       fail "stub me: Kernel.system(#{ args.map(&:inspect) * ", "})"
@@ -154,6 +155,19 @@ RSpec.describe Guard::Minitest::Runner do
   describe 'run' do
     before do
       allow(Dir).to receive(:pwd).and_return(fixtures_path.join('empty'))
+    end
+
+    context "when Guard is in debug mode" do
+      before do
+        allow(Kernel).to receive(:system) { system("true") }
+        allow(Guard::Compat::UI).to receive(:error)
+      end
+
+      it "outputs command" do
+        runner = subject.new
+        expect(Guard::Compat::UI).to receive(:debug).with("Running: ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --")
+        runner.run(['test/test_minitest.rb'])
+      end
     end
 
     it 'passes :cli arguments' do

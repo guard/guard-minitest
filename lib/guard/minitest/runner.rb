@@ -118,6 +118,7 @@ module Guard
       end
 
       def _run_command(paths, all)
+        Compat::UI.debug "Running: #{minitest_command(paths, all).join(" ")}"
         if bundler?
           system(*minitest_command(paths, all))
         else
