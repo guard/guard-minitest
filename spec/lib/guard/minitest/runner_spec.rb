@@ -2,7 +2,7 @@ require 'guard/minitest/runner'
 require 'guard/minitest/utils'
 
 RSpec.describe Guard::Minitest::Runner do
-  let(:options) {}
+  let(:options) { {} }
   subject { described_class.new(options) }
 
   before do
@@ -23,25 +23,30 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:cli_options)).to eq []
       end
 
-      it 'is set with \'cli\'' do
-        expect(described_class.new(cli: '--test').send(:cli_options)).to eq ['--test']
+      context "with cli" do
+        let(:options) { { cli: '--test' } }
+        it 'is set with \'cli\'' do
+          expect(subject.send(:cli_options)).to eq ['--test']
+        end
       end
     end
 
     describe 'deprecated options' do
       describe 'seed' do
+        let(:options) { { seed: 123456789 } }
         it 'sets cli options' do
           expect(Guard::Compat::UI).to receive(:info).with('DEPRECATION WARNING: The :seed option is deprecated. Pass standard command line argument "--seed" to Minitest with the :cli option.')
 
-          expect(described_class.new(seed: 123456789).send(:cli_options)).to eq ['--seed 123456789']
+          expect(subject.send(:cli_options)).to eq ['--seed 123456789']
         end
       end
 
       describe 'verbose' do
+        let(:options) { { verbose: true } }
         it 'sets cli options' do
           expect(Guard::Compat::UI).to receive(:info).with('DEPRECATION WARNING: The :verbose option is deprecated. Pass standard command line argument "--verbose" to Minitest with the :cli option.')
 
-          expect(described_class.new(verbose: true).send(:cli_options)).to eq ['--verbose']
+          expect(subject.send(:cli_options)).to eq ['--verbose']
         end
       end
     end
@@ -59,16 +64,22 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:bundler?)).to eq false
       end
 
-      it 'is forced to false' do
-        allow(Dir).to receive(:pwd).and_return(fixtures_path.join('bundler'))
+      context "with bundler false" do
+        let(:options) { { bundler: false } }
+        it 'is forced to false' do
+          allow(Dir).to receive(:pwd).and_return(fixtures_path.join('bundler'))
 
-        expect(described_class.new(bundler: false).send(:bundler?)).to eq false
+          expect(subject.send(:bundler?)).to eq false
+        end
       end
 
-      it 'is forced to false if spring is enabled' do
-        allow(Dir).to receive(:pwd).and_return(fixtures_path.join('bundler'))
+      context "with spring" do
+        let(:options) { { spring: true } }
+        it 'is forced to false if spring is enabled' do
+          allow(Dir).to receive(:pwd).and_return(fixtures_path.join('bundler'))
 
-        expect(described_class.new(spring: true).send(:bundler?)).to eq false
+          expect(subject.send(:bundler?)).to eq false
+        end
       end
     end
 
@@ -85,12 +96,18 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:rubygems?)).to eq false
       end
 
-      it 'is true if bundler is disabled' do
-        expect(described_class.new(bundler: false, rubygems: true).send(:rubygems?)).to eq true
+      context "when bundler is disabled" do
+        let(:options) { { bundler: false, rubygems: true } }
+        it 'is true if bundler is disabled' do
+          expect(subject.send(:rubygems?)).to eq true
+        end
       end
 
-      it 'is false if bundler is enabled' do
-        expect(described_class.new(bundler: true, rubygems: true).send(:rubygems?)).to eq false
+      context "when bundler is enabled" do
+        let(:options) { { bundler: true, rubygems: true } }
+        it 'is false if bundler is enabled' do
+          expect(subject.send(:rubygems?)).to eq false
+        end
       end
     end
 
@@ -99,8 +116,9 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:drb?)).to eq false
       end
 
-      it 'is settable using a boolean' do
-        expect(described_class.new(drb: true).send(:drb?)).to eq true
+      context "when set to true" do
+        let(:options) { { drb: true } }
+        specify { expect(subject.send(:drb?)).to eq true }
       end
     end
 
@@ -109,12 +127,14 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:zeus?)).to eq false
       end
 
-      it 'is settable using a boolean' do
-        expect(described_class.new(zeus: true).send(:zeus?)).to eq true
+      context 'when true' do
+        let(:options) { { zeus: true } }
+        specify { expect(subject.send(:zeus?)).to eq true }
       end
 
-      it 'is settable using a string which represents the command to send to zeus' do
-        expect(described_class.new(zeus: 'blah').send(:zeus?)).to eq true
+      context 'when string which represents the command to send to zeus' do
+        let(:options) { { zeus: 'blah' } }
+        specify { expect(subject.send(:zeus?)).to eq true }
       end
     end
 
@@ -123,12 +143,14 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:spring?)).to eq false
       end
 
-      it 'is settable using a boolean' do
-        expect(described_class.new(spring: true).send(:spring?)).to eq true
+      context 'when true' do
+        let(:options) { { spring: true } }
+        specify { expect(subject.send(:spring?)).to eq true }
       end
 
-      it 'is settable using a string which represents the command to send to spring' do
-        expect(described_class.new(spring: 'rake test').send(:spring?)).to eq true
+      context 'when using a string which represents the command to send to spring' do
+        let(:options) { { spring: 'rake test' } }
+        specify { expect(subject.send(:spring?)).to eq true }
       end
     end
 
@@ -137,8 +159,9 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:all_after_pass?)).to eq false
       end
 
-      it 'is settable using a boolean' do
-        expect(described_class.new(all_after_pass: true).send(:all_after_pass?)).to eq true
+      context 'when true' do
+        let(:options) { { all_after_pass: true } }
+        specify { expect(subject.send(:all_after_pass?)).to eq true }
       end
     end
 
@@ -147,8 +170,9 @@ RSpec.describe Guard::Minitest::Runner do
         expect(subject.send(:autorun?)).to eq true
       end
 
-      it 'is settable using a boolean' do
-        expect(described_class.new(autorun: false).send(:autorun?)).to eq false
+      context 'when false' do
+        let(:options) { { autorun: false } }
+        specify { expect(subject.send(:autorun?)).to eq false }
       end
     end
   end
