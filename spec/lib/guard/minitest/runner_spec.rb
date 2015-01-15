@@ -8,6 +8,10 @@ RSpec.describe Guard::Minitest::Runner do
     @old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " #{File.expand_path('../../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)}"
     @require_old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " -r#{@old_runner}"
     allow(Guard::Compat::UI).to receive(:notify)
+
+    allow(Kernel).to receive(:system) do |*args|
+      fail "stub me: Kernel.system(#{ args.map(&:inspect) * ", "})"
+    end
   end
 
   describe 'options' do
