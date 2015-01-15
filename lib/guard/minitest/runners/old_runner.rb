@@ -3,7 +3,6 @@ require 'guard/minitest/notifier'
 
 module MiniTest
   class MiniTest::Unit
-
     begin
       alias_method :_run_anything_without_guard, :_run_anything
       def _run_anything(type)
@@ -13,6 +12,5 @@ module MiniTest
         ::Guard::Minitest::Notifier.notify(test_count, assertion_count, failures, errors, skips, duration)
       end
     end
-
   end
 end

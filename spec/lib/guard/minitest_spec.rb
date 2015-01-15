@@ -8,7 +8,7 @@ RSpec.describe Guard::Minitest do
 
   describe 'initialization' do
     it 'initializes runner with default options' do
-      expect(runner).to receive(:new).with({ all_on_start: true })
+      expect(runner).to receive(:new).with(all_on_start: true)
 
       subject.new
     end
@@ -42,15 +42,15 @@ RSpec.describe Guard::Minitest do
 
   describe 'run_on_modifications' do
     it 'is run through runner' do
-      expect_any_instance_of(runner).to receive(:run_on_modifications).
-        and_return(true)
+      expect_any_instance_of(runner).to receive(:run_on_modifications)
+        .and_return(true)
 
       guard.run_on_modifications
     end
   end
 
   describe 'run_on_additions' do
-    let(:paths) { %w[path1 path2] }
+    let(:paths) { %w(path1 path2) }
 
     it 'is run through runner' do
       expect_any_instance_of(runner).to receive(:run_on_additions).with(paths)
@@ -60,7 +60,7 @@ RSpec.describe Guard::Minitest do
   end
 
   describe 'run_on_removals' do
-    let(:paths) { %w[path1 path2] }
+    let(:paths) { %w(path1 path2) }
 
     it 'runs run_on_removals via runner' do
       expect_any_instance_of(runner).to receive(:run_on_removals).with(paths)

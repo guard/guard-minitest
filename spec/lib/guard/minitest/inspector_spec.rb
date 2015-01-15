@@ -1,15 +1,14 @@
 require 'guard/minitest/inspector'
 
 RSpec.describe Guard::Minitest::Inspector do
-  let(:inspector) { Guard::Minitest::Inspector.new(%w[test spec], %w[*_test.rb test_*.rb *_spec.rb]) }
+  let(:inspector) { Guard::Minitest::Inspector.new(%w(test spec), %w(*_test.rb test_*.rb *_spec.rb)) }
 
   describe 'clean' do
-
     before do
       @files_on_disk = Dir['spec/**/*_spec.rb'].sort
     end
 
-    it "should add all test files under the given dir" do
+    it 'should add all test files under the given dir' do
       expect(inspector.clean(['spec']).sort).to eq @files_on_disk
     end
 
@@ -34,7 +33,7 @@ RSpec.describe Guard::Minitest::Inspector do
     end
 
     it 'should remove duplication (2)' do
-      expect(inspector.clean(['spec', 'spec']).sort).to eq @files_on_disk
+      expect(inspector.clean(%w(spec spec)).sort).to eq @files_on_disk
     end
 
     it 'should remove test folder includes in other test folder' do
@@ -44,6 +43,5 @@ RSpec.describe Guard::Minitest::Inspector do
     it 'should not include test files not in the given dir' do
       expect(inspector.clean(['spec/guard/minitest'])).to_not include 'spec/guard/minitest_spec.rb'
     end
-
   end
 end

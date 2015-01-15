@@ -1,7 +1,6 @@
 module Guard
   class Minitest < Plugin
     class Notifier
-
       def self.guard_message(test_count, assertion_count, failure_count, error_count, skip_count, duration)
         message = "#{test_count} tests"
         if skip_count > 0
@@ -31,7 +30,6 @@ module Guard
 
         Compat::UI.notify(message, title: 'Minitest results', image: image)
       end
-
     end
   end
 end

@@ -1,4 +1,4 @@
-require "rspec"
+require 'rspec'
 
 if ENV['CI']
   require 'coveralls'

@@ -39,5 +39,4 @@ RSpec.describe Guard::Minitest::Notifier do
       subject.notify(1, 2, 0, 0, 0, 10.0)
     end
   end
-
 end

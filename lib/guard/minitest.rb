@@ -2,7 +2,6 @@ require 'guard/compat/plugin'
 
 module Guard
   class Minitest < Plugin
-
     require 'guard/minitest/runner'
     require 'guard/minitest/utils'
     require 'guard/minitest/version'
@@ -51,6 +50,5 @@ module Guard
     def throw_on_failed_tests
       throw :task_has_failed unless yield
     end
-
   end
 end

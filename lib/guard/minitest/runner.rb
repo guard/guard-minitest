@@ -1,4 +1,5 @@
 require 'guard/minitest/inspector'
+require 'English'
 
 module Guard
   class Minitest < Plugin
@@ -16,8 +17,8 @@ module Guard
           all_env:            {},
           env:                {},
           include:            [],
-          test_folders:       %w[test spec],
-          test_file_patterns: %w[*_test.rb test_*.rb *_spec.rb],
+          test_folders:       %w(test spec),
+          test_file_patterns: %w(*_test.rb test_*.rb *_spec.rb),
           cli:                nil,
           autorun:            true
         }.merge(options)
@@ -66,12 +67,12 @@ module Guard
         run(paths, all: all_paths?(paths))
       end
 
-      def run_on_additions(paths)
+      def run_on_additions(_paths)
         inspector.clear_memoized_test_files
         true
       end
 
-      def run_on_removals(paths)
+      def run_on_removals(_paths)
         inspector.clear_memoized_test_files
       end
 
@@ -122,10 +123,10 @@ module Guard
       end
 
       def _run(*args)
-        Compat::UI.debug "Running: #{args.join(" ")}"
-        return $?.exitstatus unless Kernel.system(*args).nil?
+        Compat::UI.debug "Running: #{args.join(' ')}"
+        return $CHILD_STATUS.exitstatus unless Kernel.system(*args).nil?
 
-        fail Errno::ENOENT, args.join(" ")
+        fail Errno::ENOENT, args.join(' ')
       end
 
       def _run_possibly_bundled_command(paths, all)
@@ -159,7 +160,7 @@ module Guard
       end
 
       def drb_command(paths)
-        %w[testdrb] + generate_includes(false) + relative_paths(paths)
+        %w(testdrb) + generate_includes(false) + relative_paths(paths)
       end
 
       def zeus_command(paths)
@@ -170,7 +171,7 @@ module Guard
       def spring_command(paths)
         command = @options[:spring].is_a?(String) ? @options[:spring] : 'bin/rake test'
         cmd_parts = [command]
-        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless (Utils.minitest_version_gte_5? || command != 'spring testunit')
+        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless Utils.minitest_version_gte_5? || command != 'spring testunit'
         if cli_options.length > 0
           cmd_parts + paths + ['--'] + cli_options
         else
@@ -207,22 +208,22 @@ module Guard
           folders = include_folders
         end
 
-        folders.map {|f| %[-I"#{f}"] }
+        folders.map { |f| %(-I"#{f}") }
       end
 
-      def generate_env(all=false)
+      def generate_env(all = false)
         base_env.merge(all ? all_env : {})
       end
 
       def base_env
-        Hash[(@options[:env] || {}).map{|key, value| [key.to_s, value.to_s]}]
+        Hash[(@options[:env] || {}).map { |key, value| [key.to_s, value.to_s] }]
       end
 
       def all_env
-        if @options[:all_env].kind_of? Hash
-          Hash[@options[:all_env].map{|key, value| [key.to_s, value.to_s]}]
+        if @options[:all_env].is_a? Hash
+          Hash[@options[:all_env].map { |key, value| [key.to_s, value.to_s] }]
         else
-          {@options[:all_env].to_s => "true"}
+          { @options[:all_env].to_s => 'true' }
         end
       end
 
@@ -237,7 +238,7 @@ module Guard
       def parse_deprecated_options
         if @options.key?(:notify)
           # TODO: no coverage
-          Compat::UI.info %{DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.}
+          Compat::UI.info %(DEPRECATION WARNING: The :notify option is deprecated. Guard notification configuration is used.)
         end
 
         [:seed, :verbose].each do |key|
@@ -246,11 +247,10 @@ module Guard
             final_value << " #{value}" unless [TrueClass, FalseClass].include?(value.class)
             cli_options << final_value
 
-            Compat::UI.info %{DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.}
+            Compat::UI.info %(DEPRECATION WARNING: The :#{key} option is deprecated. Pass standard command line argument "--#{key}" to Minitest with the :cli option.)
           end
         end
       end
-
     end
   end
 end
