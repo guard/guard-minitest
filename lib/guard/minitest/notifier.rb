@@ -1,3 +1,5 @@
+require 'guard/compat/plugin'
+
 module Guard
   class Minitest < Plugin
     class Notifier
