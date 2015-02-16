@@ -1,5 +1,8 @@
 require 'guard/minitest/utils'
 
+# Require guard unless we're using guard-minitest to test a guard plugin
+require 'guard' unless Dir['guard-*.gemspec'].any?
+
 if ::Guard::Minitest::Utils.minitest_version_gte_5_0_4?
   require 'guard/minitest/reporter'
 else
