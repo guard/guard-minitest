@@ -17,6 +17,7 @@ Add Guard::Minitest to your `Gemfile`:
 
 ```ruby
 group :development do
+  gem 'guard' # NOTE: this is necessary in newer versions
   gem 'guard-minitest'
 end
 ```
