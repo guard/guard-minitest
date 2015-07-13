@@ -7,6 +7,8 @@ Guard::Minitest allows to automatically & intelligently launch tests with the
 * Compatible with minitest >= 3.0 (optimal support for 5.x).
 * Tested against Ruby 1.9.3, 2.0.0, JRuby and Rubinius (1.9 mode).
 
+*IMPORTANT NOTE: `guard-minitest` does not depend on `guard` due to obscure issues - you must either install `guard` first or add it explicitly in your `Gemfile` (see: [#131](https://github.com/guard/guard-minitest/pull/131) for details)*
+
 ## Install
 
 Please be sure to have [Guard](http://github.com/guard/guard) installed before you continue.
