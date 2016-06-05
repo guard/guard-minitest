@@ -132,7 +132,7 @@ module Guard
       def _run_possibly_bundled_command(paths, all)
         args = minitest_command(paths, all)
         bundler_env = !bundler? && defined?(::Bundler)
-        bundler_env ? ::Bundler.with_clean_env { _run(*args) } : _run(*args)
+        bundler_env ? ::Bundler.with_original_env { _run(*args) } : _run(*args)
       end
 
       def _commander(paths)

@@ -444,7 +444,7 @@ RSpec.describe Guard::Minitest::Runner do
 
         it 'runs with a clean environment' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Bundler).to receive(:with_clean_env).and_yield
+          expect(Bundler).to receive(:with_original_env).and_yield
           expect(Kernel).to receive(:system).with('bin/rake test test/test_minitest.rb') { system('true') }
 
           subject.run(['test/test_minitest.rb'])
