@@ -43,5 +43,10 @@ RSpec.describe Guard::Minitest::Inspector do
     it 'should not include test files not in the given dir' do
       expect(inspector.clean(['spec/guard/minitest'])).to_not include 'spec/guard/minitest_spec.rb'
     end
+
+    it 'should include test files in the root dir' do
+      inspector = Guard::Minitest::Inspector.new(%w[.], %w[*.md])
+      expect(inspector.clean(['README.md'])).to eq ['README.md']
+    end
   end
 end
