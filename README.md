@@ -38,6 +38,18 @@ guard init minitest
 
 ## Ruby on Rails
 
+### Spring
+
+Due to complexities in how arguments are handled and running tests for selected files, it's best to use the following spring command:
+
+guard "minitest", spring: "bin/rails test" do
+  ...
+end
+
+(For details see #130).
+
+### Rails gem dependencies
+
 Ruby on Rails lazy loads gems as needed in its test suite.
 As a result Guard::Minitest may not be able to run all tests until the gem dependencies are resolved.
 
