@@ -48,7 +48,7 @@ guard "minitest", spring: "bin/rails test" do
 end
 ```
 
-(For details see #130).
+(For details see issue [#130](https://github.com/guard/guard-minitest/issues/130)).
 
 ### Rails gem dependencies
 
