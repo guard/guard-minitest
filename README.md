@@ -42,9 +42,11 @@ guard init minitest
 
 Due to complexities in how arguments are handled and running tests for selected files, it's best to use the following spring command:
 
+```ruby
 guard "minitest", spring: "bin/rails test" do
-  ...
+  # ...
 end
+```
 
 (For details see #130).
 
