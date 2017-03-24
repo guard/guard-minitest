@@ -3,6 +3,8 @@ require 'guard/minitest/utils'
 
 RSpec.describe Guard::Minitest::Runner do
   let(:options) { {} }
+  let(:mock_open3_success) { ['', '', instance_double('Process::Status', exitstatus: 0) ] }
+  let(:mock_open3_failure) { ['', '', instance_double('Process::Status', exitstatus: 1) ] }
   subject { described_class.new(options) }
 
   before do
@@ -11,8 +13,8 @@ RSpec.describe Guard::Minitest::Runner do
     allow(Guard::Compat::UI).to receive(:notify)
     allow(Guard::Compat::UI).to receive(:debug)
 
-    allow(Kernel).to receive(:system) do |*args|
-      fail "stub me: Kernel.system(#{ args.map(&:inspect) * ', '})"
+    allow(Open3).to receive(:capture3) do |*args|
+      fail "stub me: Open3.system(#{ args.map(&:inspect) * ', '})"
     end
   end
 
@@ -183,7 +185,7 @@ RSpec.describe Guard::Minitest::Runner do
 
     context 'when Guard is in debug mode' do
       before do
-        allow(Kernel).to receive(:system) { system('true') }
+        allow(Open3).to receive(:capture3) { mock_open3_success }
         allow(Guard::Compat::UI).to receive(:error)
       end
 
@@ -195,7 +197,7 @@ RSpec.describe Guard::Minitest::Runner do
 
     context 'when binary is not found' do
       before do
-        allow(Kernel).to receive(:system) { nil }
+        allow(Open3).to receive(:capture3).and_raise(Errno::ENOENT)
         allow(Guard::Compat::UI).to receive(:error)
       end
 
@@ -213,9 +215,9 @@ RSpec.describe Guard::Minitest::Runner do
       let(:options) { { cli: '--seed 12345 --verbose' } }
 
       it 'passes :cli arguments' do
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard --seed 12345 --verbose"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'])
       end
@@ -224,9 +226,9 @@ RSpec.describe Guard::Minitest::Runner do
     context 'runs with specified directories included' do
       let(:options) { { include: %w(lib app) } }
       it 'runs with specified directories included' do
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           "ruby -I\"test\" -I\"spec\" -I\"lib\" -I\"app\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'])
       end
@@ -236,9 +238,9 @@ RSpec.describe Guard::Minitest::Runner do
       let(:options) { { autorun: false } }
 
       it 'does not require minitest/autorun' do
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           "ruby -I\"test\" -I\"spec\" -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'])
       end
@@ -247,10 +249,10 @@ RSpec.describe Guard::Minitest::Runner do
     context 'when running the full suite' do
       let(:options) { { all_env: { 'TESTS_ALL' => true } } }
       it 'sets env via all_env if running the full suite' do
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           { 'TESTS_ALL' => 'true' },
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'], all: true)
       end
@@ -259,10 +261,10 @@ RSpec.describe Guard::Minitest::Runner do
     context 'allows string setting of all_env' do
       let(:options) { { all_env: 'TESTS_ALL' } }
       it 'allows string setting of all_env' do
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           { 'TESTS_ALL' => 'true' },
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'], all: true)
       end
@@ -271,10 +273,10 @@ RSpec.describe Guard::Minitest::Runner do
     context 'runs with the specified environment' do
       let(:options) { { env: { MINITEST_TEST: 'test' } } }
       it 'runs with the specified environment' do
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           { 'MINITEST_TEST' => 'test' },
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'])
       end
@@ -283,10 +285,10 @@ RSpec.describe Guard::Minitest::Runner do
     context 'with the all environment' do
       let(:options) { { env: { MINITEST_TEST: 'test', MINITEST: true }, all_env: { MINITEST_TEST: 'all' } } }
       it 'merges the specified environment' do
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           { 'MINITEST_TEST' => 'all', 'MINITEST' => 'true' },
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'], all: true)
       end
@@ -299,9 +301,9 @@ RSpec.describe Guard::Minitest::Runner do
 
       it 'runs without bundler and rubygems' do
         expect(Guard::Compat::UI).to receive(:info)
-        expect(Kernel).to receive(:system).with(
+        expect(Open3).to receive(:capture3).with(
           "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-        ) { system('true') }
+        ) { mock_open3_success }
 
         subject.run(['test/test_minitest.rb'])
       end
@@ -310,9 +312,9 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { rubygems: true } }
         it 'runs without bundler but rubygems' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with(
+          expect(Open3).to receive(:capture3).with(
             "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-          ) { system('true') }
+          ) { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -328,9 +330,9 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { bundler: true, rubygems: false } }
         it 'runs with bundler' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with(
+          expect(Open3).to receive(:capture3).with(
             "bundle exec ruby -I\"test\" -I\"spec\" -r bundler/setup -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-          ) { system('true') }
+          ) { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -340,9 +342,9 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { bundler: false, rubygems: true } }
         it 'runs without bundler' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with(
+          expect(Open3).to receive(:capture3).with(
             "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-          ) { system('true') }
+          ) { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -352,9 +354,9 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { bundler: false, rubygems: false } }
         it 'runs without bundler' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with(
+          expect(Open3).to receive(:capture3).with(
             "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --guard"
-          ) { system('true') }
+          ) { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -366,14 +368,14 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { all_after_pass: true } }
 
         it 'runs all tests after success' do
-          allow(Kernel).to receive(:system) { system('true') }
+          allow(Open3).to receive(:capture3) { mock_open3_success }
           expect(subject).to receive(:run_all)
 
           subject.run(['test/test_minitest.rb'])
         end
 
         it 'does not run all tests after failure' do
-          allow(Kernel).to receive(:system) { system('false') }
+          allow(Open3).to receive(:capture3) { mock_open3_failure }
           expect(subject).to receive(:run_all).never
 
           subject.run(['test/test_minitest.rb'])
@@ -384,7 +386,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { all_after_pass: false } }
 
         it 'does not run all tests again after success' do
-          allow(Kernel).to receive(:system) { system('true') }
+          allow(Open3).to receive(:capture3) { mock_open3_success }
           expect(subject).to receive(:run_all).never
 
           subject.run(['test/test_minitest.rb'])
@@ -397,7 +399,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { zeus: true } }
         it 'runs with default zeus command' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with('zeus test ./test/test_minitest.rb')  { system('true') }
+          expect(Open3).to receive(:capture3).with('zeus test ./test/test_minitest.rb')  { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -407,7 +409,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { zeus: 'abcxyz' } }
         it 'runs with custom zeus command' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with('zeus abcxyz ./test/test_minitest.rb') { system('true') }
+          expect(Open3).to receive(:capture3).with('zeus abcxyz ./test/test_minitest.rb') { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -417,14 +419,14 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { zeus: true } }
 
         it 'provides success notification when the zeus exit status is 0' do
-          expect(Kernel).to receive(:system).with('zeus test ./test/test_minitest.rb') { system('true') }
+          expect(Open3).to receive(:capture3).with('zeus test ./test/test_minitest.rb') { mock_open3_success }
           expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
 
           subject.run(['test/test_minitest.rb'])
         end
 
         it 'provides failed notification when the zeus exit status is non-zero or the command failed' do
-          expect(Kernel).to receive(:system).with('zeus test ./test/test_minitest.rb') { system('false') }
+          expect(Open3).to receive(:capture3).with('zeus test ./test/test_minitest.rb') { mock_open3_failure }
           expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
 
           subject.run(['test/test_minitest.rb'])
@@ -437,7 +439,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { spring: true } }
         it 'runs with default spring command' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with('bin/rake test test/test_minitest.rb') { system('true') }
+          expect(Open3).to receive(:capture3).with('bin/rake test test/test_minitest.rb') { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -445,19 +447,19 @@ RSpec.describe Guard::Minitest::Runner do
         it 'runs with a clean environment' do
           expect(Guard::Compat::UI).to receive(:info)
           expect(Bundler).to receive(:with_original_env).and_yield
-          expect(Kernel).to receive(:system).with('bin/rake test test/test_minitest.rb') { system('true') }
+          expect(Open3).to receive(:capture3).with('bin/rake test test/test_minitest.rb') { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
         it 'provides success notification when the spring exit status is 0' do
-          expect(Kernel).to receive(:system).with('bin/rake test test/test_minitest.rb') { system('true') }
+          expect(Open3).to receive(:capture3).with('bin/rake test test/test_minitest.rb') { mock_open3_success }
           expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :success)
 
           subject.run(['test/test_minitest.rb'])
         end
 
         it 'provides failed notification when the spring exit status is non-zero or the command failed' do
-          expect(Kernel).to receive(:system).with('bin/rake test test/test_minitest.rb') { system('false') }
+          expect(Open3).to receive(:capture3).with('bin/rake test test/test_minitest.rb') { mock_open3_failure }
           expect(Guard::Compat::UI).to receive(:notify).with('Running: test/test_minitest.rb', title: 'Minitest results', image: :failed)
 
           subject.run(['test/test_minitest.rb'])
@@ -468,7 +470,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { spring: 'spring rake test' } }
         it 'runs with custom spring command' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with('spring rake test test/test_minitest.rb') { system('true') }
+          expect(Open3).to receive(:capture3).with('spring rake test test/test_minitest.rb') { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -478,7 +480,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { spring: true, cli: '--seed 12345 --verbose' } }
         it 'runs default spring command with cli' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with('bin/rake test test/test_minitest.rb -- --seed 12345 --verbose') { system('true') }
+          expect(Open3).to receive(:capture3).with('bin/rake test test/test_minitest.rb -- --seed 12345 --verbose') { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -488,7 +490,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { spring: 'spring rake test', cli: '--seed 12345 --verbose' } }
         it 'runs custom spring command with cli' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with('spring rake test test/test_minitest.rb -- --seed 12345 --verbose') { system('true') }
+          expect(Open3).to receive(:capture3).with('spring rake test test/test_minitest.rb -- --seed 12345 --verbose') { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -500,7 +502,7 @@ RSpec.describe Guard::Minitest::Runner do
         let(:options) { { drb: true } }
         it 'should run with drb' do
           expect(Guard::Compat::UI).to receive(:info)
-          expect(Kernel).to receive(:system).with('testdrb ./test/test_minitest.rb') { system('true') }
+          expect(Open3).to receive(:capture3).with('testdrb ./test/test_minitest.rb') { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -509,8 +511,8 @@ RSpec.describe Guard::Minitest::Runner do
       context 'with specific directories' do
         let(:options) { { drb: true, include: %w(lib app) } }
         it 'runs with specified directories included' do
-          expect(Kernel).to receive(:system)
-            .with("testdrb -I\"lib\" -I\"app\" ./test/test_minitest.rb") { system('true') }
+          expect(Open3).to receive(:capture3)
+            .with("testdrb -I\"lib\" -I\"app\" ./test/test_minitest.rb") { mock_open3_success }
 
           subject.run(['test/test_minitest.rb'])
         end
@@ -519,23 +521,23 @@ RSpec.describe Guard::Minitest::Runner do
 
     describe 'when no paths are passed' do
       it 'does not run a command' do
-        expect(Kernel).to_not receive(:system)
+        expect(Open3).to_not receive(:capture3)
 
         subject.run([])
       end
 
       it 'still runs all if requested' do
-        expect(Kernel).to receive(:system)
-          .with("ruby -I\"test\" -I\"spec\" -r minitest/autorun#{@require_old_runner} -e \"\" -- --guard") { system('true') }
+        expect(Open3).to receive(:capture3)
+          .with("ruby -I\"test\" -I\"spec\" -r minitest/autorun#{@require_old_runner} -e \"\" -- --guard") { mock_open3_success }
 
         expect(subject.run([], all: true)).to eq true
       end
     end
 
     it 'includes the --guard flag to signal minitest to load the plugin' do
-      expect(Kernel).to receive(:system).with(
+      expect(Open3).to receive(:capture3).with(
         a_string_starting_with('ruby').and(a_string_including('-- --guard'))
-      ) { system('true') }
+      ) { mock_open3_success }
 
       subject.run(['test/test_minitest.rb'])
     end
@@ -572,7 +574,7 @@ RSpec.describe Guard::Minitest::Runner do
       context 'even when all_after_pass is enabled' do
         let(:options) { { all_after_pass: true } }
         it 'does not run all tests again after success' do
-          allow(Kernel).to receive(:system) { system('true') }
+          allow(Open3).to receive(:capture3) { mock_open3_success }
           expect(subject).to receive(:run_all).never
 
           expect(subject.run_on_modifications(@paths)).to eq true
@@ -602,7 +604,7 @@ RSpec.describe Guard::Minitest::Runner do
 
         it 'runs all tests again after success if all_after_pass enabled' do
           subject
-          allow(Kernel).to receive(:system) { system('true') }
+          allow(Open3).to receive(:capture3) { mock_open3_success }
           allow(subject).to receive(:run).with(['test/test_minitest_1.rb'], all: false).and_call_original
           expect(subject).to receive(:run).with(@paths, all: true).and_return(true)
 
@@ -633,7 +635,7 @@ RSpec.describe Guard::Minitest::Runner do
 
   context 'when guard is not included' do
     before do
-      allow(Kernel).to receive(:system).and_call_original
+      allow(Open3).to receive(:capture3).and_call_original
     end
 
     it 'loads correctly as minitest plugin' do
