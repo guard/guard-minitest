@@ -180,6 +180,11 @@ module Guard
         cmd_parts << '-r rubygems' if rubygems?
         cmd_parts << '-r bundler/setup' if bundler?
         cmd_parts << '-r minitest/autorun' if autorun?
+
+        if Utils.minitest_version_gte_6?
+          cmd_parts << '-e "Minitest.load :guard_minitest"'
+        end
+
         cmd_parts.concat(paths.map { |path| "-r ./#{path}" })
 
         unless Utils.minitest_version_gte_5?
