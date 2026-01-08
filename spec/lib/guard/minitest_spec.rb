@@ -8,7 +8,7 @@ RSpec.describe Guard::Minitest do
 
   describe 'initialization' do
     it 'initializes runner with default options' do
-      expect(runner).to receive(:new).with(all_on_start: true)
+      expect(runner).to receive(:new).with({ all_on_start: true })
 
       subject.new
     end
