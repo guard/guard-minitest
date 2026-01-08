@@ -193,7 +193,6 @@ module Guard
         cmd_parts << '-e ""'
 
         cmd_parts << '--'
-        cmd_parts << '--guard'
         cmd_parts += cli_options
         cmd_parts
       end
