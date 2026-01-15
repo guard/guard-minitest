@@ -1,8 +1,11 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
+  NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - Guardfile
     - Rakefile
     - guard-minitest.gemspec
     - lib/guard/minitest/templates/Guardfile
+    - "**/vendor/**/*"
