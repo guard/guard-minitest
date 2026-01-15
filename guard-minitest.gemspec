@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'guard-compat', '~> 1.2'
   s.add_runtime_dependency 'minitest', '>= 3.0'
 
-  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'rake'
 
   s.files        = `git ls-files -z lib`.split("\x0") + %w[CHANGELOG.md LICENSE README.md]
   s.require_path = 'lib'

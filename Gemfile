@@ -1,23 +1,16 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-gemspec development_group: :gem_build_deps
+gem "guard-rspec", require: false
+gem "ruby_gntp", require: false
 
-group :gem_build_deps do
-  gem 'rake'
-end
+# Used for release
+gem "gems", require: false
+gem "netrc", require: false
+gem "octokit", require: false
 
-group :development do
-  gem 'guard-rspec', require: false
-  gem 'ruby_gntp', require: false
+gem "guard-rubocop", require: false
 
-  # Used for release
-  gem 'gems', require: false
-  gem 'netrc', require: false
-  gem 'octokit', require: false
+gem "rspec", ">= 3.1.0", require: false
 
-  gem 'guard-rubocop', require: false
-end
-
-group :test do
-  gem 'rspec', '>= 3.1.0', require: false
-end
+# Specify your gem's dependencies in strip_attributes.gemspec
+gemspec
