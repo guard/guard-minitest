@@ -5,4 +5,5 @@ pkg/*
 .rvmrc
 .rbx/*
 Gemfile.lock
+gemfiles/*.lock
 coverage/
