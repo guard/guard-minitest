@@ -20,15 +20,15 @@ Gem::Specification.new do |s|
     'source_code_uri'   => s.homepage,
   }
 
-  s.required_ruby_version = '>= 1.9.2'
+  s.required_ruby_version = '>= 3.2'
 
   s.add_runtime_dependency 'guard-compat', '~> 1.2'
-  s.add_runtime_dependency 'minitest', '>= 3.0', '< 6.0'
+  s.add_runtime_dependency 'minitest', '>= 5.0.4', '< 7.0'
 
   s.add_development_dependency 'coveralls'
   s.add_development_dependency 'guard-rubocop'
   s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec', '>= 3.1.0'
+  s.add_development_dependency 'rspec', '>= 3.1'
 
   s.files        = `git ls-files -z lib`.split("\x0") + %w[CHANGELOG.md LICENSE README.md]
   s.require_path = 'lib'
