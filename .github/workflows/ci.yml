@@ -12,9 +12,8 @@ jobs:
       matrix:
         ruby: ["3.2", "3.3", "3.4", "4.0"]
         gemfile:
-          - minitest-3
-          - minitest-4
           - minitest-5
+          - minitest-6
 
     env:
       BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
