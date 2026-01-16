@@ -1,5 +1,6 @@
 require 'guard/minitest/inspector'
 require 'English'
+require 'open3'
 
 module Guard
   class Minitest < Plugin
@@ -40,7 +41,7 @@ module Guard
 
         begin
           status = _run_possibly_bundled_command(paths, options[:all])
-        rescue Errno::ENOENT => e
+        rescue RuntimeError, Errno::ENOENT => e
           Compat::UI.error e.message
           throw :task_has_failed
         end
@@ -124,9 +125,12 @@ module Guard
 
       def _run(*args)
         Compat::UI.debug "Running: #{args.join(' ')}"
-        return $CHILD_STATUS.exitstatus unless Kernel.system(*args).nil?
+        out, err, st = Open3.capture3(*args)
+        return st.exitstatus unless st.exitstatus.nil?
 
-        fail Errno::ENOENT, args.join(' ')
+        fail "Failed to execute #{args.join}, #{st}"
+      rescue Errno::ENOENT => e
+        fail Errno::ENOENT, args.join
       end
 
       def _run_possibly_bundled_command(paths, all)
