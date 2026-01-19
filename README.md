@@ -1,5 +1,8 @@
 # Guard::Minitest
-[![Gem Version](https://badge.fury.io/rb/guard-minitest.svg)](http://badge.fury.io/rb/guard-minitest) [![Build Status](https://travis-ci.org/guard/guard-minitest.svg?branch=master)](https://travis-ci.org/guard/guard-minitest) [![Dependency Status](https://gemnasium.com/guard/guard-minitest.svg)](https://gemnasium.com/guard/guard-minitest) [![Code Climate](https://codeclimate.com/github/guard/guard-minitest.svg)](https://codeclimate.com/github/guard/guard-minitest) [![Coverage Status](https://coveralls.io/repos/guard/guard-minitest/badge.svg?branch=master)](https://coveralls.io/r/guard/guard-minitest)
+
+[![Gem Version](http://img.shields.io/gem/v/guard-minitest.svg)](https://rubygems.org/gems/guard-minitest)
+[![Build Status](https://github.com/guard/guard-minitest/workflows/CI/badge.svg)](https://github.com/guard/guard-minitest/actions/workflows/ci.yml)
+[![Gem Downloads](https://img.shields.io/gem/dt/guard-minitest.svg)](https://rubygems.org/gems/guard-minitest)
 
 Guard::Minitest allows to automatically & intelligently launch tests with the
 [minitest framework](https://github.com/seattlerb/minitest) when files are modified.
