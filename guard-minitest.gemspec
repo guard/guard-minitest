@@ -10,9 +10,15 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.authors     = ['Yann Lugrin', 'Rémy Coutable']
   s.email       = ['remy@rymai.me']
-  s.homepage    = 'https://rubygems.org/gems/guard-minitest'
+  s.homepage    = "https://github.com/guard/#{s.name}"
   s.summary     = 'Guard plugin for the Minitest framework'
   s.description = 'Guard::Minitest automatically run your tests with Minitest framework (much like autotest)'
+
+  s.metadata = {
+    'bug_tracker_uri'   => "#{s.homepage}/issues",
+    'changelog_uri'     => "#{s.homepage}/releases",
+    'source_code_uri'   => s.homepage,
+  }
 
   s.required_ruby_version = '>= 1.9.2'
 
