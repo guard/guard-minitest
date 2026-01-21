@@ -6,8 +6,6 @@ RSpec.describe Guard::Minitest::Runner do
   subject { described_class.new(options) }
 
   before do
-    @old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " #{File.expand_path('../../../../../lib/guard/minitest/runners/old_runner.rb', __FILE__)}"
-    @require_old_runner = Guard::Minitest::Utils.minitest_version_gte_5? ? '' : " -r#{@old_runner}"
     allow(Guard::Compat::UI).to receive(:notify)
     allow(Guard::Compat::UI).to receive(:debug)
 
@@ -188,7 +186,7 @@ RSpec.describe Guard::Minitest::Runner do
       end
 
       it 'outputs command' do
-        expect(Guard::Compat::UI).to receive(:debug).with("Running: ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --")
+        expect(Guard::Compat::UI).to receive(:debug).with("Running: ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --")
         subject.run(['test/test_minitest.rb'])
       end
     end
@@ -200,7 +198,7 @@ RSpec.describe Guard::Minitest::Runner do
       end
 
       it 'shows an error' do
-        expect(Guard::Compat::UI).to receive(:error).with("No such file or directory - ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --")
+        expect(Guard::Compat::UI).to receive(:error).with("No such file or directory - ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --")
         catch(:task_has_failed) { subject.run(['test/test_minitest.rb']) }
       end
 
@@ -214,7 +212,7 @@ RSpec.describe Guard::Minitest::Runner do
 
       it 'passes :cli arguments' do
         expect(Kernel).to receive(:system).with(
-          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" -- --seed 12345 --verbose"
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" -- --seed 12345 --verbose"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'])
@@ -225,7 +223,7 @@ RSpec.describe Guard::Minitest::Runner do
       let(:options) { { include: %w(lib app) } }
       it 'runs with specified directories included' do
         expect(Kernel).to receive(:system).with(
-          "ruby -I\"test\" -I\"spec\" -I\"lib\" -I\"app\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          "ruby -I\"test\" -I\"spec\" -I\"lib\" -I\"app\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'])
@@ -237,7 +235,7 @@ RSpec.describe Guard::Minitest::Runner do
 
       it 'does not require minitest/autorun' do
         expect(Kernel).to receive(:system).with(
-          "ruby -I\"test\" -I\"spec\" -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          "ruby -I\"test\" -I\"spec\" -r ./test/test_minitest.rb -e \"\" --"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'])
@@ -249,7 +247,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'sets env via all_env if running the full suite' do
         expect(Kernel).to receive(:system).with(
           { 'TESTS_ALL' => 'true' },
-          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'], all: true)
@@ -261,7 +259,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'allows string setting of all_env' do
         expect(Kernel).to receive(:system).with(
           { 'TESTS_ALL' => 'true' },
-          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'], all: true)
@@ -273,7 +271,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs with the specified environment' do
         expect(Kernel).to receive(:system).with(
           { 'MINITEST_TEST' => 'test' },
-          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'])
@@ -285,7 +283,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'merges the specified environment' do
         expect(Kernel).to receive(:system).with(
           { 'MINITEST_TEST' => 'all', 'MINITEST' => 'true' },
-          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'], all: true)
@@ -300,7 +298,7 @@ RSpec.describe Guard::Minitest::Runner do
       it 'runs without bundler and rubygems' do
         expect(Guard::Compat::UI).to receive(:info)
         expect(Kernel).to receive(:system).with(
-          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+          "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
         ) { system('true') }
 
         subject.run(['test/test_minitest.rb'])
@@ -311,7 +309,7 @@ RSpec.describe Guard::Minitest::Runner do
         it 'runs without bundler but rubygems' do
           expect(Guard::Compat::UI).to receive(:info)
           expect(Kernel).to receive(:system).with(
-            "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+            "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
           ) { system('true') }
 
           subject.run(['test/test_minitest.rb'])
@@ -329,7 +327,7 @@ RSpec.describe Guard::Minitest::Runner do
         it 'runs with bundler' do
           expect(Guard::Compat::UI).to receive(:info)
           expect(Kernel).to receive(:system).with(
-            "bundle exec ruby -I\"test\" -I\"spec\" -r bundler/setup -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+            "bundle exec ruby -I\"test\" -I\"spec\" -r bundler/setup -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
           ) { system('true') }
 
           subject.run(['test/test_minitest.rb'])
@@ -341,7 +339,7 @@ RSpec.describe Guard::Minitest::Runner do
         it 'runs without bundler' do
           expect(Guard::Compat::UI).to receive(:info)
           expect(Kernel).to receive(:system).with(
-            "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+            "ruby -I\"test\" -I\"spec\" -r rubygems -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
           ) { system('true') }
 
           subject.run(['test/test_minitest.rb'])
@@ -353,7 +351,7 @@ RSpec.describe Guard::Minitest::Runner do
         it 'runs without bundler' do
           expect(Guard::Compat::UI).to receive(:info)
           expect(Kernel).to receive(:system).with(
-            "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb#{@require_old_runner} -e \"\" --"
+            "ruby -I\"test\" -I\"spec\" -r minitest/autorun -r ./test/test_minitest.rb -e \"\" --"
           ) { system('true') }
 
           subject.run(['test/test_minitest.rb'])
@@ -526,7 +524,7 @@ RSpec.describe Guard::Minitest::Runner do
 
       it 'still runs all if requested' do
         expect(Kernel).to receive(:system)
-          .with("ruby -I\"test\" -I\"spec\" -r minitest/autorun#{@require_old_runner} -e \"\" --") { system('true') }
+          .with("ruby -I\"test\" -I\"spec\" -r minitest/autorun -e \"\" --") { system('true') }
 
         expect(subject.run([], all: true)).to eq true
       end
