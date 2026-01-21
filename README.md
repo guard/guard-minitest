@@ -91,6 +91,7 @@ Please read [guard doc](http://github.com/guard/guard#readme) for more info abou
 ```ruby
 guard :minitest do
   watch(%r{^test/(.*)\/?test_(.*)\.rb$})
+  watch(%r{^test/(.*)\/?_test(.*)\.rb$}) # Rails 5 auto generated test files use `*_test.rb` pattern 
   watch(%r{^lib/(.*/)?([^/]+)\.rb$})     { |m| "test/#{m[1]}test_#{m[2]}.rb" }
   watch(%r{^test/test_helper\.rb$})      { 'test' }
 end
