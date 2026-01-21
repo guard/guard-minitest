@@ -13,11 +13,7 @@ module Minitest
     # Require guard unless we're using guard-minitest to test a guard plugin
     require 'guard' unless Dir['guard-*.gemspec'].any?
 
-    if ::Guard::Minitest::Utils.minitest_version_gte_5_0_4?
-      require 'guard/minitest/reporter'
-    else
-      require 'guard/minitest/reporters/old_reporter'
-    end
+    require 'guard/minitest/reporter'
 
     reporter << ::Guard::Minitest::Reporter.new
   end

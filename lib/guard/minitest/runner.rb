@@ -166,7 +166,6 @@ module Guard
       def spring_command(paths)
         command = @options[:spring].is_a?(String) ? @options[:spring] : 'bin/rake test'
         cmd_parts = [command]
-        cmd_parts << File.expand_path('../runners/old_runner.rb', __FILE__) unless Utils.minitest_version_gte_5? || command != 'spring testunit'
         if cli_options.length > 0
           cmd_parts + paths + ['--'] + cli_options
         else
@@ -182,10 +181,6 @@ module Guard
         cmd_parts << '-r minitest/autorun' if autorun?
         cmd_parts.concat(paths.map { |path| "-r ./#{path}" })
 
-        unless Utils.minitest_version_gte_5?
-          cmd_parts << "-r #{File.expand_path('../runners/old_runner.rb', __FILE__)}"
-        end
-
         # All the work is done through minitest/autorun
         # and requiring the test files, so this is just
         # a placeholder so Ruby doesn't try to exceute
@@ -193,7 +188,6 @@ module Guard
         cmd_parts << '-e ""'
 
         cmd_parts << '--'
-        cmd_parts << '--guard'
         cmd_parts += cli_options
         cmd_parts
       end
